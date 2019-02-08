@@ -1,0 +1,18 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      before: |
+        <li><a href="...">Short-Course on Analytical Paleobiology</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown">
+        Proudly published with bookdown</a></li>
+    download:
+      - ["analytical_paleobiology.pdf", "PDF"]
+      - ["analytical_paleobiology.epub", "EPUB"]
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  citation_package: natbib
+  keep_tex: yes
+bookdown::epub_book: default

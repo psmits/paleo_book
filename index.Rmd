@@ -1,0 +1,21 @@
+--- 
+title: "Analytical Paleobiology"
+author: "Peter D Smits"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: psmits/paleo_book
+twitter-handle: PeterDSmits
+description: "An informal short-course on analytical paleobiology"
+---
+
+# Prerequisites {-}
+
+This book uses the [`tidyverse`](https://www.tidyverse.org/) collection of R packages with a particular emphasis on `dplyr`, `ggplot2`, and `purrr`. Other `tidyverse` packages are used as necessary (e.g. `modelr`).
+
+I emphasize Bayesian data analysis approaches throughout this text. To this end, model inference is done using the [`brms`](https://github.com/paul-buerkner/brms) package which is a flexible tool for implementing [Stan-based](https://mc-stan.org/) models in R. Manipulation of those results, and some aspects of visualization, is done using the [`tidybayes`](http://mjskay.github.io/tidybayes/) package.
+
+I attempt to stick to the [`tidyverse` style guide](https://style.tidyverse.org/)
