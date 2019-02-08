@@ -12,7 +12,9 @@ twitter-handle: PeterDSmits
 description: "An informal short-course on analytical paleobiology"
 ---
 
-# Prerequisites {-}
+# Preface {-}
+
+This 
 
 This book uses the [`tidyverse`](https://www.tidyverse.org/) collection of R packages with a particular emphasis on `dplyr`, `ggplot2`, and `purrr`. Other `tidyverse` packages are used as necessary (e.g. `modelr`).
 
