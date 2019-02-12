@@ -1,11 +1,5 @@
 base
-methods
 colorout
-datasets
-utils
-grDevices
-graphics
-stats
 bookdown
 tidyverse
 ggplot2
@@ -23,3 +17,8 @@ bindrcpp
 Rcpp
 brms
 tidybayes
+modelr
+here
+viridisLite
+viridis
+bayesplot

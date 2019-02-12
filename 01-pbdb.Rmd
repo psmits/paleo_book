@@ -10,7 +10,7 @@
 - Learn how to make PBDB cleaner and tidier
 
 
-```{r load_packages, results = 'hide'}
+```{r load_packages_01, results = 'hide'}
 
 library(tidyverse)
 library(janitor)
@@ -66,7 +66,7 @@ https://paleobiodb.org/data1.2/occs/taxa.txt?base_name=Cetacea&interval=Miocene&
 ```
 
 The best part of using a URL based call is that we can embed them in our R scripts. Here is a simple example (note I'm suppressing warnings here, so don't get scared when you see a lot of them):
-```{r read_data, message = FALSE, results = 'hide', warning = FALSE}
+```{r read_carnivora, message = FALSE, results = 'hide', warning = FALSE}
 
 url <- 'https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&interval=Miocene&show=full'
 carnivora <- read_csv(file = url)
@@ -76,7 +76,7 @@ carnivora <- read_csv(file = url)
 The `carnivora` object represents the basic PBDB list response with all information for every observation as a data.frame. Because the URL points directly to a CSV (or JSON) file, we never have to actually save a copy of our data to our local machine and it instead just lives in memory -- though you might want to download and store the data every so often (e.g. `write_csv()`). Also, by using a direct API call to the PBDB instead of relying on a downloaded file our analyses can instaly be updated when new data is added to the PBDB.
 
 I find tibbles easier to process than data.frame-s, so my scripts tend to look like this:
-```{r read_astibble, message = FALSE, results = 'hide', warning = FALSE}
+```{r read_carnivora_astibble, message = FALSE, results = 'hide', warning = FALSE}
 
 url <- 'https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&interval=Miocene&show=full'
 carnivora <- read_csv(file = url) %>%
@@ -107,7 +107,7 @@ Luckily, these operations are very easy to do with with `dplyr` and the [`janito
 
 For example, let's filter out the imprecise fossils and those not identified to at least the genus level, and have paleocoordinates. Let's also make sure all the variable names have the same logic (they are all already fine, but this is a good habit to get into!)
 
-```{r filter}
+```{r filter_carnivora}
 
 carnivora_filter <- 
   carnivora %>%
@@ -122,7 +122,7 @@ This new tibble, `carnivora_filter`, is a subset of the ordinal data that should
 
 The accepted_* variables in PBDB data correspond to the accepted, or best, identification of a fossil. Differences between identified_* and accepted_* variables are commonly due to re-identification or changes in taxonomy. While this is really convenient on its face, sometimes the accepted species names assumes too much confidence in the identification. For example, let's take a close look at a few records.
 
-```{r species_names}
+```{r species_names_carnivora}
 
 carnivora_table <- 
   carnivora_filter %>%
@@ -147,7 +147,7 @@ To do this, I'm going to be using functions from the `stringr` package which pro
 
 I always spend a lot of time on Google figuring our RegEx before I use them as they are not intuitive, so don't worry too much about understanding regular expressions early on -- I'm using some special, easy to understand, forms that will be generally useful to you. 
 
-```{r correct_names}
+```{r correct_names_carnivora}
 
 carnivora_clean <- 
   carnivora_filter %>%
@@ -166,7 +166,7 @@ carnivora_clean %>%
 
 If we really wanted to be slick, we could combine all of the above into a single block.
 
-```{r full_example, message = FALSE, results = 'hide', warning = FALSE}
+```{r full_example_carnivora, message = FALSE, results = 'hide', warning = FALSE}
 
 url <- 'https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&interval=Miocene&show=full'
 carnivora <- read_csv(file = url) %>%
@@ -189,7 +189,7 @@ Fossil occurrences in the PBDB have temporal information such as geologic stage,
 
 In our example, we may want to track diversity over time. We are going to do this by counting the number of unique genera present in our time bins. To do this, we have to determine how many bins there are and to which bin each fossil belongs. The age of each fossil, however, is a range and not a single value. We could use the midpoint of this range to assign each fossil to a bin, but what if the age range of some fossils is much larger than our bin width? 
 First, let's take a look at the amount of uncertainty there is in the age estimates of our fossil occurrences.
-```{r range_ilo}
+```{r range_ilo_carnivora}
 
 carnivora_clean %>%
   mutate(age_range = abs(max_ma - min_ma)) %>%
@@ -206,7 +206,7 @@ We can dither over an "optimal" bin width for our data, but for the purpose of t
 
 Because binning data is so common, I've written a function, `bin_ages()` to do this. I present it here and will use it to bin our data. The `bin_ages()` function follows that convention that the youngest bin is bin 1. I've written documentation for this function using `roxygen` formatting. Feel free to modify it or write your own.
 
-```{r bin_foo}
+```{r bin_foo_carnivora}
 
 #' Break time data up into bins
 #' 
@@ -280,7 +280,7 @@ carnivora_bin %>%
 ```
 
 Ok, so now we have a column `bin` that identifies the temporal bin that each occurrence belongs to. The quick summary at the bottom demonstrates that we have broken our data into 9 bins of equal length. The limit here is that our bins are identified by their number and not their "age". Luckily, the `age` parameter of the `bin_ages()` function that changes the output from bin number to bin age. Here it is in use.
-```{r bin_age}
+```{r bin_age_carnivora}
 
 carnivora_bin <- 
   carnivora_bin %>%
@@ -296,7 +296,7 @@ carnivora_bin %>%
 ```
 
 As before, we can combine all of these operations into a set of piped statements.
-```{r bin_complete}
+```{r bin_complete_carnivora}
 
 url <- 'https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&interval=Miocene&show=full'
 carnivora <- read_csv(file = url) %>%
@@ -330,7 +330,7 @@ For example, my projects tend to have multiple subfolders: R/, data/, and result
 
 
 Here is a quick example of what I mean without referencing subdirectories:
-```{r save, eval = FALSE}
+```{r save_carnivora, eval = FALSE}
 
 url <- 'https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&interval=Miocene&show=full'
 carnivora <- read_csv(file = url)
@@ -360,22 +360,3 @@ write_csv(carnivora_clean, 'carnivora_clean.csv')
 ## Summary
 
 In this lesson we introduced the PBDB API and how to include URL-based API calls in our R code. We also covered multiple aspects of cleaning PBDB data including species identifications and temporal binning. Finally, we briefly covered exporting our data, both raw and cleaned, so that our analyses are more reproducible. All of these steps are fundamental in any analysis and form a great deal of the work associated with any analysis problem.
-You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
-
-Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
-
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
-```
-
-Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
-
-```{r nice-tab, tidy=FALSE}
-knitr::kable(
-  head(iris, 20), caption = 'Here is a nice table!',
-  booktabs = TRUE
-)
-```
-
-You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].

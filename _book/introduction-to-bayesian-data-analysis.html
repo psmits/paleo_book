@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-02-08">
+<meta name="date" content="2019-02-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="managing-and-processing-paleobiology-database-data.html">
-<link rel="next" href="methods.html">
+<link rel="next" href="introduction-to-linear-regression.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -131,10 +131,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods</a></li>
-<li class="chapter" data-level="4" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>4</b> Applications</a><ul>
-<li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>4.1</b> Example one</a></li>
-<li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>4.2</b> Example two</a></li>
+<li class="chapter" data-level="3" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html"><i class="fa fa-check"></i><b>3</b> Introduction to linear regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#objectives-2"><i class="fa fa-check"></i><b>3.1</b> Objectives</a></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#linear-regression"><i class="fa fa-check"></i><b>3.2</b> Linear regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#talking-about-models"><i class="fa fa-check"></i><b>3.2.1</b> Talking about models</a></li>
+<li class="chapter" data-level="3.2.2" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#growing-a-regression-model"><i class="fa fa-check"></i><b>3.2.2</b> Growing a regression model</a></li>
+<li class="chapter" data-level="3.2.3" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#adding-a-predictor-to-the-mix"><i class="fa fa-check"></i><b>3.2.3</b> Adding a predictor to the mix</a></li>
+<li class="chapter" data-level="3.2.4" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#interpreting-the-model-fit"><i class="fa fa-check"></i><b>3.2.4</b> Interpreting the model fit</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#summary-2"><i class="fa fa-check"></i><b>3.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html"><i class="fa fa-check"></i><b>4</b> Continuing with regression</a><ul>
+<li class="chapter" data-level="4.1" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html#objectives-3"><i class="fa fa-check"></i><b>4.1</b> Objectives</a></li>
+<li class="chapter" data-level="4.2" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html#our-first-example"><i class="fa fa-check"></i><b>4.2</b> Our first example</a></li>
+<li class="chapter" data-level="4.3" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.3</b> A single continuous predictor</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html#aside-centering"><i class="fa fa-check"></i><b>4.3.1</b> Aside: Centering</a></li>
+<li class="chapter" data-level="4.3.2" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html#checking-model-fit"><i class="fa fa-check"></i><b>4.3.2</b> Checking model fit</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="continuing-with-regression.html"><a href="continuing-with-regression.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -419,7 +433,7 @@ d <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;proportion water&quot;</span>, <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.5</span>, <span class="dv">1</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;plausibility&quot;</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>strip, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</code></pre></div>
-<p><img src="paleo_book_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="paleo_book_files/figure-html/coin_updating-1.png" width="672" /></p>
 <p><strong>Side note on sample size:</strong> Bayesian estimates are valid and interpretable at any sample size. This fact is very much in contrast to the folk-wisdom around a minimum number of samples needed that you’ll hear in non-Bayesian contexts. In non-Bayesian contests, statistical inference is justified by behaviour at large samples sizes, called asymptotic behaviour. The reason Bayesian estimates are always valid and interpretable comes down to the prior. If the prior is bad, the resulting posterior could be misleading. Regardless, all estimates in either context are based on assumptions.</p>
 </div>
 <div id="evaluate" class="section level4">
@@ -532,7 +546,7 @@ p(y) = E(p(y | \Theta)) = \int p(y | \Theta) p(\Theta) d\Theta
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;5 points&quot;</span>,
          <span class="dt">x =</span> <span class="st">&quot;probability of water&quot;</span>,
          <span class="dt">y =</span> <span class="st">&quot;posterior probability&quot;</span>)</code></pre></div>
-<p><img src="paleo_book_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="paleo_book_files/figure-html/prob_water_5-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tibble</span>(<span class="dt">p_grid =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">20</span>), <span class="co"># define grid</span>
        <span class="dt">prior =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">                  </span><span class="co"># define prior</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">likelihood =</span> <span class="kw">dbinom</span>(<span class="dv">6</span>, <span class="dt">size =</span> <span class="dv">9</span>, <span class="dt">prob =</span> p_grid), <span class="co"># compute likelihood at each value in grid</span>
@@ -545,7 +559,7 @@ p(y) = E(p(y | \Theta)) = \int p(y | \Theta) p(\Theta) d\Theta
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;20 points&quot;</span>,
          <span class="dt">x =</span> <span class="st">&quot;probability of water&quot;</span>,
          <span class="dt">y =</span> <span class="st">&quot;posterior probability&quot;</span>)</code></pre></div>
-<p><img src="paleo_book_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="paleo_book_files/figure-html/prob_water_20-1.png" width="672" /></p>
 </div>
 <div id="markov-chain-monte-carlo" class="section level4">
 <h4><span class="header-section-number">2.4.2.2</span> Markov chain Monte Carlo</h4>
@@ -572,7 +586,7 @@ globe_brms &lt;-
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept     0.66      0.08     0.51     0.80        985 1.00
+## Intercept     0.66      0.08     0.50     0.79       1214 1.00
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -585,7 +599,7 @@ globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">&#39;proportion water&#39;</span>,
                      <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>)</code></pre></div>
-<p><img src="paleo_book_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="paleo_book_files/figure-html/print_globe-1.png" width="672" /></p>
 </div>
 <div id="aside-on-interpreting-probabilities" class="section level4">
 <h4><span class="header-section-number">2.4.2.3</span> Aside on Interpreting Probabilities</h4>
@@ -621,7 +635,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 1
 ##    p_val
 ##    &lt;dbl&gt;
-## 1 0.0202</code></pre>
+## 1 0.0278</code></pre>
 <p>What if we want to know the posterior probability that the proportion of water is between 0.5 and 0.75?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">globe_brms <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">spread_draws</span>(b_Intercept) <span class="op">%&gt;%</span>
@@ -629,7 +643,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 1
 ##   p_val
 ##   &lt;dbl&gt;
-## 1 0.867</code></pre>
+## 1 0.862</code></pre>
 </div>
 <div id="intervals-of-defined-mass" class="section level4">
 <h4><span class="header-section-number">2.4.3.2</span> Intervals of defined mass</h4>
@@ -644,7 +658,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 1
 ##     q80
 ##   &lt;dbl&gt;
-## 1 0.724</code></pre>
+## 1 0.723</code></pre>
 <p>What about the middle 80% interval? There are lots of ways to get this information, so here are two examples.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># one way</span>
 (qu &lt;-<span class="st"> </span>globe_brms <span class="op">%&gt;%</span>
@@ -654,7 +668,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 2
 ##     q10   q90
 ##   &lt;dbl&gt; &lt;dbl&gt;
-## 1 0.560 0.755</code></pre>
+## 1 0.555 0.754</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># another way</span>
 globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread_draws</span>(b_Intercept) <span class="op">%&gt;%</span>
@@ -662,7 +676,7 @@ globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">pull</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">quantile</span>(<span class="dt">prob =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>))         </code></pre></div>
 <pre><code>##       10%       90% 
-## 0.5603904 0.7549126</code></pre>
+## 0.5549006 0.7542126</code></pre>
 <p>We can also plot this interval on the distribution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plot the distribution</span>
 p1 &lt;-<span class="st"> </span>globe_brms <span class="op">%&gt;%</span>
@@ -680,7 +694,7 @@ p1 <span class="op">+</span><span class="st"> </span><span class="kw">geom_area<
                <span class="kw">aes</span>(<span class="dt">x=</span>x,<span class="dt">y=</span>y),
                <span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>, 
                <span class="dt">color =</span> <span class="ot">NA</span>) </code></pre></div>
-<p><img src="paleo_book_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="paleo_book_files/figure-html/shade_interval-1.png" width="672" /></p>
 </div>
 <div id="highest-posterior-density-interval" class="section level5">
 <h5><span class="header-section-number">2.4.3.2.2</span> Highest posterior density interval</h5>
@@ -692,7 +706,7 @@ p1 <span class="op">+</span><span class="st"> </span><span class="kw">geom_area<
 <span class="st">  </span><span class="kw">pull</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">hdi</span>(<span class="dt">.width =</span> <span class="fl">0.5</span>)</code></pre></div>
 <pre><code>##           [,1]      [,2]
-## [1,] 0.6129107 0.7158852</code></pre>
+## [1,] 0.6137909 0.7158464</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># compare to 50% PI</span>
 globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread_draws</span>(b_Intercept) <span class="op">%&gt;%</span>
@@ -700,7 +714,7 @@ globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">pull</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">qi</span>(<span class="dt">.width =</span> <span class="fl">0.5</span>)</code></pre></div>
 <pre><code>##           [,1]      [,2]
-## [1,] 0.6084597 0.7118306</code></pre>
+## [1,] 0.6082956 0.7113937</code></pre>
 <p>Why are the PI and HPDI not equal?</p>
 <p>If the choice of interval makes a big difference in your summary, then you probably shouldn’t be using intervals to summarize the posterior! The entire distribution of samples is our actual estimate, these summaries are just there to help digest this wealth of information. Do not only work with simplified versions of our posterior estimates!</p>
 </div>
@@ -718,7 +732,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 6
 ##   b_Intercept .lower .upper .width .point .interval
 ##         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.651  0.506  0.797   0.95 mode   qi</code></pre>
+## 1       0.662  0.497  0.794   0.95 mode   qi</code></pre>
 <p>We could also report a mean or median. Here are some ways to do get these estimates along with some kind of interval:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># mean with 95% PI</span>
 globe_brms <span class="op">%&gt;%</span>
@@ -728,7 +742,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 6
 ##   b_Intercept .lower .upper .width .point .interval
 ##         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.658  0.506  0.797   0.95 mean   qi</code></pre>
+## 1       0.658  0.497  0.794   0.95 mean   qi</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># mean with 95% HPDI</span>
 globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread_draws</span>(b_Intercept) <span class="op">%&gt;%</span>
@@ -737,7 +751,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 6
 ##   b_Intercept .lower .upper .width .point .interval
 ##         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.658  0.511  0.801   0.95 mean   hdci</code></pre>
+## 1       0.658  0.499  0.795   0.95 mean   hdci</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># median with 95% PI</span>
 globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread_draws</span>(b_Intercept) <span class="op">%&gt;%</span>
@@ -746,7 +760,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 6
 ##   b_Intercept .lower .upper .width .point .interval
 ##         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.660  0.506  0.797   0.95 median qi</code></pre>
+## 1       0.661  0.497  0.794   0.95 median qi</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># median with 95% HPDI</span>
 globe_brms <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread_draws</span>(b_Intercept) <span class="op">%&gt;%</span>
@@ -755,7 +769,7 @@ globe_brms <span class="op">%&gt;%</span>
 <pre><code>## # A tibble: 1 x 6
 ##   b_Intercept .lower .upper .width .point .interval
 ##         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1       0.660  0.511  0.801   0.95 median hdci</code></pre>
+## 1       0.661  0.499  0.795   0.95 median hdci</code></pre>
 <p>Usually it is better to communicate as much about the posterior distribution as you can.</p>
 </div>
 </div>
@@ -775,7 +789,7 @@ globe_brms <span class="op">%&gt;%</span>
         </div>
       </div>
 <a href="managing-and-processing-paleobiology-database-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="introduction-to-linear-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

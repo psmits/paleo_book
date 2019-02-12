@@ -22,7 +22,7 @@ We're going to be using the [tidyverse](https://www.tidyverse.org) for data wran
 
 I'm also using code examples from [this rewriting](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse) of **Rethinking**.
 
-```{r results = 'hide'}
+```{r load_packages_02, results = 'hide'}
 library(tidyverse)
 library(brms)
 library(tidybayes)
@@ -108,7 +108,7 @@ Bayesian inference is made easier by working with probabilities instead of count
 
 **Setup**: We've a globe with land and water sections. We want to know how much of the globe is water. Our strategy is to throw the globe up, catch it, and note the surface under the right index finger. Let's do this 9 times.
 
-```{r}
+```{r coin_toss}
 d <- tibble(toss = c("w", "l", "w", "w", "w", "l", "w", "l", "w"))
 
 # then rephrase in terms of trials and count of water
@@ -142,7 +142,7 @@ How did the data come to be? Describe aspects of the underlying reality as well 
 
 A Bayesian model begins with one set of plausibilities assigned to each possible result: the prior plausibilities. These values are updated in light of data to produce our posterior plausibilities. This process is called *Bayesian updating*.
 
-```{r}
+```{r coin_updating}
 sequence_length <- 50                  # how many points to calculate prob for
 
 d %>% 
@@ -287,7 +287,7 @@ The number of points you evaluate on the grid determines the precision of your e
 
 For example, here's the posterior probability of the percent of water on the globe given our data evaluated at 5 points and 20 points.
 
-```{r}
+```{r prob_water_5}
 tibble(p_grid = seq(from = 0, to = 1, length.out = 5), # define grid
        prior = 1) %>%                  # define prior
   mutate(likelihood = dbinom(6, size = 9, prob = p_grid), # compute likelihood at each value in grid
@@ -302,7 +302,7 @@ tibble(p_grid = seq(from = 0, to = 1, length.out = 5), # define grid
          y = "posterior probability")
 ```
 
-```{r}
+```{r prob_water_20}
 tibble(p_grid = seq(from = 0, to = 1, length.out = 20), # define grid
        prior = 1) %>%                  # define prior
   mutate(likelihood = dbinom(6, size = 9, prob = p_grid), # compute likelihood at each value in grid
@@ -326,7 +326,7 @@ Unlike grid approximation, where we computed the posterior distribution directly
 
 Let's do a quick example where we fit this model using **brms**. This package acts as an interface with [Stan probabilistic programming language](http://mc-stan.org/) which implements Hamiltonian Monte Carlo sampling, a fancy type of MCMC. The function `brm()` is the workhorse of the **brms** package, and builds and compiles a Stan model as defined in R. If you've used functions like `lm()` or `glm()`, some of the syntax should look familiar to you. 
 
-```{r cache = T, message = F, results = 'hide'}
+```{r globe_model, cache = T, message = F, results = 'hide'}
 # this can take a bit as the model compiles
 globe_brms <-
   brm(data = list(w = 24),             # generate data
@@ -338,7 +338,7 @@ globe_brms <-
       iter = 2000,                     # how many draws from posterior? (default)
       warmup = 1000)                   # how many draws till we start recording (default = 1/2 iter)
 ```
-```{r}
+```{r print_globe}
 print(globe_brms)
 
 # look at the posterior distribution of proportion water
@@ -379,14 +379,14 @@ Once our model produces a posterior distribution, the model's work is done. It i
 #### Intervals of defined boundaries
 
 What is the posterior probability that the proportion of water is less than 50%? Count the number of observations that are less than 0.5, then divide by the number of samples.
-```{r}
+```{r pp_lessthan}
 globe_brms %>%
 	spread_draws(b_Intercept) %>%
 	dplyr::summarize(p_val = sum(b_Intercept < 0.5) / length(b_Intercept))
 ```
 
 What if we want to know the posterior probability that the proportion of water is between 0.5 and 0.75?
-```{r}
+```{r pp_between}
 globe_brms %>%
 	spread_draws(b_Intercept) %>%
 	dplyr::summarize(p_val = sum(b_Intercept > 0.5 & b_Intercept < 0.75) / length(b_Intercept))
@@ -403,14 +403,14 @@ There are two kinds of intervals of defined mass: percentile (or quantile) inter
 ##### Percentile interval (PI)
 
 For example, you may want to know the boundaries of the lower 80% posterior interval. This interval has to start at 0, but where does it stop? How do we calculate the 80th percentile?
-```{r}
+```{r percentile_80}
 globe_brms %>%
   spread_draws(b_Intercept) %>%
   dplyr::summarize(q80 = quantile(b_Intercept, 0.8))
 ```
 
 What about the middle 80% interval? There are lots of ways to get this information, so here are two examples.
-```{r}
+```{r percentile_middle_80}
 # one way
 (qu <- globe_brms %>%
   spread_draws(b_Intercept) %>%
@@ -426,7 +426,7 @@ globe_brms %>%
 ```
 
 We can also plot this interval on the distribution.
-```{r}
+```{r shade_interval}
 # plot the distribution
 p1 <- globe_brms %>%
   spread_draws(b_Intercept) %>%
@@ -451,7 +451,7 @@ p1 + geom_area(data = subset(p1_df, x > qu$q10 & x < qu$q90),
 An HPDI is defined as the narrowest interval containing the specified probability mass. There are an infinite of posterior intervals with the same mass, but what if you want that interval that best represents the parameter values most consistent with the data AND you want the densest of these intervals.
 
 Here an example of a 50% HPDI
-```{r}
+```{r hdp_vs_pi}
 globe_brms %>%
   spread_draws(b_Intercept) %>%
   select(b_Intercept) %>%
@@ -480,7 +480,7 @@ The three most common point estimates are the mean, median, and mode -- you're p
 The mode represents the parameter value with the highest posterior probability, or the *maximum a posteriori* estimate (MAP). In frequentist contexts, the maximum likelihood estimate is the equivalent to mode of the likelihood function. Calculating the mode of a distribution is an optimization problem and isn't always easy. Luckily, **tidybayes** has a function which gets us a mode (and other information) from the posterior samples.
 
 Here is a code snippet that gives a mode and a middle 95% percentile interval:
-```{r}
+```{r point_mode}
 globe_brms %>%
   spread_draws(b_Intercept) %>%
   select(b_Intercept) %>%
@@ -488,7 +488,7 @@ globe_brms %>%
 ```
 
 We could also report a mean or median. Here are some ways to do get these estimates along with some kind of interval:
-```{r}
+```{r point_many}
 # mean with 95% PI
 globe_brms %>%
   spread_draws(b_Intercept) %>%
