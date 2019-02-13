@@ -1,4 +1,4 @@
-# Continuing with regression
+# Continuing with regression with continuous predictors {#reg-continue}
 
 ## Objectives
 
@@ -36,7 +36,7 @@ theme_set(theme_bw())
 For this lesson we will be using fitting models to data from the [PanTHERIA}](http://www.esapubs.org/archive/ecol/E090/184/default.htm) database, a large collection of trait data for extant mammals. For a more detailed explanation of the dataset and each variable, you can review the [data dictionary](http://esapubs.org/archive/ecol/E090/184/metadata.htm). A key detail to PanTHERIA is that missing data is coded as -999.00 and not as NA or blank cells. This knowledge is something we can use when importing our data so that it translates easily into the R environment. Also, a lot of the variables have terrible names with mixed unction, capital letters, and begin with numbers -- all of these are very bad to program around and need to be dealt with (using the `janitor` package).
 
 That all being said, let's import the dataset, clean it up a bit, and then start visualizing it.
-```{r pantheria}
+```{r pantheria_04}
 
 pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
                       na = '-999.00') %>%
