@@ -9,21 +9,12 @@
 
 
 
-```{r load_packages, message = F, results = 'hide'}
+```{r load_packages_05, message = F, results = 'hide'}
 
-library(tidyverse)
-library(here)
-library(janitor)
-library(purrr)
-library(viridis)
+library(pacman)
 
-library(brms)
-library(tidybayes)
-library(bayesplot)
-library(modelr)
-
-library(knitr)
-library(kableExtra)
+p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       modelr, forcats, knitr, kableExtra)
 
 theme_set(theme_bw())
 
@@ -63,47 +54,67 @@ Trophic level is a categorical predictor with three levels. The previous categor
 
 `brm`, and R in general, will automatically translate categorical predictors like our `trophic_level` variable into what's called *dummy coding*. 
 
-When we dummy code a categorical variable what we are doing is turning one variable with $k$ states into $k - 1$ binary variables. One state of the categorical variable is considered the "baseline" or the default condition for any observation. The other $k - 1$ binary variables then describe if the observation is different from the default. The standard behavior for this in R is that the first state, alphabetically, is made the baseline.  Here is this in action:
+When we dummy code a categorical variable what we are doing is turning one variable with $k$ states into $k - 1$ binary variables. One state of the categorical variable is considered the "baseline" or the default condition for any observation. The other $k - 1$ binary variables then describe if the observation is different from the default -- these are called contrasts. The standard behavior for this in R is that the first state, alphabetically, is made the baseline.  Here is this in action:
 ```{r dummy_trophic}
 
 pantheria %>%
   drop_na(trophic_level) %>%
   model_matrix(~ trophic_level) %>%
-  top_n(10) %>%
+  slice(1:10) %>%
   kable() %>%
   kableExtra::kable_styling()
 
 ```
-TO DO
-This choice isn't necessarily always the best, for example when that state is very rare, and there are a lot of ways to manipulate this behavior. For example, for our `trophic_level` variable, it might best to have the default be "omnivore" instead of "carnivore."
+
+The `model_matrix()` function returns a tibble with $k$ columns. Take a closer look at the column names. First, focus on the second and third columns. Each title is the variable name (`trophic_level`) combined with one of the levels (e.g. `trophic_levelherbivore`). One of the factor's levels, carnivore, is not named as one of the columns, instead that level is subsumed in the `(Intercept)` column. 
+
+The default state of any observation is this "carnivore." A 0 in the `trophic_levelherbivore` or `trophic_levelomnivore` columns means that the observation is not an herbivore or omnivore, respectively. If there is a 1 in the herbivore or omnivore column that means that observation is an herbivore or omnivore and not a carnivore -- hence why the $k - 1$ binary variables are called contrasts (with respect to the default condition/intercept). Importantly, an observation cannot/should not have a 1 in more than one of the $k - 1$ binary variables associated with a single categorical predictor.
+
+Let's see what happens when we suppress the intercept using R's [formula syntax](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html).
+
+```{r dummy_nointercept}
+
+pantheria %>%
+  drop_na(trophic_level) %>%
+  model_matrix(~ -1 + trophic_level) %>%
+  slice(1:10) %>%
+  kable() %>%
+  kableExtra::kable_styling()
+
+```
+
+By suppressing the intercept in our model matrix, we've dramatically changed the first column of our tibble. Instead of being labeled `(Intercept)` and being a column of only 1s, we have a column named `trophic_levelcarnivora` which is a binary variable indicating if an observation is a carnivore or not. 
+
+I do not recommend suppressing the intercept when developing a model, especially if you are generating your contrasts independent of the model formula (e.g. when using `brm()`), and extra especially if you have more predictors in your model than just the categorical variable being coded out. If you are not careful, you might end up with the equivalent of two intercepts which causes a model to be completely undefined and useless.
+
+As as been discussed before, R tacitly converts our categorical variables (e.g. variables where our observations are character data) into dummy coding. While this is convenient, it can lead to confusion if you aren't super familiar with categorical variables. For example, I once had a colleague ask, "How are there 5 parameters when we only have 1 predictor in our linear regression (they expected three)?" 
+
+Something I like to do is make the most common or most general class be the intercept. This adds a bit of logic to the contrasts, as they are now "in contrast" to the most common state. The most common class in `trophic_level` is "herbivore". To change which class becomes the intercept, we need to manipulate the R structure of `trophic_level`. I'm choosing to do this using functions from the `forcats` package.
+
+```{r dummy_recode}
+
+pantheria %>%
+  drop_na(trophic_level) %>%
+  mutate(trophic_level = fct_infreq(trophic_level)) %>% # reorder by frequency
+  model_matrix(~ trophic_level) %>%
+  slice(1:10) %>%
+  kable() %>%
+  kableExtra::kable_styling()
+
+```
+
+By controlling which of the classes from our categorical variable is considered the intercept, we can make inference easier. Carnivores are relatively rare in our dataset, so having them as the "default" condition for our model is a bit confusing -- most of our observations would be "exceptions" or "in contrast to" our default. By having herbivores act as are default, we inherently are describing more parts of our data before looking at the contrasts.
+
+There are [many other strategies for encoding categorical variables](https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/), but dummy coding is by far the most common -- it helps that it is the R default. 
 
 
 
-There are [many other strategies for encoding categorical variables](https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/), but dummy coding is by far the most common -- it helps that it is the R default.
+### Defining out model
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+FOR LATER
 
 
 $$

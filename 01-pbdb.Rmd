@@ -12,11 +12,11 @@
 
 ```{r load_packages_01, results = 'hide'}
 
-library(tidyverse)
-library(janitor)
+library(pacman)
 
-library(knitr)
-library(kableExtra) 
+p_load(tidyverse, janitor, knitr, kableExtra)
+
+theme_set(theme_bw())
 
 ```
 

@@ -11,19 +11,10 @@ In a previous lesson we introduced linear regression with a single, binary predi
 
 ```{r load_packages_04, message = F, results = 'hide'}
 
-library(tidyverse)
-library(here)
-library(janitor)
-library(purrr)
-library(viridis)
+library(pacman)
 
-library(brms)
-library(tidybayes)
-library(bayesplot)
-library(modelr)
-
-library(knitr)
-library(kableExtra)
+p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       modelr, knitr, kableExtra)
 
 theme_set(theme_bw())
 

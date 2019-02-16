@@ -23,9 +23,13 @@ We're going to be using the [tidyverse](https://www.tidyverse.org) for data wran
 I'm also using code examples from [this rewriting](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse) of **Rethinking**.
 
 ```{r load_packages_02, results = 'hide'}
-library(tidyverse)
-library(brms)
-library(tidybayes)
+
+library(pacman)
+
+p_load(tidyverse, brms, tidybayes)
+
+theme_set(theme_bw())
+
 ```
 
 

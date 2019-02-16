@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-15">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -141,14 +141,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#summary-2"><i class="fa fa-check"></i><b>3.3</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html"><i class="fa fa-check"></i><b>4</b> Continuing with regression with continuous predictors</a><ul>
-<li class="chapter" data-level="4.1" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#objectives-3"><i class="fa fa-check"></i><b>4.1</b> Objectives</a></li>
-<li class="chapter" data-level="4.2" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#our-first-example"><i class="fa fa-check"></i><b>4.2</b> Our first example</a></li>
-<li class="chapter" data-level="4.3" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.3</b> A single continuous predictor</a><ul>
-<li class="chapter" data-level="4.3.1" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#aside-centering"><i class="fa fa-check"></i><b>4.3.1</b> Aside: Centering</a></li>
-<li class="chapter" data-level="4.3.2" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#checking-model-fit"><i class="fa fa-check"></i><b>4.3.2</b> Checking model fit</a></li>
+<li class="chapter" data-level="4" data-path="reg-continue.html"><a href="reg-continue.html"><i class="fa fa-check"></i><b>4</b> Continuing with regression with continuous predictors</a><ul>
+<li class="chapter" data-level="4.1" data-path="reg-continue.html"><a href="reg-continue.html#objectives-3"><i class="fa fa-check"></i><b>4.1</b> Objectives</a></li>
+<li class="chapter" data-level="4.2" data-path="reg-continue.html"><a href="reg-continue.html#our-first-example"><i class="fa fa-check"></i><b>4.2</b> Our first example</a></li>
+<li class="chapter" data-level="4.3" data-path="reg-continue.html"><a href="reg-continue.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.3</b> A single continuous predictor</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="reg-continue.html"><a href="reg-continue.html#aside-centering"><i class="fa fa-check"></i><b>4.3.1</b> Aside: Centering</a></li>
+<li class="chapter" data-level="4.3.2" data-path="reg-continue.html"><a href="reg-continue.html#checking-model-fit"><i class="fa fa-check"></i><b>4.3.2</b> Checking model fit</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+<li class="chapter" data-level="4.4" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors and interactions in linear regression</a><ul>
 <li class="chapter" data-level="5.1" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
@@ -202,9 +202,11 @@ Proudly published with bookdown</a></li>
 <h2><span class="header-section-number">2.2</span> Preface</h2>
 <p>We’re going to be using the <a href="https://www.tidyverse.org">tidyverse</a> for data wrangling, and <a href="https://github.com/paul-buerkner/brms">brms</a> for modeling. Discussion and activities are derived from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>, <a href="http://www.stat.columbia.edu/~gelman/book/"><strong>Bayesian Data Analysis 3</strong> by Gelman et al.</a>, and <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983"><strong>Data Analysis Using Regression and Multilevel/Hierarchical Models</strong> by Gelman and Hill</a>.</p>
 <p>I’m also using code examples from <a href="https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse">this rewriting</a> of <strong>Rethinking</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(brms)
-<span class="kw">library</span>(tidybayes)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
+
+<span class="kw">p_load</span>(tidyverse, brms, tidybayes)
+
+<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
 <div id="learning-from-data" class="section level2">
 <h2><span class="header-section-number">2.3</span> Learning from data</h2>

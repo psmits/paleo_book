@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-15">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -141,14 +141,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="introduction-to-linear-regression.html"><a href="introduction-to-linear-regression.html#summary-2"><i class="fa fa-check"></i><b>3.3</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html"><i class="fa fa-check"></i><b>4</b> Continuing with regression with continuous predictors</a><ul>
-<li class="chapter" data-level="4.1" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#objectives-3"><i class="fa fa-check"></i><b>4.1</b> Objectives</a></li>
-<li class="chapter" data-level="4.2" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#our-first-example"><i class="fa fa-check"></i><b>4.2</b> Our first example</a></li>
-<li class="chapter" data-level="4.3" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.3</b> A single continuous predictor</a><ul>
-<li class="chapter" data-level="4.3.1" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#aside-centering"><i class="fa fa-check"></i><b>4.3.1</b> Aside: Centering</a></li>
-<li class="chapter" data-level="4.3.2" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#checking-model-fit"><i class="fa fa-check"></i><b>4.3.2</b> Checking model fit</a></li>
+<li class="chapter" data-level="4" data-path="reg-continue.html"><a href="reg-continue.html"><i class="fa fa-check"></i><b>4</b> Continuing with regression with continuous predictors</a><ul>
+<li class="chapter" data-level="4.1" data-path="reg-continue.html"><a href="reg-continue.html#objectives-3"><i class="fa fa-check"></i><b>4.1</b> Objectives</a></li>
+<li class="chapter" data-level="4.2" data-path="reg-continue.html"><a href="reg-continue.html#our-first-example"><i class="fa fa-check"></i><b>4.2</b> Our first example</a></li>
+<li class="chapter" data-level="4.3" data-path="reg-continue.html"><a href="reg-continue.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.3</b> A single continuous predictor</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="reg-continue.html"><a href="reg-continue.html#aside-centering"><i class="fa fa-check"></i><b>4.3.1</b> Aside: Centering</a></li>
+<li class="chapter" data-level="4.3.2" data-path="reg-continue.html"><a href="reg-continue.html#checking-model-fit"><i class="fa fa-check"></i><b>4.3.2</b> Checking model fit</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="continuing-with-regression-with-continuous-predictors.html"><a href="continuing-with-regression-with-continuous-predictors.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+<li class="chapter" data-level="4.4" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors and interactions in linear regression</a><ul>
 <li class="chapter" data-level="5.1" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
@@ -191,11 +191,11 @@ Proudly published with bookdown</a></li>
 <li>Introduce tidy data and some good practices when managing data.</li>
 <li>Learn how to make PBDB cleaner and tidier</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(janitor)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
 
-<span class="kw">library</span>(knitr)
-<span class="kw">library</span>(kableExtra) </code></pre></div>
+<span class="kw">p_load</span>(tidyverse, janitor, knitr, kableExtra)
+
+<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
 <div id="reading" class="section level2">
 <h2><span class="header-section-number">1.2</span> Reading</h2>
@@ -867,7 +867,7 @@ carnivora &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span c
 ##   # ... with 25 more columns
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Warning: 1044 parsing failures.
+<pre><code>## Warning: 1048 parsing failures.
 ##  row             col           expected actual                                                                                          file
 ## 1071 regionalsection 1/0/T/F/TRUE/FALSE  ValAH &#39;https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&amp;interval=Miocene&amp;show=full&#39;
 ## 1071 regionalbed     1/0/T/F/TRUE/FALSE  3     &#39;https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&amp;interval=Miocene&amp;show=full&#39;

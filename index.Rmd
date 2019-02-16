@@ -21,3 +21,7 @@ This book uses the [`tidyverse`](https://www.tidyverse.org/) collection of R pac
 I emphasize Bayesian data analysis approaches throughout this text. To this end, model inference is done using the [`brms`](https://github.com/paul-buerkner/brms) package which is a flexible tool for implementing [Stan-based](https://mc-stan.org/) models in R. Manipulation of those results, and some aspects of visualization, is done using the [`tidybayes`](http://mjskay.github.io/tidybayes/) package.
 
 I attempt to stick to the [`tidyverse` style guide](https://style.tidyverse.org/)
+
+
+The `pacman` package is used throughout to ensure that all packages are both installed and loaded into namespace.
+

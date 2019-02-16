@@ -10,13 +10,13 @@
 - Basics of summarizing and visualizing a model fit.
 
 ```{r load_packages_03, message = F, results = 'hide'}
-library(tidyverse)
-library(modelr)
-library(brms)
-library(tidybayes)
-library(here)
+
+library(pacman)
+
+p_load(tidyverse, modelr, brms, tidybayes, here)
 
 theme_set(theme_bw())
+
 ```
 
 
