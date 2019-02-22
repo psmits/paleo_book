@@ -109,12 +109,17 @@ There are [many other strategies for encoding categorical variables](https://sta
 
 
 
-### Defining out model
+### Defining our model
 
+Now that we have refreshed our understanding of how categorical covariates are handled in a regression model, let's write out a model describing how `density_log` varies as a linear function of our `trophic_level` categorical predictor and the `mass_log` continuous covariate. As always, let's write out our model in statistical notation before implementing it in `brms`. 
 
+I'm going to be a bit more formal in defining our statistical model than [before](#reg-continue) because it is good practice and because this model is more complicated than the ones we have seen before. 
 
+We have $N$ total observations (species) in our dataset. We can define our response variable, `density_log`, as $y_{i}$ where $i$ index which species that measure is from and $i = 1, 2, \ldots, N$. We have our two predictor variables `mass_log` and `trophic_level` which are continuous and categorical, respectively. Our first predictor is the continuous `mass_log` of each observation -- let's call this variable $x_{i}$  where $i = 1, 2, \ldots, N$. Our second variable is the categorical `trophic_level` which has three classes: carnivore, herbivore, omnivore. As discussed before, we are going to rewrite this variable as a set of $k - 1$ contrasts where $k$ is the number of levels in the variable (i.e. three). Let's name herbivore to be the baseline, with carnivore and omnivore being the contrasts. We can define these two binary predictors as $c_{i}$ and $o_{i}$, respectively. 
 
-FOR LATER
+This covers all of our data. Now lets define the parameters that describe our the bits of our data are related. We need to define a regression model describing how the expected value of $y$ varies as a function of $x$, $c$, and $o$.
+
+First, let's assume a Normal distribution is a suitable descriptor of population density, the core assumption of linear regression. We can the  define mean and standard deviation of this distribution as $\mu_{i}$ and $\sigma$. $\mu$ is indexed by observation $i$ where $i = 1, 2, \ldots, N$ because we are going to define it as a linear function of our predictors which vary for each of our $N$ observations.
 
 
 $$

@@ -263,7 +263,7 @@ pantheria <-
 ```
 
 
-$\alpha$ is still the expected value of the outcome variable when the predictor is equal to zero. But now the mean value of the predictor is also zero. So the intercept all means: the expected value of the outcome, when the predictor is at its average value. This makes interpreting the intercept a lot easier.
+$\alpha$ is still the expected value of the outcome variable when the predictor is equal to zero. But now the mean value of the predictor is also zero. So the intercept now means: the expected value of the outcome, when the predictor is at its average value. This makes interpreting the intercept a lot easier.
 
 To illustrate this, let's refit the model with the newly centered data.
 
