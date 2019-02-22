@@ -119,7 +119,9 @@ We have $N$ total observations (species) in our dataset. We can define our respo
 
 This covers all of our data. Now lets define the parameters that describe our the bits of our data are related. We need to define a regression model describing how the expected value of $y$ varies as a function of $x$, $c$, and $o$.
 
-First, let's assume a Normal distribution is a suitable descriptor of population density, the core assumption of linear regression. We can the  define mean and standard deviation of this distribution as $\mu_{i}$ and $\sigma$. $\mu$ is indexed by observation $i$ where $i = 1, 2, \ldots, N$ because we are going to define it as a linear function of our predictors which vary for each of our $N$ observations.
+Let's assume a Normal distribution is a suitable descriptor of population density, the core assumption of linear regression. We can the  define mean and standard deviation of this distribution as $\mu_{i}$ and $\sigma$. $\mu$ is indexed by observation $i$ where $i = 1, 2, \ldots, N$ because we are going to define it as a linear function of our predictors which vary for each of our $N$ observations. We then can define the linear function describing $mu_{i}$ as an additive relationship of each covariate multiplied by its own regression coefficient plus an intercept. Let's identify the intercept as $\alpha$ and the three coefficients as $\beta_{1}$, $\beta_{2}$, and $\beta_{3}$.
+
+Now that we've defined all of our data terms and parameters, we need to define the remaining priors for the regression coefficients and standard deviation parameter. I'm going to stick with what the priors we used from our [previous lesson](#reg-continue), recyclying the same prior definition of the regression coefficient for all three of our $\beta$-s.
 
 
 $$
