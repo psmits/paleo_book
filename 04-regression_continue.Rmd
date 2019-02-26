@@ -419,7 +419,7 @@ pan_trophic_summary_ppc %>%
   geom_vline(data = pan_trophic_summary,
              mapping = aes(xintercept = median),
              size = 2) +
-  facet_grid(~ trophic_level) +
+  facet_wrap(~ trophic_level) +
   labs(x = 'Median population density', y = '') +
   NULL
 ```
@@ -444,7 +444,7 @@ pan_cut %>%
                   colour = 'blue') +
   geom_point(data = pan_cut, size = 2) +
   scale_fill_brewer() +
-  facet_grid(~ trophic_level) +
+  facet_wrap(~ trophic_level) +
   NULL
 
 ```

@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-02-21">
+<meta name="date" content="2019-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -648,27 +648,32 @@ trophic_levelcarnivore
 <p>I’m going to be a bit more formal in defining our statistical model than <a href="reg-continue.html#reg-continue">before</a> because it is good practice and because this model is more complicated than the ones we have seen before.</p>
 <p>We have <span class="math inline">\(N\)</span> total observations (species) in our dataset. We can define our response variable, <code>density_log</code>, as <span class="math inline">\(y_{i}\)</span> where <span class="math inline">\(i\)</span> index which species that measure is from and <span class="math inline">\(i = 1, 2, \ldots, N\)</span>. We have our two predictor variables <code>mass_log</code> and <code>trophic_level</code> which are continuous and categorical, respectively. Our first predictor is the continuous <code>mass_log</code> of each observation – let’s call this variable <span class="math inline">\(x_{i}\)</span> where <span class="math inline">\(i = 1, 2, \ldots, N\)</span>. Our second variable is the categorical <code>trophic_level</code> which has three classes: carnivore, herbivore, omnivore. As discussed before, we are going to rewrite this variable as a set of <span class="math inline">\(k - 1\)</span> contrasts where <span class="math inline">\(k\)</span> is the number of levels in the variable (i.e. three). Let’s name herbivore to be the baseline, with carnivore and omnivore being the contrasts. We can define these two binary predictors as <span class="math inline">\(c_{i}\)</span> and <span class="math inline">\(o_{i}\)</span>, respectively.</p>
 <p>This covers all of our data. Now lets define the parameters that describe our the bits of our data are related. We need to define a regression model describing how the expected value of <span class="math inline">\(y\)</span> varies as a function of <span class="math inline">\(x\)</span>, <span class="math inline">\(c\)</span>, and <span class="math inline">\(o\)</span>.</p>
-<p>First, let’s assume a Normal distribution is a suitable descriptor of population density, the core assumption of linear regression. We can the define mean and standard deviation of this distribution as <span class="math inline">\(\mu_{i}\)</span> and <span class="math inline">\(\sigma\)</span>. <span class="math inline">\(\mu\)</span> is indexed by observation <span class="math inline">\(i\)</span> where <span class="math inline">\(i = 1, 2, \ldots, N\)</span> because we are going to define it as a linear function of our predictors which vary for each of our <span class="math inline">\(N\)</span> observations.</p>
+<p>Let’s assume a Normal distribution is a suitable descriptor of population density, the core assumption of linear regression. We can the define mean and standard deviation of this distribution as <span class="math inline">\(\mu_{i}\)</span> and <span class="math inline">\(\sigma\)</span>. <span class="math inline">\(\mu\)</span> is indexed by observation <span class="math inline">\(i\)</span> where <span class="math inline">\(i = 1, 2, \ldots, N\)</span> because we are going to define it as a linear function of our predictors which vary for each of our <span class="math inline">\(N\)</span> observations. We then can define the linear function describing <span class="math inline">\(mu_{i}\)</span> as an additive relationship of each covariate multiplied by its own regression coefficient plus an intercept. Let’s identify the intercept as <span class="math inline">\(\alpha\)</span> and the three coefficients as <span class="math inline">\(\beta_{1}\)</span>, <span class="math inline">\(\beta_{2}\)</span>, and <span class="math inline">\(\beta_{3}\)</span>.</p>
+<p>Now that we’ve defined all of our data terms and parameters, we need to define the remaining priors for the regression coefficients and standard deviation parameter. I’m going to stick with what the priors we used from our <a href="reg-continue.html#reg-continue">previous lesson</a>, with a slightly informative prior for the effect of body mass and general weakly informative priors for the other regression coefficients.</p>
 <p><span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \alpha + \beta_{1} m_{i} + \beta_{2} o_{i} + \beta_{3} h_{i} \\
 \alpha &amp;\sim \text{Normal}(0, 10) \\
-\beta &amp;\sim \text{Normal}(0, 5) \\
+\beta_{1} &amp;\sim \text{Normal}(-1, 5) \\
+\beta_{2} &amp;\sim \text{Normal}(0, 5) \\
+\beta_{3} &amp;\sim \text{Normal}(0, 5) \\
 \sigma &amp;\sim \text{Cauchy}^{+}(0, 5) \\
 \end{align}
 \]</span></p>
 </div>
 <div id="fitting-model-in-brms" class="section level3">
 <h3><span class="header-section-number">5.2.3</span> Fitting model in <code>brms</code></h3>
-<p>First, like we discussed and demonstrated in last lesson, let’s center our continuous predictor <code>mass_log</code>. Then we can fit our model with a more interpretable intercept.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span>
+<p>Now that we’ve been able to write out our complete statistical model, we can not implement it in <code>brms</code>.</p>
+<p>Our first task limiting our data to not include observations with missing values for our variables of interest. After that, we need to center our continuous predictor so that our intercept has a <a href="reg-continue.html#reg-continue">clean interpretation</a>.</p>
+<p>After our data is prepared for analysis, we can then write our <code>brm()</code> call.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_fit &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log, trophic_level) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log_center =</span> mass_log <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(mass_log))
-
-m_<span class="dv">1</span> &lt;-<span class="st"> </span>
-<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log_center =</span> mass_log <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(mass_log),
+         <span class="dt">trophic_level =</span> <span class="kw">fct_infreq</span>(trophic_level))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria_fit <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
       <span class="dt">family =</span> <span class="kw">gaussian</span>(),
       <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_log_center <span class="op">+</span><span class="st"> </span>trophic_level),
@@ -691,19 +696,19 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 ## 
 ## Population-Level Effects: 
 ##                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample
-## Intercept                  1.83      0.18     1.46     2.18       2726
-## mass_log_center           -0.82      0.02    -0.87    -0.77       4124
-## trophic_levelherbivore     2.61      0.21     2.21     3.02       2666
-## trophic_levelomnivore      1.32      0.21     0.92     1.73       2725
+## Intercept                  3.15      0.10     2.95     3.35       4610
+## mass_log_center           -0.82      0.02    -0.87    -0.78       4434
+## trophic_levelherbivore     1.30      0.15     1.00     1.60       4493
+## trophic_levelcarnivore    -1.31      0.21    -1.71    -0.92       4422
 ##                        Rhat
 ## Intercept              1.00
 ## mass_log_center        1.00
 ## trophic_levelherbivore 1.00
-## trophic_levelomnivore  1.00
+## trophic_levelcarnivore 1.00
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     1.80      0.05     1.71     1.90       4012 1.00
+## sigma     1.80      0.05     1.72     1.90       4410 1.00
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -711,15 +716,22 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 </div>
 <div id="aside-standardizing" class="section level3">
 <h3><span class="header-section-number">5.2.4</span> Aside: Standardizing</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span>
+<p>Remember, regression coefficients (e.g. <span class="math inline">\(\beta_{1}\)</span>) are interpreted as the expected change in <span class="math inline">\(y\)</span> per unit change in the predictor (e.g. <span class="math inline">\(m\)</span>). If our predictors are not on the same scale, it is “unfair” to compare them directly. For example, how can we compare the effect size of body mass versus being an herbivore on population density? While the regression coeffcient for being an herbivore (instead of an omnivore) has a greater magnitude than the coefficient for mass, but this is misleading because a complete difference in category to a 1-km<span class="math inline">\(^2\)</span> change in geographic range.</p>
+<p>A natural solution to this problem is to standardize our predictors so that they are all on the same scale (having the same standard deviation). You might have heard of this as z-scores or something else – we will not be using this langauge.</p>
+<p>To standardize our data, <a href="http://www.stat.columbia.edu/~gelman/arm/">Gelman and Hill</a> recommend scaling or predictors by dividing by 2 standard devations so that “a 1-unit change in the rescaled predcitor corresponds to a change from 1 standard deviation blow the mean, to 1 standard devaition above.”</p>
+<p>But why 2 standard deviations and not 1? By dividing by 2 standard deviations we gain comparability between our continuous covariates and the binary predictors. For example, consider a simple binary variable <span class="math inline">\(x\)</span> where 0 and 1 occur with equal probability. The standard deviation of this variable is then <span class="math inline">\(\sqrt{0.5 \cdot 0.5} = 0.5\)</span>, which means the standardized variable, <span class="math inline">\((x - \mu_{x}) / (2 \sigma_{x})\)</span>, takes on the values <span class="math inline">\(\pm 0.5\)</span>, and its coefficient reflects comparisons between <span class="math inline">\(x = 0\)</span> and <span class="math inline">\(x = 1\)</span>. In contrast, dividing by 1 standard deviation means that the scaled variable takes on values <span class="math inline">\(\pm 1\)</span> and its coefficients correspond to half the difference between the two possible values of <span class="math inline">\(x\)</span>.</p>
+<p><a href="http://www.stat.columbia.edu/~gelman/arm/">Gelman and Hill</a> also state that in complicated regression models with lots of predictors, we can leave our binary inputs as is and just transform our continuous predictors. In that case, the 2 standard deviation rule gives rough comparability in the coeffcieints.</p>
+<p>Our goal should be able to have meaningful interpretations for as many parameters as possible, especially regression coefficients. To ensure this, we should center and scale all continuous predictor variables before analysis. If these transformations aren’t done, than we can have difficulty interpreting our models intercept and can incorrectly and unfairly compare the estimates of our regression coefficients.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_fit2 &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log, trophic_level) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log_stan =</span> <span class="kw">scale</span>(mass_log, <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log_stan =</span> (mass_log <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(mass_log)) <span class="op">/</span><span class="st"> </span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(mass_log)),
+         <span class="dt">trophic_level =</span> <span class="kw">fct_infreq</span>(trophic_level))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">2</span> &lt;-<span class="st"> </span>
-<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span>pantheria_fit2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
       <span class="dt">family =</span> <span class="kw">gaussian</span>(),
-      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_log_stan<span class="op">+</span><span class="st"> </span>trophic_level),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_log_stan <span class="op">+</span><span class="st"> </span>trophic_level),
       <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
                 <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> b),
                 <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">class =</span> b, <span class="dt">coef =</span> mass_log_stan),
@@ -739,28 +751,28 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 ## 
 ## Population-Level Effects: 
 ##                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample
-## Intercept                  1.83      0.18     1.47     2.18       2689
-## mass_log_stan             -2.50      0.07    -2.64    -2.36       4245
-## trophic_levelherbivore     2.61      0.21     2.18     3.03       2654
-## trophic_levelomnivore      1.32      0.21     0.90     1.73       2645
+## Intercept                  3.15      0.10     2.95     3.35       3486
+## mass_log_stan             -5.00      0.14    -5.28    -4.73       4164
+## trophic_levelherbivore     1.29      0.15     0.99     1.59       3460
+## trophic_levelcarnivore    -1.32      0.21    -1.73    -0.93       4052
 ##                        Rhat
 ## Intercept              1.00
 ## mass_log_stan          1.00
 ## trophic_levelherbivore 1.00
-## trophic_levelomnivore  1.00
+## trophic_levelcarnivore 1.00
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     1.80      0.05     1.72     1.90       4686 1.00
+## sigma     1.80      0.05     1.71     1.90       4443 1.00
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
-<p>I recommend always rescaling your (continuous) predictors to have the same scale.</p>
 </div>
 <div id="checking-model-fit-1" class="section level3">
 <h3><span class="header-section-number">5.2.5</span> Checking model fit</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<p>So we’ve been able to fit our model and have (more) interpretable parameters. Our work with this model, however, is not done. As with our previous lessons, we now need to get an idea for how well our model represents our data – can we “trust” inferences based on its parameter estimates?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_fit2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fitted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                    <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
@@ -768,12 +780,12 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> .draw),
             <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">20</span>,
             <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria_fit2, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/multi_fitted-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_fit2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_log_stan =</span> <span class="kw">seq_range</span>(mass_log_stan, <span class="dt">n =</span> <span class="dv">1000</span>),
             trophic_level) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
@@ -783,12 +795,12 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .prediction),
                   <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>),
                   <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria_fit2, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/multi_predicted-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_fit2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                       <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
@@ -797,7 +809,7 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
             <span class="dt">alpha =</span> <span class="fl">0.1</span>,
             <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
-            <span class="dt">data =</span> pantheria,
+            <span class="dt">data =</span> pantheria_fit2,
             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> density_log,
                           <span class="dt">group =</span> <span class="ot">NULL</span>),
             <span class="dt">colour =</span> <span class="st">&#39;black&#39;</span>,
@@ -807,13 +819,33 @@ m_<span class="dv">1</span> &lt;-<span class="st"> </span>
        <span class="dt">title =</span> <span class="st">&#39;Population density, actual versus predicted&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/multi_dens_ppc-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_fit2 <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">group =</span> .draw)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">alpha =</span> <span class="fl">0.1</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">data =</span> pantheria_fit2,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> density_log,
+                          <span class="dt">group =</span> <span class="ot">NULL</span>),
+            <span class="dt">colour =</span> <span class="st">&#39;black&#39;</span>,
+            <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Population density &#39;</span>, <span class="kw">log</span>(n <span class="op">/</span><span class="st"> </span>km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Population density, actual versus predicted&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/multi_dens_troph_ppc-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pan_trophic_summary &lt;-
-<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span>pantheria_fit2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(trophic_level) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(density_log))
 
 pantheria_summary_ppc &lt;-<span class="st"> </span>
-<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span>pantheria_fit2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                       <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
@@ -826,7 +858,7 @@ pantheria_summary_ppc <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">data =</span> pan_trophic_summary,
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">xintercept =</span> median),
              <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Median population density&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>

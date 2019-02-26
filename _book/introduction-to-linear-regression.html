@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-02-21">
+<meta name="date" content="2019-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -268,8 +268,11 @@ d <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">gather</span>(key, value, size, size_log) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">stat_bin</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> </span>key, <span class="dt">scales =</span> <span class="st">&#39;free_x&#39;</span>, <span class="dt">switch =</span> <span class="st">&#39;x&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>key, <span class="dt">scales =</span> <span class="st">&#39;free_x&#39;</span>, <span class="dt">switch =</span> <span class="st">&#39;x&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;valve length&#39;</span>)</code></pre></div>
+<pre><code>## Warning: &#39;switch&#39; is deprecated.
+## Use &#39;strip.position&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="paleo_book_files/figure-html/load_payne_data-1.png" width="672" /></p>
 <p>We want a measurement variable to model as a Gaussian distribution. The Gaussian distribution has two parameters describing the shape of the distribution – mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>. Here’s a quick picture of a Gaussian distribution, play around with the mean and standard deviation parameters.</p>
@@ -675,7 +678,7 @@ d <span class="op">%&gt;%</span>
              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">xintercept =</span> value),
              <span class="dt">size =</span> <span class="fl">1.5</span>,
              <span class="dt">colour =</span> <span class="st">&#39;grey20&#39;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(taxon <span class="op">~</span><span class="st"> </span>key, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(taxon <span class="op">~</span><span class="st"> </span>key, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;&lt;stat&gt; log valve length&#39;</span>)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/pp_tests_multi-1.png" width="672" /></p>

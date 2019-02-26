@@ -80,7 +80,7 @@ d %>%
   gather(key, value, size, size_log) %>%
   ggplot(aes(x = value)) + 
   stat_bin() +
-  facet_grid(~ key, scales = 'free_x', switch = 'x') +
+  facet_wrap(~ key, scales = 'free_x', switch = 'x') +
   labs(x = 'valve length')
 ```
 
@@ -480,7 +480,7 @@ d %>%
              mapping = aes(xintercept = value),
              size = 1.5,
              colour = 'grey20') +
-  facet_grid(taxon ~ key, scales = 'free') +
+  facet_wrap(taxon ~ key, scales = 'free') +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(x = '<stat> log valve length')
 ```
