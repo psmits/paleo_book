@@ -45,8 +45,20 @@ pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'),
 
 ## More than one predictor
 
+Correlation between variables is very common in nature. In large datasets, all pairs of variables have a statistically discernible non-zero correlation. We should never be surprised to find that two variables are correlated. But simple correlation tells us nothing of mechanism -- the "biology" of the system. We need tools to distinguist between mere association from evidence of causation. This is where multivariate regression (regression with more than one predictor variable) comes into play.
+
+There are three general reasons for using a multivariate model.
+
+- **Confounds** or variables that may be correlated with variable of interest. Confounds can easily hide important variables or produce false signals. Check out [Simpson's Paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox) for an example of how a relationship can be reversed in the presence of a confound.
+  
+- **Multiple causation**. Reality is rarely simple, to the point that we can safely assume complexity. By considering that complexity, we can improve our understanding. Additionally, when causation is multiple one cause can hide another unless they are considered simultaneously. 
+
+- **Interactions**. Even in the absence of correlation, effects of two or more variables might depend on each other. An example would be plant growth as a function of light and water -- both are needed and only having one yields no benefit. In order to make effective inference about one variable, we need to consider the others as well.
+
+
 
 So far all of the linear regression models we have encountered have either been intercept-only or with a single predictor. For this lesson we're going to continue our focus on three variables from the PanTHERIA dataset: population density, body size, and trophic level. Population density, measured as the number of individuals per square-kilometer, is our variable of interest -- we want to define a model which describes how population density varies between mammal species. We have previously investigated body size as a predictor of population density, but the posterior predictive analysis of our model of population density with only body mass as a predictor demonstrates that this model does not adequately describe the data. We were able to do this by asking if our model is able to describe differences in the data that we know about but that our model does not (e.g. trophic level).
+
 
 ### Categorical predictor
 
@@ -113,7 +125,13 @@ There are [many other strategies for encoding categorical variables](https://sta
 
 Now that we have refreshed our understanding of how categorical covariates are handled in a regression model, let's write out a model describing how `density_log` varies as a linear function of our `trophic_level` categorical predictor and the `mass_log` continuous covariate. As always, let's write out our model in statistical notation before implementing it in `brms`. 
 
-I'm going to be a bit more formal in defining our statistical model than [before](#reg-continue) because it is good practice and because this model is more complicated than the ones we have seen before. 
+Multivariable regression models add more parameters and variables to the defintion of the mean of the Normal distribution, $\mu_{i}$. For each predictor we will essentially do three things:
+
+1. Nominate the predictor variable of interest.
+2. Create a parameter that will measure the association between that variable and the outcome.
+3. Multiply the parameter by the variable and add that term to the linear model.
+
+To demonstrate this, I'm going to be a bit more formal in defining our statistical model than [before](#reg-continue) because it is good practice and because this model is more complicated than the ones we have seen before. 
 
 We have $N$ total observations (species) in our dataset. We can define our response variable, `density_log`, as $y_{i}$ where $i$ index which species that measure is from and $i = 1, 2, \ldots, N$. We have our two predictor variables `mass_log` and `trophic_level` which are continuous and categorical, respectively. Our first predictor is the continuous `mass_log` of each observation -- let's call this variable $x_{i}$  where $i = 1, 2, \ldots, N$. Our second variable is the categorical `trophic_level` which has three classes: carnivore, herbivore, omnivore. As discussed before, we are going to rewrite this variable as a set of $k - 1$ contrasts where $k$ is the number of levels in the variable (i.e. three). Let's name herbivore to be the baseline, with carnivore and omnivore being the contrasts. We can define these two binary predictors as $c_{i}$ and $o_{i}$, respectively. 
 
@@ -135,6 +153,10 @@ y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \sigma &\sim \text{Cauchy}^{+}(0, 5) \\
 \end{align}
 $$
+
+
+But how do we interpret a regression coefficient when we have more than one regression coefficient? The standard advice is to interpret an individual coefficient while assuming that all other predictors are held constant. The meaning of each regression coefficient is independent of the others because we are assuming the covariates are independent of one another -- for example, that body size has noting to do with trophic level. Is this assumption correct? Probably not. Is it defensible? Possibly.
+
 
 
 
@@ -242,6 +264,9 @@ print(m_2)
 
 So we've been able to fit our model and have (more) interpretable parameters. Our work with this model, however, is not done. As with our previous lessons, we now need to get an idea for how well our model represents our data -- can we "trust" inferences based on its parameter estimates?
 
+As I've stated before, there is no single best way of evaluating model fit. Let's look at a lot of different aspects of model fit and make conclusions based on this host of evidence.
+
+First, we check if the linear part of our model (i.e. the definition of $\mu_{i}$) appears the capture mean population density. This means plotting the fitted draws against our data.
 
 ```{r multi_fitted}
 
@@ -259,6 +284,9 @@ pantheria_fit2 %>%
   NULL
 
 ```
+
+But the fitted draws are only the linear part of our model, and not our full posterior predictive distribution which includes our estimate of the scale of our data (i.e. $\sigma$). Like before, we can generate the posterior predictive distribution of population density for the whole range of mass values and trophic levels. This is technically a type *counterfactual* plot because we are estimating values for unobserved values of body mass. However, we will overlay our data points over the posterior predictive distribution to visually compare how closely our estimates resemble the observed distribution of values.
+
 
 ```{r multi_predicted}
 
@@ -278,6 +306,9 @@ pantheria_fit2 %>%
   NULL
 
 ```
+
+
+
 
 ```{r multi_dens_ppc}
 
