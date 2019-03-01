@@ -384,4 +384,10 @@ pantheria_summary_ppc %>%
 
 this current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogenity in standard deviation between our groups -- while our model does a good job at approximateing the variation in population denisty of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
 
-## Interactions
+
+
+## Summary
+
+This lesson covered linear models with more than one predictor variable. We continued our development of a regression model to explain variation in population density in mammals, using data from the PanTHERIA database. We returned to categorical variables and how they can be translated for use in regression models. Our newest model included body mass and trophic level as predictors of population density. We found that this model is an obvious improvement over the single predictor model from the previous less as more adequately describes the differences in population density assocaited with differences in body mass and torphic level. While our model is not a prefect descriptor of the data, it appears adequate for addressing questions relating to differences expected population density but not necessarily adequate for predicting the range of plausible population densities for carnivorous mammals.
+
+
