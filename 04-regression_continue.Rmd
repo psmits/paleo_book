@@ -20,6 +20,13 @@ theme_set(theme_bw())
 
 ```
 
+## Reading
+
+The following materials are recommended pre-readings before starting this tutorial. 
+
+- Chapter 4 "Linear Models" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- OPTIONAL Chapter 3 "Linear regression: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+- OPTIONAL Chapter 4 "Linear regression: before and after fitting the model" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
 
 
 ## Our first example

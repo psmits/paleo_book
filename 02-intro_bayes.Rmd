@@ -13,14 +13,14 @@
 - Cover the basics of summarizing a posterior distribution using **tidybayes**.
 
 
-## Preface
+## Reading
 
-We're going to be using the [tidyverse](https://www.tidyverse.org) for data wrangling, and [brms](https://github.com/paul-buerkner/brms) for modeling. Discussion and activities are derived from 
-[**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/), 
-[**Bayesian Data Analysis 3** by Gelman et al.](http://www.stat.columbia.edu/~gelman/book/), and 
-[**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+The following materials are recommended pre-readings before starting this tutorial. 
 
-I'm also using code examples from [this rewriting](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse) of **Rethinking**.
+- Chapter 1 "The Golem of Prague" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- Chapter 2 "Small Worlds and Large Worlds" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- OPTIONAL: Chapter 3 "Sampling the Imaginary" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+
 
 ```{r load_packages_02, results = 'hide'}
 

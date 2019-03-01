@@ -41,13 +41,20 @@ pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'),
 ```
 
 
+## Reading
+
+The following materials are recommended pre-readings before starting this tutorial. 
+
+- Chapter 5 "Multivariate Linear Models" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- OPTIONAL Chapter 3 "Linear regression: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+- OPTIONAL Chapter 4 "Linear regression: before and after fitting the model" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
 
 
 ## More than one predictor
 
 Correlation between variables is very common in nature. In large datasets, all pairs of variables have a statistically discernible non-zero correlation. We should never be surprised to find that two variables are correlated. But simple correlation tells us nothing of mechanism -- the "biology" of the system. We need tools to distinguist between mere association from evidence of causation. This is where multivariate regression (regression with more than one predictor variable) comes into play.
 
-There are three general reasons for using a multivariate model.
+The three general reasons for using a multivariate model are:
 
 - **Confounds** or variables that may be correlated with variable of interest. Confounds can easily hide important variables or produce false signals. Check out [Simpson's Paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox) for an example of how a relationship can be reversed in the presence of a confound.
   
@@ -208,13 +215,13 @@ print(m_1)
 
 Remember, regression coefficients (e.g. $\beta_{1}$) are interpreted as the expected change in $y$ per unit change in the predictor (e.g. $m$). If our predictors are not on the same scale, it is "unfair" to compare them directly. For example, how can we compare the effect size of body mass versus being an herbivore on population density? While the regression coeffcient for being an herbivore (instead of an omnivore) has a greater magnitude than the coefficient for mass, but this is misleading because a complete difference in category to a 1-km$^2$ change in geographic range.
 
-A natural solution to this problem is to standardize our predictors so that they are all on the same scale (having the same standard deviation). You might have heard of this as z-scores or something else -- we will not be using this langauge.
+A natural solution to this problem is to standardize our predictors so that they are all on the same scale (having the same standard deviation). You might have heard of this as z-scores or something else -- we will not be using this language.
 
-To standardize our data, [Gelman and Hill](http://www.stat.columbia.edu/~gelman/arm/) recommend scaling or predictors by dividing by 2 standard devations so that "a 1-unit change in the rescaled predcitor corresponds to a change from 1 standard deviation blow the mean, to 1 standard devaition above." 
+To standardize our data, [Gelman and Hill](http://www.stat.columbia.edu/~gelman/arm/) recommend scaling or predictors by dividing by 2 standard deviations so that "a 1-unit change in the rescaled predictor corresponds to a change from 1 standard deviation blow the mean, to 1 standard deviation above." 
 
 But why 2 standard deviations and not 1? By dividing by 2 standard deviations we gain comparability between our continuous covariates and the binary predictors. For example, consider a simple binary variable $x$ where 0 and 1 occur with equal probability. The standard deviation of this variable is then $\sqrt{0.5 \cdot 0.5} = 0.5$, which means the standardized variable, $(x - \mu_{x}) / (2 \sigma_{x})$, takes on the values $\pm 0.5$, and its coefficient reflects comparisons between $x = 0$ and $x = 1$. In contrast, dividing by 1 standard deviation means that the scaled variable takes on values $\pm 1$ and its coefficients correspond to half the difference between the two possible values of $x$.
 
-[Gelman and Hill](http://www.stat.columbia.edu/~gelman/arm/) also state that in complicated regression models with lots of predictors, we can leave our binary inputs as is and just transform our continuous predictors. In that case, the 2 standard deviation rule gives rough comparability in the coeffcieints. 
+[Gelman and Hill](http://www.stat.columbia.edu/~gelman/arm/) also state that in complicated regression models with lots of predictors, we can leave our binary inputs as is and just transform our continuous predictors. In that case, the 2 standard deviation rule gives rough comparability in the coeffcieints. I generally just center and rescale my continuous covariates. 
 
 
 Our goal should be able to have meaningful interpretations for as many parameters as possible, especially regression coefficients. To ensure this, we should center and scale all continuous predictor variables before analysis. If these transformations aren't done, than we can have difficulty interpreting our models intercept and can incorrectly and unfairly compare the estimates of our regression coefficients.
@@ -285,6 +292,9 @@ pantheria_fit2 %>%
 
 ```
 
+The linear predictor appears to cut through the "meat" of our data, though with so few carnivore observations it is hard to tell the quality of fit to those observations from this plot.
+
+
 But the fitted draws are only the linear part of our model, and not our full posterior predictive distribution which includes our estimate of the scale of our data (i.e. $\sigma$). Like before, we can generate the posterior predictive distribution of population density for the whole range of mass values and trophic levels. This is technically a type *counterfactual* plot because we are estimating values for unobserved values of body mass. However, we will overlay our data points over the posterior predictive distribution to visually compare how closely our estimates resemble the observed distribution of values.
 
 
@@ -299,7 +309,7 @@ pantheria_fit2 %>%
   ggplot(aes(x = mass_log_stan, y = density_log)) +
   stat_lineribbon(mapping = aes(y = .prediction),
                   .width = c(0.9, 0.5, 0.1),
-                  colour = 'blue') +
+                  size = 0) +
   geom_point(data = pantheria_fit2, size = 2) +
   scale_fill_brewer() +
   facet_wrap(~ trophic_level) +
@@ -307,31 +317,10 @@ pantheria_fit2 %>%
 
 ```
 
+Our data appears to sit over our posterior predictive distribution, with the concentration of points corresponding to the tighter credible intervals. However, this plot does not resolve our difficulty with evaluating our models fit to the carnivore observations.
 
+We can also compare the density of our observations to those of draws from our posterior predictive distribution, something [we have done before](#reg-continue). This involves simulating multiple (e.g. 100) datasets from the posterior predictive distribution and visually comparing these distributions to our observed. Because our previous plots weren't able to help us resolve the quality of our model's fit to our carnivore observations, let's also break down our data by trophic level.
 
-
-```{r multi_dens_ppc}
-
-pantheria_fit2 %>%
-  add_predicted_draws(model = m_2,
-                      n = 100) %>%
-  ungroup() %>%
-  ggplot(aes(x = .prediction, group = .draw)) +
-  geom_line(stat = 'density',
-            alpha = 0.1,
-            colour = 'blue') +
-  geom_line(stat = 'density',
-            data = pantheria_fit2,
-            mapping = aes(x = density_log,
-                          group = NULL),
-            colour = 'black',
-            size = 1.5) +
-  scale_y_continuous(NULL, breaks = NULL) +
-  labs(x = expression(paste('Population density ', log(n / km^2))),
-       title = 'Population density, actual versus predicted') +
-  NULL
-
-```
 
 ```{r multi_dens_troph_ppc}
 
@@ -358,6 +347,7 @@ pantheria_fit2 %>%
 ```
 
 
+Let's also look our model's ability to reconstruct specific point estimates. This means comparing point estimates from multiple (e.g. 100) posterior predictive datasets to those estimates from observed data. We've previously focused on the median population density for the trophic groups, but let's also take a look at the standard deviation of population denisty for those groups -- perhaps there is heterogenity in the spread of population density between the groups that we've yet to consider.
 
 
 ```{r median_ppc}
@@ -365,7 +355,9 @@ pantheria_fit2 %>%
 pan_trophic_summary <-
   pantheria_fit2 %>%
   group_by(trophic_level) %>%
-  dplyr::summarize(median = median(density_log))
+  dplyr::summarize(median = median(density_log),
+                   sd = sd(density_log)) %>%
+  gather(key, value, median, sd)
 
 pantheria_summary_ppc <- 
   pantheria_fit2 %>%
@@ -373,21 +365,23 @@ pantheria_summary_ppc <-
                       n = 100) %>%
   ungroup() %>%
   group_by(.draw, trophic_level) %>%
-  dplyr::summarize(density_median_ppc = median(.prediction))
+  dplyr::summarize(median = median(.prediction),
+                   sd = sd(.prediction)) %>%
+  ungroup() %>%
+  gather(key, value, median, sd)
 
 pantheria_summary_ppc %>%
-  ggplot(aes(x = density_median_ppc)) +
+  ggplot(aes(x = value)) +
   geom_histogram(fill = 'blue') +
   geom_vline(data = pan_trophic_summary,
-             mapping = aes(xintercept = median),
+             mapping = aes(xintercept = value),
              size = 2) +
-  facet_wrap(~ trophic_level) +
+  facet_grid(key ~ trophic_level, scales = 'free', switch = 'y') +
   labs(x = 'Median population density', y = '') +
   NULL
 
 ```
 
-
-
+this current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogenity in standard deviation between our groups -- while our model does a good job at approximateing the variation in population denisty of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
 
 ## Interactions

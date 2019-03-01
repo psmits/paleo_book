@@ -20,8 +20,14 @@ This book uses the [`tidyverse`](https://www.tidyverse.org/) collection of R pac
 
 I emphasize Bayesian data analysis approaches throughout this text. To this end, model inference is done using the [`brms`](https://github.com/paul-buerkner/brms) package which is a flexible tool for implementing [Stan-based](https://mc-stan.org/) models in R. Manipulation of those results, and some aspects of visualization, is done using the [`tidybayes`](http://mjskay.github.io/tidybayes/) package.
 
-I attempt to stick to the [`tidyverse` style guide](https://style.tidyverse.org/)
-
-
 The `pacman` package is used throughout to ensure that all packages are both installed and loaded into namespace.
 
+We're going to be using the [tidyverse](https://www.tidyverse.org) for data wrangling, and [brms](https://github.com/paul-buerkner/brms) for modeling. Discussion and activities are derived from 
+[**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/), 
+[**Bayesian Data Analysis 3** by Gelman et al.](http://www.stat.columbia.edu/~gelman/book/), and 
+[**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+
+I'm also using code examples from [this rewriting](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse) of **Rethinking**.
+
+
+I attempt to stick to the [`tidyverse` style guide](https://style.tidyverse.org/)
