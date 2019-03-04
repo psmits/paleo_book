@@ -19,7 +19,7 @@ The following materials are recommended pre-readings before starting this tutori
 
 - Chapter 1 "The Golem of Prague" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 - Chapter 2 "Small Worlds and Large Worlds" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
-- OPTIONAL: Chapter 3 "Sampling the Imaginary" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- OPTIONAL Chapter 3 "Sampling the Imaginary" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 
 
 ```{r load_packages_02, results = 'hide'}
@@ -74,14 +74,14 @@ Logically, what we've just done can be expressed as
   plausibility of [B W W W] after seeing [B W B] $\propto$ ways [B W W W] can produce [B W B] X prior plausibility of [B W W W].
 </center>
 
-But these are just counts and plausibilities; we want probabilities! First, to make explaining ourselves simpler, let's define $p$ as the proportion of blue marbles in the bag and $D_{new}$ as our data. We now have: 
+But these are just counts and plausibilities; we want probabilities! First, to make explaining ourselves simpler, let's define $p$ as the proportion of blue marbles in the bag and $D_{new}$ as our data. We can now rewrite the previous statement as: 
 
 <center>
   plausibility of $p$ after $D_{new}$ $\propto$ ways $p$ can produce $D_{new}$ X prior plausibility of $p$.
 </center>
 
 
-We want to standardize the plausibility so that the sum of the plausibilities for all conjectures sums to 1. To standardize, we add up all the products, one for each $p$, then divide each product by the sum of the products.
+We want to standardize the measure of plausibility so that the sum of the plausibilities for all conjectures sums to 1. To standardize, we add up all the products, one for each $p$, then divide each product by the sum of the products.
 
 | possible combinations | $p$ | ways to produce data | plausibility |
 |---|---|---|---|
@@ -108,11 +108,11 @@ Each part of the calculations we've done so far correspond directly to quantitie
 
 ### Building a model
 
-Bayesian inference is made easier by working with probabilities instead of counts, but this makes everything look a lot harder.
+Bayesian inference is made easier by working with probabilities instead of counts, but this makes everything look a lot harder. Let's explore this with a new problem.
 
 **Setup**: We've a globe with land and water sections. We want to know how much of the globe is water. Our strategy is to throw the globe up, catch it, and note the surface under the right index finger. Let's do this 9 times.
 
-```{r coin_toss}
+```{r globe_toss}
 d <- tibble(toss = c("w", "l", "w", "w", "w", "l", "w", "l", "w"))
 
 # then rephrase in terms of trials and count of water
@@ -121,7 +121,7 @@ d <- tibble(toss = c("w", "l", "w", "w", "w", "l", "w", "l", "w"))
         n_success = cumsum(toss == "w")))
 ```
 
-To get the logic machinery working, we need to make some assumptions. These assumptions constitute the our model. An ideal design loop for designing a Bayesian model has three steps
+To get the logic machinery working, we need to make some assumptions. These assumptions constitute the our model. An ideal design loop for developing a Bayesian model has three steps:
 
 1. **Data story** 
     - Describe aspects of the underlying reality and the sampling process. 
@@ -139,14 +139,16 @@ To get the logic machinery working, we need to make some assumptions. These assu
 
 #### A data story
 
-How did the data come to be? Describe aspects of the underlying reality as well as the sampling process, sufficient enough for specifying an algorithm to simulate new data. Write out the data story for this activity.
+How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient enough to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.
 
 
 #### Bayesian updating
 
 A Bayesian model begins with one set of plausibilities assigned to each possible result: the prior plausibilities. These values are updated in light of data to produce our posterior plausibilities. This process is called *Bayesian updating*.
 
-```{r coin_updating}
+Here is an illustration of Bayesian updating applied to our globe tossing experiment. The posterior generated at each observation becomes the prior for the subsequent observation.
+
+```{r globe_updating}
 sequence_length <- 50                  # how many points to calculate prob for
 
 d %>% 
@@ -182,20 +184,20 @@ d %>%
 ```
 
 
-**Side note on sample size:** Bayesian estimates are valid and interpretable at any sample size. This fact is very much in contrast to the folk-wisdom around a minimum number of samples needed that you'll hear in non-Bayesian contexts. In non-Bayesian contests, statistical inference is justified by behaviour at large samples sizes, called asymptotic behaviour. The reason Bayesian estimates are always valid and interpretable comes down to the prior. If the prior is bad, the resulting posterior could be misleading. Regardless, all estimates in either context are based on assumptions.
+**Side note on sample size:** Bayesian estimates are valid and interpretable at any sample size. This fact is very much in contrast to the folk-wisdom around a minimum number of samples needed that you'll hear in non-Bayesian contexts. In non-Bayesian contests, statistical inference is justified by behaviour at large samples sizes, called asymptotic behaviour. The reason Bayesian estimates are always valid and interpretable comes down to the prior. If the prior is bad, the resulting posterior could be misleading. Regardless, all estimates in either context are based on assumptions -- the assumptions made during Bayesian analysis are just more obvious and capable of being directly interrogated.
 
 
 #### Evaluate
 
 Our model is learning from a "small world" of data. If there are important differences between the model and reality, then there is no guarantee of "large world" performance.
 
-Certainty is no guarantee that the model is good. As data increases, our model will become increasingly sure of the proportion of water. This sureness happens even if the model is seriously misleading because our estimates are conditional on our model. What is happening is that, given a specific model, we can be sure that plausible values are within a narrow range.
+Certainty is no guarantee that the model is good, either. As the amount of data increases, our model will become increasingly sure of the proportion of water. This sureness happens even if the model is seriously misleading because our estimates are conditional on our model. What is happening is that, given a specific model, we can be sure that plausible values are within a narrow range.
 
 It is important that you supervise and critique your model, and not just assume it worked or is correct because your code did not return an error. Anything that is not included in our model might not affect our inference directly, but might affect it indirectly because of that unmodeled dependence. For example, we currently are assuming that the order the data was collected in doesn't matter (*exchangeable*), but what if the order of the observations actually did matter? Check the model's inferences in light of aspects of the data that you know but the model doesn't know about. This part of data analysis is an inherently creative endeavor that is up to you (the analyst) and your scientific community. Robots can't do this step for you.
 
-The goal when evaluating your model is not to test the truth of the model's assumptions. Our model's assumptions can never be exactly right and are not the true data generating process. Failure to prove that our model false is a failure of our imagination, not a success of our model. Additionally, a model doesn't have to be true in order to produce precise and useful inference. Models are information processing machines, and there are parts of information that cannot be easily represented by framing our problem in terms of the truth of our assumptions.
+The goal when evaluating your model is not to test the truth of the model's assumptions. Our model's assumptions can never be exactly right as they are not the true data generating process. Failure to prove that our model false is a failure of our imagination, not a success of our model. Additionally, a model doesn't have to be true in order to produce precise and useful inference. Models are information processing machines, and there are parts of information that cannot be easily represented by framing our problem in terms of the truth of our assumptions.
 
-Instead, our objective should be to test the model's adequacy for some *purpose*. What are we trying to learn? This means asking and answering more questions than those originally used to construct our model. Think about what you know as a domain expert and compare it to your model; if there is a conflict you should update your model (likelihood and/or prior) to better reflect your domain knowledge. It is hard to give general advice on model evaluation as there are lots of different contexts for evaluating the adequacy of a model -- prediction, comprehension, measurement, and persuasion. These are inherently *scientific questions*, not statistical questions. As I said earlier, robot's can't do this step for you.
+Instead, our objective should be to test the model's adequacy for some *purpose*. What are we trying to learn? This means asking and answering more questions than those originally used to construct our model. Think about what you already know as a domain expert and compare this knowledge to your model's estimates/predictions; if there is a conflict you should update your model (likelihood *and/or* prior) to better reflect your domain knowledge. It is hard to give general advice on model evaluation as there are lots of different contexts for evaluating the adequacy of a model -- prediction, comprehension, measurement, and persuasion. These are inherently *scientific questions*, not statistical questions. As I said earlier, robot's can't do this step for you.
 
 
 ## Terms and theory
@@ -277,7 +279,7 @@ All of the numerical techniques we use produce only *samples* from the posterior
 
 One of the simplest conditioning techniques is grid approximation. While most parameters are continuous, we can get a decent approximation of them by considering only a finite grid of parameter values. For any particular value $p'$, compute the posterior probability by multiplying the prior probability of $p'$ by the likelihood of $p'$.
 
-Grid approximation is a teaching tool that forces you to really understand the nature of Bayesian updating. You will probably never use it in your actual work. Grid approximation scales very poorly as the number of parameters increases.
+Grid approximation is a teaching tool that forces you to really understand the nature of Bayesian updating. You will probably never use it in your actual work mostly because grid approximation scales very poorly as the number of parameters increases.
 
 How to do grid approximation: 
 
@@ -360,9 +362,9 @@ globe_brms %>%
 
 From [Math with Bad Drawings](mathwithbaddrawings.com/2015/09/23/what-does-probability-mean-in-your-profession/).
 
-![](./figure/prob_actual.jpg "Actual Meaning")
+![](figures/prob_actual.jpg "Actual Meaning")
 
-![](./figure/prob_starwars.jpg "Star Wars")
+![](figures/prob_starwars.jpg "Star Wars")
 
 
 ### Working with samples
