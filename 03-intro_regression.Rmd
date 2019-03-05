@@ -1,4 +1,4 @@
-# Introduction to linear regression
+# Introduction to linear regression {#reg-intro}
 
 
 ## Objectives
@@ -31,11 +31,11 @@ The following materials are recommended pre-readings before starting this tutori
 
 Linear regression refers to a large family of statistical models which attempt to learn about the mean and variance of some measurement, using an additive combination of other measures. Linear regression is a descriptive model that corresponds to many different processes.
 
-Normally regression is presented as a way of representing the relationship between two or more variables. I believe this description obscures the interpretation and meaning of regression results. Instead, we're going to think of linear regression as a method that summarizes how the *average values* of a numerical outcome vary as a linear functions of predictors. 
+Normally regression is presented as a way of representing the relationship between two or more variables. I believe this description obscures the interpretation and meaning of regression results. Instead, we're going to think of linear regression as a method that summarizes how the *average* or expected values of a numerical outcome vary as a linear functions of one or more predictors. 
 
 Regression can be used to predict an outcome given a linear function of those predictors, and regression coefficients can be thought of as comparisons across predicted values or as comparisons among averages in the data. A regression coefficient describes the expected change in the response per unit change in its predictor. Linear regression uses a Gaussian/Normal distribution to describe the distribution of our measurement of interest. Like any model, linear regression is not universally applicable. But linear regression is pretty foundational in statistics because once you can build and interpret a linear regression model, it is easy to move on to other types of regression for when things aren't Normal. 
 
-Models of normally distributed data are very common: t-test, single regression, multiple regression, ANOVA, ANCOVA, MANOVA, MANCOVA, etc. All of these models are functionally equivalent. Learning and understanding each of these special cases is a lot of unnecessary work; instead, we're going to focus on a general modeling strategy that subsumes all of these special cases. Additionally, we're going to cover a single means of communicating a model that encodes all of our assumptions and presents them clearly.
+Models of normally distributed data are very common: t-test, single regression, multiple regression, ANOVA, ANCOVA, MANOVA, MANCOVA, etc. All of these models are functionally equivalent. Learning and understanding each of these special cases is a lot of unnecessary work; instead, we're going to focus on a general modeling strategy that subsumes all of these special cases as just variations on a theme. Additionally, we're going to cover a statistical notation for communicating a model that encodes all of our assumptions and presents them clearly for other readers (including yourself in the future).
 
 
 ### Talking about models
@@ -55,16 +55,16 @@ w &\sim \text{Binomial}(n, p) \\
 p &\sim \text{Uniform}(0, 1). \\
 \end{align}
 $$
-Identify the parts of this model description. 
-
 The $\sim$ symbol indicates a stochastic relationship. A stochastic relationship means that the variable or parameter is mapped onto a distribution of values. It is stochastic because no single instance of the variable on the left is known with certainty. This relationship is probabilistic as some values are more plausible than others, though there are many plausible values under any model.
 
-It is ok if you do not immediately understand this notation; that's a normal part of learning. This notation allows us to specify and communicate our model clearly so that other people can understand what we're doing. This language is general, and can be used to describe all model types. By continuing to use this notation, we will build familiarity with this syntax. 
+Can you identify the various parts of this model description? 
+
+This notation allows us to specify and communicate our model clearly so that other people can understand what we're doing. This language is general, and can be used to describe all model types. It is ok if you do not immediately understand this notation; that's a normal part of learning. By continuing to use this notation, we will build familiarity with this syntax. 
 
 
 ### Growing a regression model
 
-We're going to use a real dataset of invertebrate valve sizes and slowly build up a regression model to describe differences between taxonomic gorups. We will begin with a proto-regression model and then add predictors.
+We're going to use a real dataset of invertebrate valve sizes and slowly build up a regression model to describe differences between taxonomic groups. We will begin with a proto-regression model and then add predictors.
 
 The dataset we're going to have fun with as part of today's activities is the Bivalve and Brachiopod body size data from [Payne et al. 2014 ProcB](http://rspb.royalsocietypublishing.org/content/281/1783/20133122.long). Their data includes location, age, type, and valve length. Load the "occurrence" tab-delimited file and start exploring the distribution of body sizes. 
 
@@ -91,7 +91,8 @@ d %>%
   labs(x = 'valve length')
 ```
 
-We want a measurement variable to model as a Gaussian distribution. The Gaussian distribution has two parameters describing the shape of the distribution -- mean $\mu$ and standard deviation $\sigma$. Here's a quick picture of a Gaussian distribution, play around with the mean and standard deviation parameters.
+Linear regression uses a Gaussian distribution to describe a continuous variable of interest. The Gaussian distribution at the center of linear regression has two parameters describing the shape of the distribution -- mean $\mu$ and standard deviation $\sigma$. Here's a quick picture of a Gaussian distribution, play around with the mean and standard deviation parameters.
+
 ```{r example_distribution}
 ggplot(data = tibble(x = seq(from = -25, to = 25, by = 0.1)),
        aes(x = x, y = dnorm(x, mean = 5, sd = 1000))) +
@@ -103,11 +104,12 @@ The way Bayesian updating works means we want to consider all possible combinati
 
 To define the log valve length as Gaussian distributed with mean $\mu$ and standard deviation $\sigma$, we write
 $$
-s_{i} \sim \text{Normal}(\mu, \sigma)
+s_{i} \sim \text{Normal}(\mu, \sigma).
 $$
-What do the different parts of this statement mean?
 
-To complete this model we need to define the priors for the parameters $\mu$ and $\sigma$. We need a joint prior $Pr(\mu, \sigma)$, but most of the time we'll just define independent priors for each parameter -- this is equivalent to saying $Pr(\mu, \sigma) = Pr(\mu)Pr(\sigma)$. Here's a more complete look at the Gaussian model of log valve length:
+What do the different terms and symbols in this statement mean?
+
+To complete this model we need to define the priors for the parameters $\mu$ and $\sigma$. We need a joint prior $Pr(\mu, \sigma)$, but most of the time we can just define independent priors for each parameter -- this is equivalent to saying $Pr(\mu, \sigma) = Pr(\mu)Pr(\sigma)$. Here's a more complete look at the Gaussian model of log valve length:
 $$
 \begin{align}
 s_{i} &\sim \text{Normal}(\mu, \sigma) \\
@@ -117,7 +119,7 @@ s_{i} &\sim \text{Normal}(\mu, \sigma) \\
 $$
 What do each of these three lines mean? 
 
-Let's discuss the choice of priors for $\mu$ and $\sigma$. It is a good idea to plot your priors so that you can better understand your assumptions.
+Let's discuss the choice of priors for $\mu$ and $\sigma$. It is a good idea to plot your priors so that you can better understand your assumptions. 
 ```{r vis_priors}
 # prior for mean of log valve length
 ggplot(data = tibble(x = seq(from = -50, to = 50, by = .1)),
@@ -147,14 +149,14 @@ tibble(sample_mu = rnorm(n, mean = 5, sd = 5),
   labs(x = expression(paste("Prior predictive distribution for ", italic(s[i]))))
 ```
 
-The resulting distribution describes the relative prior plausibilities we've defined for the distribution of log valve lengths. Play around with the numbers in the priors and see its effect on the prior probability density of log valve lengths.
+The resulting distribution describes the relative prior plausibilities we've defined for log valve lengths. Play around with the numbers in the priors and see its effect on the prior probability density of log valve lengths.
 
 
 #### Sampling from the model
 
 Now that we've completely defined out model (likelihood, data to condition on, parameters, and priors for all parameters) we can estimate the posterior plausibilities of our parameter values.
 
-We're going to use the **brms** package to fit our model. This package was briefly introduced at the end of last lesson, and we're going to get more experience with it today. After we fit the model, we'll use functions from **tidybayes** that will help us extract and visualize our posterior distribution.
+We're going to use the `brms` package to fit our model. This package was briefly introduced at the end of last lesson, and we're going to get more experience with it today. After we fit the model, we'll use functions from `tidybayes` that will help us extract and visualize our posterior distribution.
 ```{r fit_model, cache = T, message = F, results = 'hide'}
 m_1 <- brm(data = d, 
            family = gaussian(), 
@@ -265,7 +267,7 @@ In the case of the linear model, $\mu_{i} = \alpha + \beta x_{i}$, we are now as
 
 These two parameters along with $x$ describe a line that passes through $\alpha$ when $x_{i} = 0$ and has slope $\beta$.
 
-Remember that $x$ is a binary vector -- it only takes on one of two values: 0 or 1. For a binary predictor, the regression coefficient is interepreted as the difference between the averages of the two groups.
+Remember that $x$ is a binary vector -- it only takes on one of two values: 0 or 1. For a binary predictor, the regression coefficient is interpreted as the difference between the averages of the two groups.
 
 Let's think more about this choice of prior. Do you think there is an equal chance that average brachiopod valves are larger or smaller than bivalves? In this context, we have so much data that this is harmless. In other contexts, our sampler might need more information to finds its target.
 

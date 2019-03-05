@@ -1,3 +1,4 @@
 book_filename: "paleo_book"
-
+repo: https://github.com/psmits/paleo_book/
+output_dir: docs
 delete_merged_file: true

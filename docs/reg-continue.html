@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>4 Continuing with regression with continuous predictors | Analytical Paleobiology</title>
+  <meta name="description" content="An informal short-course on analytical paleobiology">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="4 Continuing with regression with continuous predictors | Analytical Paleobiology" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An informal short-course on analytical paleobiology" />
+  <meta name="github-repo" content="psmits/paleo_book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Continuing with regression with continuous predictors | Analytical Paleobiology" />
+  <meta name="twitter:site" content="@PeterDSmits" />
+  <meta name="twitter:description" content="An informal short-course on analytical paleobiology" />
+  
+
+<meta name="author" content="Peter D Smits">
+
+
+<meta name="date" content="2019-03-05">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="reg-intro.html">
+<link rel="next" href="multiple-predictors-and-interactions-in-linear-regression.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="...">Short-Course on Analytical Paleobiology</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html"><i class="fa fa-check"></i><b>1</b> Managing and Processing Data From the Paleobiology Database</a><ul>
+<li class="chapter" data-level="1.1" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#objectives"><i class="fa fa-check"></i><b>1.1</b> Objectives</a></li>
+<li class="chapter" data-level="1.2" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#project-reading"><i class="fa fa-check"></i><b>1.2</b> Reading</a></li>
+<li class="chapter" data-level="1.3" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#introduction"><i class="fa fa-check"></i><b>1.3</b> Introduction</a></li>
+<li class="chapter" data-level="1.4" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#getting-data"><i class="fa fa-check"></i><b>1.4</b> Getting data</a></li>
+<li class="chapter" data-level="1.5" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#processing-data"><i class="fa fa-check"></i><b>1.5</b> Processing data</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#binning-observations"><i class="fa fa-check"></i><b>1.5.1</b> Binning observations</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#sharing-data"><i class="fa fa-check"></i><b>1.6</b> Sharing data</a></li>
+<li class="chapter" data-level="1.7" data-path="managing-and-processing-data-from-the-paleobiology-database.html"><a href="managing-and-processing-data-from-the-paleobiology-database.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html"><i class="fa fa-check"></i><b>2</b> Introduction to Bayesian data analysis</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#objectives-1"><i class="fa fa-check"></i><b>2.1</b> Objectives</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#reading"><i class="fa fa-check"></i><b>2.2</b> Reading</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#learning-from-data"><i class="fa fa-check"></i><b>2.3</b> Learning from data</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#counting-and-plausibility"><i class="fa fa-check"></i><b>2.3.1</b> Counting and plausibility</a></li>
+<li class="chapter" data-level="2.3.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#building-a-model"><i class="fa fa-check"></i><b>2.3.2</b> Building a model</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#terms-and-theory"><i class="fa fa-check"></i><b>2.4</b> Terms and theory</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#bayes-theorem"><i class="fa fa-check"></i><b>2.4.1</b> Bayes’ Theorem</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#but-how-does-it-work"><i class="fa fa-check"></i><b>2.4.2</b> But how does it <em>work</em>?</a></li>
+<li class="chapter" data-level="2.4.3" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#working-with-samples"><i class="fa fa-check"></i><b>2.4.3</b> Working with samples</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="reg-intro.html"><a href="reg-intro.html"><i class="fa fa-check"></i><b>3</b> Introduction to linear regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="reg-intro.html"><a href="reg-intro.html#objectives-2"><i class="fa fa-check"></i><b>3.1</b> Objectives</a></li>
+<li class="chapter" data-level="3.2" data-path="reg-intro.html"><a href="reg-intro.html#reading-1"><i class="fa fa-check"></i><b>3.2</b> Reading</a></li>
+<li class="chapter" data-level="3.3" data-path="reg-intro.html"><a href="reg-intro.html#linear-regression"><i class="fa fa-check"></i><b>3.3</b> Linear regression</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="reg-intro.html"><a href="reg-intro.html#talking-about-models"><i class="fa fa-check"></i><b>3.3.1</b> Talking about models</a></li>
+<li class="chapter" data-level="3.3.2" data-path="reg-intro.html"><a href="reg-intro.html#growing-a-regression-model"><i class="fa fa-check"></i><b>3.3.2</b> Growing a regression model</a></li>
+<li class="chapter" data-level="3.3.3" data-path="reg-intro.html"><a href="reg-intro.html#adding-a-predictor-to-the-mix"><i class="fa fa-check"></i><b>3.3.3</b> Adding a predictor to the mix</a></li>
+<li class="chapter" data-level="3.3.4" data-path="reg-intro.html"><a href="reg-intro.html#interpreting-the-model-fit"><i class="fa fa-check"></i><b>3.3.4</b> Interpreting the model fit</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="reg-intro.html"><a href="reg-intro.html#summary-2"><i class="fa fa-check"></i><b>3.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="reg-continue.html"><a href="reg-continue.html"><i class="fa fa-check"></i><b>4</b> Continuing with regression with continuous predictors</a><ul>
+<li class="chapter" data-level="4.1" data-path="reg-continue.html"><a href="reg-continue.html#objectives-3"><i class="fa fa-check"></i><b>4.1</b> Objectives</a></li>
+<li class="chapter" data-level="4.2" data-path="reg-continue.html"><a href="reg-continue.html#reading-2"><i class="fa fa-check"></i><b>4.2</b> Reading</a></li>
+<li class="chapter" data-level="4.3" data-path="reg-continue.html"><a href="reg-continue.html#our-first-example"><i class="fa fa-check"></i><b>4.3</b> Our first example</a></li>
+<li class="chapter" data-level="4.4" data-path="reg-continue.html"><a href="reg-continue.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.4</b> A single continuous predictor</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="reg-continue.html"><a href="reg-continue.html#aside-centering"><i class="fa fa-check"></i><b>4.4.1</b> Aside: Centering</a></li>
+<li class="chapter" data-level="4.4.2" data-path="reg-continue.html"><a href="reg-continue.html#checking-model-fit"><i class="fa fa-check"></i><b>4.4.2</b> Checking model fit</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors and interactions in linear regression</a><ul>
+<li class="chapter" data-level="5.1" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
+<li class="chapter" data-level="5.2" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#reading-3"><i class="fa fa-check"></i><b>5.2</b> Reading</a></li>
+<li class="chapter" data-level="5.3" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#more-than-one-predictor"><i class="fa fa-check"></i><b>5.3</b> More than one predictor</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#categorical-predictor"><i class="fa fa-check"></i><b>5.3.1</b> Categorical predictor</a></li>
+<li class="chapter" data-level="5.3.2" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#defining-our-model"><i class="fa fa-check"></i><b>5.3.2</b> Defining our model</a></li>
+<li class="chapter" data-level="5.3.3" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.3.3</b> Fitting model in <code>brms</code></a></li>
+<li class="chapter" data-level="5.3.4" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#aside-standardizing"><i class="fa fa-check"></i><b>5.3.4</b> Aside: Standardizing</a></li>
+<li class="chapter" data-level="5.3.5" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#checking-model-fit-1"><i class="fa fa-check"></i><b>5.3.5</b> Checking model fit</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#summary-4"><i class="fa fa-check"></i><b>5.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="glms-logistic-regression.html"><a href="glms-logistic-regression.html"><i class="fa fa-check"></i><b>6</b> GLMs: Logistic regression</a></li>
+<li class="chapter" data-level="7" data-path="glms-poisson-regression-and-others.html"><a href="glms-poisson-regression-and-others.html"><i class="fa fa-check"></i><b>7</b> GLMs: Poisson regression and others</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown">
+Proudly published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analytical Paleobiology</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="reg-continue" class="section level1">
+<h1><span class="header-section-number">4</span> Continuing with regression with continuous predictors</h1>
+<div id="objectives-3" class="section level2">
+<h2><span class="header-section-number">4.1</span> Objectives</h2>
+<p>In the <a href="reg-intro.html#reg-intro">previous lesson</a> we introduced linear regression with a single, binary predictor. This lesson expands on that initial introduction by introducing and explaining continuous predictors. Along the way I will continue to emphasize checking the quality or adequacy of model fit as an important part of both understanding our model and improving out model.</p>
+<ul>
+<li>Including a continuous predictor in a regression model.</li>
+<li>Learn to interpret continuous predictors.</li>
+<li>Continue to focus on evaluating model fit as major step in modeling.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
+
+<span class="kw">p_load</span>(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       modelr, knitr, kableExtra)
+
+<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
+</div>
+<div id="reading-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Reading</h2>
+<p>The following materials are recommended pre-readings before starting this tutorial.</p>
+<ul>
+<li>Chapter 4 “Linear Models” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
+<li>OPTIONAL Chapter 3 “Linear regression: the basics” from <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983"><strong>Data Analysis Using Regression and Multilevel/Hierarchical Models</strong> by Gelman and Hill</a>.</li>
+<li>OPTIONAL Chapter 4 “Linear regression: before and after fitting the model” from <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983"><strong>Data Analysis Using Regression and Multilevel/Hierarchical Models</strong> by Gelman and Hill</a>.</li>
+</ul>
+</div>
+<div id="our-first-example" class="section level2">
+<h2><span class="header-section-number">4.3</span> Our first example</h2>
+<p>For this lesson we will be analyzing data from the <a href="http://www.esapubs.org/archive/ecol/E090/184/default.htm">PanTHERIA}</a> database, a large collection of trait data for extant mammals. For a more detailed explanation of the dataset and each variable, you can review the <a href="http://esapubs.org/archive/ecol/E090/184/metadata.htm">data dictionary</a>. A key detail to PanTHERIA is that missing data is coded as -999.00 and not as NA or blank cells. This knowledge is something we can use when importing our data so that it translates easily into the R environment. Also, a lot of the variables have terrible names which are mixes of punctuation, capital letters, begin with numbers, etc. – all are difficult to program around and need to be dealt with and standardized (using the <code>janitor</code> package).</p>
+<p>That all being said, let’s import the dataset, clean it up a bit, and then start visualizing it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="kw">here</span>(<span class="st">&#39;data&#39;</span>, <span class="st">&#39;PanTHERIA_1-0_WR05_Aug2008.txt&#39;</span>), 
+                      <span class="dt">na =</span> <span class="st">&#39;-999.00&#39;</span>) <span class="op">%&gt;%</span>
+<span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="co"># even after cleaning, the variables are rough so let&#39;s smooth them out</span>
+<span class="kw">mutate</span>(<span class="dt">mass_log =</span> <span class="kw">log</span>(x5_<span class="dv">1</span>_adult_body_mass_g), 
+       <span class="dt">range_group_log =</span> <span class="kw">log</span>(x22_<span class="dv">1</span>_home_range_km2),
+       <span class="dt">range_indiv_log =</span> <span class="kw">log</span>(x22_<span class="dv">2</span>_home_range_indiv_km2),
+       <span class="dt">density_log =</span> <span class="kw">log</span>(x21_<span class="dv">1</span>_population_density_n_km2),
+       <span class="dt">activity_cycle =</span> <span class="kw">case_when</span>(x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;nocturnal&#39;</span>,
+                                  x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &#39;mixed&#39;</span>,
+                                  x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> &#39;diurnal&#39;</span>),
+       <span class="dt">trophic_level =</span> <span class="kw">case_when</span>(x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;herbivore&#39;</span>,
+                                 x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &#39;omnivore&#39;</span>,
+                                 x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> &#39;carnivore&#39;</span>))</code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   MSW05_Order = col_character(),
+##   MSW05_Family = col_character(),
+##   MSW05_Genus = col_character(),
+##   MSW05_Species = col_character(),
+##   MSW05_Binomial = col_character(),
+##   References = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">drop_na</span>(activity_cycle) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> trophic_level, 
+             <span class="dt">y =</span> range_group_log)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">fill =</span> <span class="st">&#39;grey80&#39;</span>, 
+              <span class="dt">draw_quantiles =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">height =</span> <span class="dv">0</span>,
+              <span class="dt">alpha =</span> <span class="fl">0.5</span>,
+              <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">colour =</span> msw05_order)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_viridis</span>(<span class="dt">discrete =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&#39;Order&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Trophic level&#39;</span>, 
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Group range size &#39;</span>, <span class="kw">log</span>(km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Group range size differences between trophic levels, </span><span class="ch">\n</span><span class="st">orders highlighted&#39;</span>)</code></pre></div>
+<pre><code>## Warning: Removed 1079 rows containing non-finite values (stat_ydensity).</code></pre>
+<pre><code>## Warning: Removed 1079 rows containing missing values (geom_point).</code></pre>
+<p><img src="paleo_book_files/figure-html/pantheria_plot1-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_log, <span class="dt">y =</span> density_log, <span class="dt">colour =</span> msw05_order)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_viridis</span>(<span class="dt">discrete =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&#39;Order&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Body mass &#39;</span>, <span class="kw">log</span>(g<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Population density &#39;</span>, <span class="kw">log</span>(n <span class="op">/</span><span class="st"> </span>km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Body mass and population density, orders highlighted&#39;</span>)</code></pre></div>
+<pre><code>## Warning: Removed 4469 rows containing missing values (geom_point).</code></pre>
+<p><img src="paleo_book_files/figure-html/pantheria_plot2-1.png" width="672" /></p>
+<p>There are tons of ways we could deconstruct this dataset, some much more logical than others. For this tutorial, we’re going to focus on trying to understand how population density varies across mammals. There are tons of factors that can influence the population density of a species, so our process will be to slowly build up a model one predictor at a time while continually checking the quality of the model’s fit to the data.</p>
+<p>Let’s begin our population density model in a similar fashion to our previous one: an intercept-only model. Once this simplest model is established, we can then add our first continuous predictor from there.</p>
+<p>Our response variable <code>density_log</code> is a continuous value from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(\infty\)</span> so a good place to start is by assuming that this variable can be approximated by a Normal distribution, as is common with linear regression. The Normal distribution two parameters: mean and standard deviation. Sometimes the standard deviation term of the Normal distribution is replaced with a variance or precision parameter – we’re not going to deal with those alternative parameterizations.</p>
+<p>Let’s write this out. Let <span class="math inline">\(y\)</span> be <code>density_log</code>, <span class="math inline">\(\mu\)</span> be the mean of <code>density_log</code>, and <span class="math inline">\(\sigma\)</span> be the standard deviation of <code>density_log</code>.</p>
+<p><span class="math display">\[
+y \sim \text{Normal}(\mu, \sigma)
+\]</span> Can you recall what all the of the parts of the above statement mean? What are we missing? Priors!</p>
+<p>We can probably stick with pretty vague priors here – the mean is probably somewhere between -10 and 10 log(millimeters) and probably has at least that much range. Here’s my starting point. Could I improve it? Do we have enough data that it probably won’t matter?</p>
+<p><span class="math display">\[
+\begin{align}
+y &amp;\sim \text{Normal}(\mu, \sigma) \\
+\mu &amp;\sim \text{Normal}(0, 10) \\
+\sigma &amp;\sim \text{Cauchy}^{+}(0, 10) \\
+\end{align}
+\]</span></p>
+<p>Something is new here – what is this Cauchy<span class="math inline">\(^{+}\)</span> distribution? The Cauchy distribution is a thick-tailed probability distribution closely related to the Student’s <em>t</em> distribution. The Cauchy<span class="math inline">\(^{+}\)</span> distribution is the half-Cauchy distribution – this means it is only defined for all positive real values (including 0.) You can think of this distribution as a weakly regularizing prior for standard deviations – most of the mass is concentrated towards low values and 0, but the heavy tail means there is non-zero probably of large values for <span class="math inline">\(\sigma\)</span>. The half-Cauchy distribution has two parameters: location and scale. The location is the middle of the full distribution and the scale describes the “width” of the distribution. For the half-Cauchy distribution the location parameter is mostly a formality as it defines the “backstop” of the distribution – that it is defined for values of 0 or greater, with a default being 0.</p>
+<p>Here is a quick visualization of the Cauchy distribution’s behavior as you vary the scale parameter. The half-Cauchy is just this distribution reflected about the origin.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scale_1 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">1</span>),
+         <span class="dt">scale_5 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">5</span>),
+         <span class="dt">scale_10 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">10</span>),
+         <span class="dt">scale_20 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">20</span>),
+         <span class="dt">scale_50 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">50</span>))
+
+df <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&#39;key&#39;</span>, <span class="dt">value =</span> <span class="st">&#39;value&#39;</span>, <span class="op">-</span>x) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">separate</span>(key, <span class="kw">c</span>(<span class="st">&#39;type&#39;</span>, <span class="st">&#39;scale&#39;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scale =</span> <span class="kw">factor</span>(scale, <span class="dt">levels =</span> <span class="kw">sort</span>(<span class="kw">order</span>(scale)))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> value, <span class="dt">colour =</span> scale)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_viridis</span>(<span class="dt">discrete =</span> <span class="ot">TRUE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">colour =</span> <span class="st">&#39;Scale&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/cauchy_demo-1.png" width="672" /></p>
+<p>As you can see, at scales of 20 or greater the Cauchy really begins to resemble the uniform distribution but with a bump in density around 0.</p>
+<p>Let’s implement our intercept-only model in <code>brms</code>. To fit this model we are going to need to remove all species from the dataset that are missing values for <code>density_log</code>. Is getting rid of all this data ideal? Let’s assume it has no effect on our results for now, but if you are interested in learning more about handling missing values in our models, look up <strong>data imputation</strong> – an advanced topic we will not be covering introductory lessons.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># remove missing values</span>
+pantheria &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">drop_na</span>(density_log)
+
+<span class="co"># fit basic model</span>
+m_<span class="dv">1</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span>),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(m_<span class="dv">1</span>)</code></pre></div>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: density_log ~ 1 
+##    Data: . (Number of observations: 956) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## Intercept     3.86      0.09     3.68     4.05       3270 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     2.97      0.07     2.84     3.10       3508 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>As with any model, we should see how well it describes our data – maybe this simple model does a good enough job?</p>
+<p>Let’s compare our observed distribution of population densities versus our posterior predictive distribution.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">group =</span> .draw)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>, 
+            <span class="dt">alpha =</span> <span class="fl">0.1</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">data =</span> pantheria,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> density_log,
+                          <span class="dt">group =</span> <span class="ot">NULL</span>),
+            <span class="dt">colour =</span> <span class="st">&#39;black&#39;</span>,
+            <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Population density  &#39;</span>, <span class="kw">log</span>(n <span class="op">/</span><span class="st"> </span>km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Population density, actual versus predicted.&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/intercept_ppc-1.png" width="672" /></p>
+<p>While we might be describing the overall mean and standard deviation of our data, I do not think our simple model is capable of capturing a lot of the complexity in our data. Our data appears to be multimodal and has a very different spread than those datasets simulated from the posterior predictive distribution, especially on the right-hand side. We are probably going to have to include more information we if want to better descriptive model of our data.</p>
+</div>
+<div id="a-single-continuous-predictor" class="section level2">
+<h2><span class="header-section-number">4.4</span> A single continuous predictor</h2>
+<p>In linear regression, our predictors tend to describe change in mean <span class="math inline">\(y\)</span> has a function of an intercept, one or more regression coefficients, and one or more predictor. Just like in our previous lesson, we’re going to try and improve upon on model by adding a predictor. What’s new to this lesson is that that predictor is a continuous variable: average individual mass in log grams or <code>mass_log</code>. To do this, we need to define <span class="math inline">\(\mu\)</span> as a function of our predictor. Do you remember from last lesson how we did this? Try writing out a model definition by hand.</p>
+<p>First, let’s define <span class="math inline">\(x\)</span> as <code>mass_log</code>. Also, let’s define two more variables: let <span class="math inline">\(\alpha\)</span> be the intercept of our regression, and let <span class="math inline">\(\beta\)</span> be the regression coefficient for <span class="math inline">\(x\)</span>. Given this new information, here is how we can write out our regression model. <span class="math display">\[
+\begin{align}
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &amp;= \alpha + \beta x_{i} \\
+\alpha &amp;\sim \text{Normal}(0, 10) \\
+\beta &amp;\sim \text{Normal}(-1, 5) \\
+\sigma &amp;\sim \text{Cauchy}^{+}(0, 5) \\
+\end{align}
+\]</span></p>
+<p>Are the choice of priors reasonable? Take a closer look at the prior for <span class="math inline">\(\beta\)</span> – this is a <strong>weakly informative prior</strong>. I’m guessing that the slope is probably negative, but allow for the possibility of a 0 or positive slope – albeit less than that of a negative slope. Is this justified? Think of the physical definition of the variables – what would you guess the relationship between body size and population density to be?</p>
+<p>You might notice this model is functionally identical to the model from our previous lesson where we had only a single binary predictor. The difference is all on the data end, and not the model, as <span class="math inline">\(x\)</span> can take on any value and not just 0 and 1.</p>
+<p>How do we interpret all of these parameters? Our previous lesson gave us all the information we needed to describe each parameter, but I will reiterate them here because this is really important. If we don’t know what our parameters precisely mean, we cannot interpret them.</p>
+<ul>
+<li><span class="math inline">\(\mu\)</span> average value of <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(\sigma\)</span> standard deviation of <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(\alpha\)</span> intercept, average value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> = 0</li>
+<li><span class="math inline">\(\beta\)</span> slope, expected change in <span class="math inline">\(y\)</span> per unit change in <span class="math inline">\(x\)</span></li>
+</ul>
+<p>Let’s implement this model in <code>brms</code>. Like before, we are going to ignore species that have missing data for either <code>density_log</code> or <code>mass_log</code> – <code>brms()</code> can do this for us automatically, but let’s do it by hand here again. So, our first set is filter down the <code>pantheria</code> tibble again and then fit our new model. We’ve already dropped all observations missing density values, so we just need to do the same for mass values. Conveniently, there is no harm in checking for missing <code>density_log</code> values again so that everything is clear.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log)
+
+m_<span class="dv">2</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_log),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">10</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(m_<span class="dv">2</span>)</code></pre></div>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: density_log ~ 1 + mass_log 
+##    Data: . (Number of observations: 947) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## Intercept     8.94      0.16     8.63     9.25       4248 1.00
+## mass_log     -0.74      0.02    -0.78    -0.70       4051 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     1.95      0.04     1.86     2.03       4715 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<div id="aside-centering" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Aside: Centering</h3>
+<p>The intercept of a linear regression model is normally interpreted as the average value of <span class="math inline">\(y\)</span> when all predictors equal 0. A consequence of this definition means that the value of the intercept is frequently uninterpretable without also studying the regression coefficients. This is also the reason that we commonly need very weak priors for intercepts.</p>
+<p>A trick for improving our interpretation of the intercept <span class="math inline">\(\alpha\)</span> is <strong>centering</strong> our (continuous) predictors. Centering is the procedure of subtracting the mean of a variable from each value. Namely:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log_center =</span> mass_log <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(mass_log))</code></pre></div>
+<p><span class="math inline">\(\alpha\)</span> is still the expected value of the outcome variable when the predictor is equal to zero. But now the mean value of the predictor is also zero. So the intercept now means: the expected value of the outcome, when the predictor is at its average value. This makes interpreting the intercept a lot easier.</p>
+<p>To illustrate this, let’s refit the model with the newly centered data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">3</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_log_center),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(m_<span class="dv">3</span>)</code></pre></div>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: density_log ~ 1 + mass_log_center 
+##    Data: . (Number of observations: 947) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##                 Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## Intercept           3.85      0.06     3.72     3.97       4372 1.00
+## mass_log_center    -0.74      0.02    -0.78    -0.70       3917 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     1.95      0.04     1.86     2.03       3656 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>Can you explain why centering changes the value of <span class="math inline">\(\alpha\)</span> but not <span class="math inline">\(\beta\)</span>?</p>
+<p>Centering will not change our models posterior predictive performance, but really improves the interpretability of our model parameters. Centering can also be beneficial for estimating parameter values by decreasing posterior correlation among the parameters.</p>
+<p>I recommend always centering your (continuous) predictors.</p>
+</div>
+<div id="checking-model-fit" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Checking model fit</h3>
+<p>Now let’s see how much adding this predictor improves our ability to describe <span class="math inline">\(y\)</span>. We can also visualize our data as a scatter plot with the linear predictor overlain to demonstrate our model estimates of <em>mean</em> population density as a function of species mass.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_fitted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
+                   <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_log_center, <span class="dt">y =</span> density_log)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> .draw),
+            <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">20</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>()</code></pre></div>
+<p><img src="paleo_book_files/figure-html/predictor_fitted-1.png" width="672" /></p>
+<p>The previous plot only covers our model’s estimates for <em>mean</em> population density but this is not all our model is telling us. As with our earlier posterior predictive comparisons from the intercept-only model, we can use the full posterior predictive distribution to compare our observed data to 100 datasets drawn from the posterior predictive distribution. Because the posterior predictive distribution also takes into account the estimated scale of our data (<span class="math inline">\(\sigma\)</span>) and thus estimates individual values of <span class="math inline">\(y\)</span> and not just the expected value of <span class="math inline">\(y\)</span>, these types of comparisons give us a fuller appreciation of how well our model is or is not representing out data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_log_center =</span> <span class="kw">seq_range</span>(mass_log_center, <span class="dt">n =</span> <span class="dv">1000</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_log_center, <span class="dt">y =</span> density_log)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .prediction),
+                  <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>),
+                  <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/predictor_predicted-1.png" width="672" /></p>
+<p>We can also do explicit posterior predictive tests to see how well our model captures specific parts of our data such as the overall density, the median, or differences between unmodeled classes. For our first posterior predictive test, let’s do a comparison between the density of our data, <span class="math inline">\(y\)</span>, and the densities of 100 simulated datasets drawn from our posterior predictive distribution, <span class="math inline">\(y^{\tilde}\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">group =</span> .draw)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>, 
+            <span class="dt">alpha =</span> <span class="fl">0.1</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">data =</span> pantheria,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> density_log,
+                          <span class="dt">group =</span> <span class="ot">NULL</span>),
+            <span class="dt">colour =</span> <span class="st">&#39;black&#39;</span>,
+            <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Population density  &#39;</span>, <span class="kw">log</span>(n <span class="op">/</span><span class="st"> </span>km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Population density, actual versus predicted.&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/predictor_dens_ppc-1.png" width="672" /></p>
+<p>Let’s then see how well our model reproduces the median population density even though our model is defined for the mean of population density.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria_summary &lt;-
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(density_log)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pull</span>()
+
+pantheria_summary_ppc &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(.draw) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">density_median_ppc =</span> <span class="kw">median</span>(.prediction))
+
+med_ppc &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria_summary_ppc <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">per =</span> <span class="kw">sum</span>(density_median_ppc <span class="op">&gt;</span><span class="st"> </span>pantheria_summary) <span class="op">/</span><span class="st"> </span><span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pull</span>()
+
+pantheria_summary_ppc <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> density_median_ppc)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">fill =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> pantheria_summary, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="kw">paste</span>(med_ppc, <span class="st">&#39;% of estimates greater than observed&#39;</span>),
+       <span class="dt">x =</span> <span class="st">&#39;Median population density&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;&#39;</span>)</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="paleo_book_files/figure-html/predictor_median_ppc-1.png" width="672" /></p>
+<p>Let’s see if our model can reproduce the differences in population density between trophic levels even though that information was not included in our model. This requires us dropping a bit more of our data because trophic level is not assigned for as many species as density or body mass.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pan_cut &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log_center, trophic_level)
+
+pan_trophic_summary &lt;-<span class="st"> </span>
+<span class="st">  </span>pan_cut <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(density_log))
+
+pan_trophic_summary_ppc &lt;-<span class="st"> </span>
+<span class="st">  </span>pan_cut <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(.draw, trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">density_median_ppc =</span> <span class="kw">median</span>(.prediction))
+
+pan_trophic_summary_ppc <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> density_median_ppc)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">fill =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">data =</span> pan_trophic_summary,
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">xintercept =</span> median),
+             <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Median population density&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="paleo_book_files/figure-html/predictor_median_trophic_ppc-1.png" width="672" /></p>
+<p>Or we can even look at how well our posterior predictive distribution does across the different trophic levels, even though those are not encoded in the model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pan_cut &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log_center, trophic_level)
+
+pan_cut <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_log_center =</span> <span class="kw">seq_range</span>(mass_log_center, <span class="dt">n =</span> <span class="dv">1000</span>),
+            trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_log_center, <span class="dt">y =</span> density_log)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .prediction),
+                  <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>),
+                  <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pan_cut, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/predictor_pred_trophic-1.png" width="672" /></p>
+<p>While our model does an okay job at predicting median population density of omnivores and herbivores, it is very bad at estimating the population density of carnivores.</p>
+<p>Given all of the above plots, in particular the failure of our model to capture the differences between the (unmodeled) trophic levels, it appears that while this model does slightly better job at approximating our data than our earlier model it still fails are adequately representing our data. Even though we did not model the differences between the trophic groups, by seeing if our model captures these differences we get a better idea about how we might improve our model. In this case, because we know that while there are differences between trophic groups, these differences are not captured by the model. If we want to make sure we are describing the different sources of variation, we might want to include the tropic levels as additional predictors on top of body size.</p>
+<p>But what is this about adding more predictors? What does that mean? That is the subject of our next lesson.</p>
+</div>
+</div>
+<div id="summary-3" class="section level2">
+<h2><span class="header-section-number">4.5</span> Summary</h2>
+<p>In this lesson we introduced continuous predictors in linear regression. We also covered a lot of examples of how to inspect your model’s adequacy at describing our data. This process involved checking our model’s ability to represent unmodeled variation in the data that we know about but that our model does not. Our next step will be including these previously unmodeled factors in a new expanded model. In our next lesson we will cover multivariate models, or models with more than one predictor (e.g body mass AND trophic level).</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="reg-intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="multiple-predictors-and-interactions-in-linear-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": [["analytical_paleobiology.pdf", "PDF"], ["analytical_paleobiology.epub", "EPUB"]],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 
 ## Objectives
 
-In a previous lesson we introduced linear regression with a single, binary predictor. This lesson expands on that initial introduction by introducing and explaining continuous predictors. Along the way I will continue to emphasize checking the quality or adequacy of model fit as an important part of both understanding our model and improving out model.
+In the [previous lesson](#reg-intro) we introduced linear regression with a single, binary predictor. This lesson expands on that initial introduction by introducing and explaining continuous predictors. Along the way I will continue to emphasize checking the quality or adequacy of model fit as an important part of both understanding our model and improving out model.
 
 - Including a continuous predictor in a regression model.
 - Learn to interpret continuous predictors.
@@ -31,7 +31,7 @@ The following materials are recommended pre-readings before starting this tutori
 
 ## Our first example
 
-For this lesson we will be using fitting models to data from the [PanTHERIA}](http://www.esapubs.org/archive/ecol/E090/184/default.htm) database, a large collection of trait data for extant mammals. For a more detailed explanation of the dataset and each variable, you can review the [data dictionary](http://esapubs.org/archive/ecol/E090/184/metadata.htm). A key detail to PanTHERIA is that missing data is coded as -999.00 and not as NA or blank cells. This knowledge is something we can use when importing our data so that it translates easily into the R environment. Also, a lot of the variables have terrible names with mixed unction, capital letters, and begin with numbers -- all of these are very bad to program around and need to be dealt with (using the `janitor` package).
+For this lesson we will be analyzing data from the [PanTHERIA}](http://www.esapubs.org/archive/ecol/E090/184/default.htm) database, a large collection of trait data for extant mammals. For a more detailed explanation of the dataset and each variable, you can review the [data dictionary](http://esapubs.org/archive/ecol/E090/184/metadata.htm). A key detail to PanTHERIA is that missing data is coded as -999.00 and not as NA or blank cells. This knowledge is something we can use when importing our data so that it translates easily into the R environment. Also, a lot of the variables have terrible names which are mixes of punctuation, capital letters, begin with numbers, etc. -- all are difficult to program around and need to be dealt with and standardized (using the `janitor` package).
 
 That all being said, let's import the dataset, clean it up a bit, and then start visualizing it.
 ```{r pantheria_04}
@@ -39,7 +39,8 @@ That all being said, let's import the dataset, clean it up a bit, and then start
 pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
                       na = '-999.00') %>%
 clean_names() %>% 
-mutate(mass_log = log(x5_1_adult_body_mass_g),
+# even after cleaning, the variables are rough so let's smooth them out
+mutate(mass_log = log(x5_1_adult_body_mass_g), 
        range_group_log = log(x22_1_home_range_km2),
        range_indiv_log = log(x22_2_home_range_indiv_km2),
        density_log = log(x21_1_population_density_n_km2),
@@ -64,7 +65,7 @@ pantheria %>%
               alpha = 0.5,
               mapping = aes(colour = msw05_order)) +
   scale_colour_viridis(discrete = TRUE, name = 'Order') +
-  labs(x = 'Activity Cycle', 
+  labs(x = 'Trophic level', 
        y = expression(paste('Group range size ', log(km^2))),
        title = 'Group range size differences between trophic levels, \norders highlighted')
 
@@ -83,11 +84,11 @@ pantheria %>%
 ```
 
 
-There are tons of ways we could deconstruct this dataset, some much more logical than others. For this tutorial, we're going to focus on trying to understand how population density varies across mammals. There are tons of factors that can influence the population density of a species, so our process will be to slowly build up a model one predictor at a time.
+There are tons of ways we could deconstruct this dataset, some much more logical than others. For this tutorial, we're going to focus on trying to understand how population density varies across mammals. There are tons of factors that can influence the population density of a species, so our process will be to slowly build up a model one predictor at a time while continually checking the quality of the model's fit to the data.
 
-Let's begin our model in a similar fashion to our previous one, with an intercept-only model. We can then add our first continuous predictor from there.
+Let's begin our population density model in a similar fashion to our previous one: an intercept-only model. Once this simplest model is established, we can then add our first continuous predictor from there.
 
-Our response variable is `density_log` is a continuous value from $-\infty$ to $\infty$ so it is probably a good place to start by assuming it could be approximated with a normal distribution, as is common with linear regression. The normal distribution as defined in `brms` has two parameters: mean and standard deviation. For our simple intercept-only model, we do not need to expand on these parameters -- after all, the intercept describes the average value or *mean* of the response.
+Our response variable `density_log` is a continuous value from $-\infty$ to $\infty$ so a good place to start is by assuming that this variable can be approximated by a Normal distribution, as is common with linear regression. The Normal distribution two parameters: mean and standard deviation. Sometimes the standard deviation term of the Normal distribution is replaced with a variance or precision parameter -- we're not going to deal with those alternative parameterizations. 
 
 Let's write this out. Let $y$ be `density_log`, $\mu$ be the mean of `density_log`, and $\sigma$ be the standard deviation of `density_log`.
 
@@ -106,9 +107,9 @@ y &\sim \text{Normal}(\mu, \sigma) \\
 \end{align}
 $$
 
-Something is new here -- what is this Cauchy$^{+}$ distribution? The Cauchy distribution is a thick-tailed probability distribution closely related to the Student *t* distribution. The Cauchy$^{+}$ distribution is the half-Cauchy distribution -- this means it is only defined for all positive real values (including 0.) You can think of this distribution as a weakly regularizing prior for standard deviations -- most of the mass is concentrated towards low values and 0, but the heavy tail means there is non-zero probably of large values for $\sigma$. The half-Cauchy distribution has two parameters: location and scale. The location is the middle of the full distribution and the scale describes the "width" of heaviness of the tails. For the half-Cauchy distribution the location parameter is mostly a formality as it defines the "backstop" of the distribution -- that it is defined for values of 0 or greater.
+Something is new here -- what is this Cauchy$^{+}$ distribution? The Cauchy distribution is a thick-tailed probability distribution closely related to the Student's *t* distribution. The Cauchy$^{+}$ distribution is the half-Cauchy distribution -- this means it is only defined for all positive real values (including 0.) You can think of this distribution as a weakly regularizing prior for standard deviations -- most of the mass is concentrated towards low values and 0, but the heavy tail means there is non-zero probably of large values for $\sigma$. The half-Cauchy distribution has two parameters: location and scale. The location is the middle of the full distribution and the scale describes the "width" of the distribution. For the half-Cauchy distribution the location parameter is mostly a formality as it defines the "backstop" of the distribution -- that it is defined for values of 0 or greater, with a default being 0.
 
-Here is a quick visual of the Cauchy distribution's behavior as you vary the scale. The half-Cauchy is just this distribution reflected about 0.
+Here is a quick visualization of the Cauchy distribution's behavior as you vary the scale parameter. The half-Cauchy is just this distribution reflected about the origin.
 ```{r cauchy_demo}
 
 df <- tibble(x = seq(from = -20, to = 20, by = 0.1)) %>%
@@ -134,16 +135,16 @@ df %>%
 As you can see, at scales of 20 or greater the Cauchy really begins to resemble the uniform distribution but with a bump in density around 0.
 
 
-Let's implement our intercept-only model in `brms`. We are going to need to ignore species that have missing data for `density_log` -- something `brms()` can do automatically. Is getting rid of all this data ideal? Let's assume it has no effect on our results for now, but if you are interested in learning more about handling missing values in our models, look up **data imputation** -- this is an advanced topic we will not be covering in these introductory lessons. So, first we need to filter our data to just those observations with population density values. Then we can fit our model.
-
+Let's implement our intercept-only model in `brms`. To fit this model we are going to need to remove all species from the dataset that are missing values for `density_log`. Is getting rid of all this data ideal? Let's assume it has no effect on our results for now, but if you are interested in learning more about handling missing values in our models, look up **data imputation** -- an advanced topic we will not be covering introductory lessons. 
 
 ```{r fit_intercept, cache = TRUE, message = FALSE, results = 'hide'}
 
+# remove missing values
 pantheria <- 
   pantheria %>%
   drop_na(density_log)
 
-
+# fit basic model
 m_1 <- 
   pantheria %>%
   brm(data = .,
@@ -193,17 +194,13 @@ pantheria %>%
 
 ```
 
-While we might be describing the overall mean and standard deviation of our data, I do not think our simple model is capable of capturing the a lot of the complexity in our data. Our data appears to be multimodal and has a very different spread, especially on the right-hand side. We are going to have to include more information we if want to better describe our data.
+While we might be describing the overall mean and standard deviation of our data, I do not think our simple model is capable of capturing a lot of the complexity in our data. Our data appears to be multimodal and has a very different spread than those datasets simulated from the posterior predictive distribution, especially on the right-hand side. We are probably going to have to include more information we if want to better descriptive model of our data.
 
 
 
 ## A single continuous predictor
 
-Just like in our previous lesson, to improve our model we're going to add a single predictor. What's new to this lesson is that that predictor is a continuous variable: average individual mass in log grams or `mass_log`. 
-
-In linear regression, our predictors tend to describe change in mean $y$ has a function of an intercept, one or more regression coefficients, and one or more predictor. 
-
-To do this, we need to define $\mu$ as a function of our predictor. Do you remember from last lesson how we did this? Try writing out a model definition by hand.
+In linear regression, our predictors tend to describe change in mean $y$ has a function of an intercept, one or more regression coefficients, and one or more predictor. Just like in our previous lesson, we're going to try and improve upon on model by adding a predictor. What's new to this lesson is that that predictor is a continuous variable: average individual mass in log grams or `mass_log`. To do this, we need to define $\mu$ as a function of our predictor. Do you remember from last lesson how we did this? Try writing out a model definition by hand.
 
 First, let's define $x$ as `mass_log`. Also, let's define two more variables: let $\alpha$ be the intercept of our regression, and let $\beta$ be the regression coefficient for $x$. Given this new information, here is how we can write out our regression model.
 $$

@@ -166,7 +166,6 @@ But how do we interpret a regression coefficient when we have more than one regr
 
 
 
-
 ### Fitting model in `brms`
 
 Now that we've been able to write out our complete statistical model, we can not implement it in `brms`.
@@ -264,6 +263,45 @@ print(m_2)
 
 ```
 
+
+Now that we've fit our model with standardized data, we can directly compare the regression coefficients. With multiple predictors we might want to know which the relative importance of the predictors or which predictor has the largest effect size. In general, comparing effect sizes just means calculating the probability that the absolute value of the posterior distribution of one coefficient is greater than another. Remember that in math, magnitude means absolute value. So when you compare effect sizes, you are comparing the relative magnitudes of the regression coefficients.
+
+For categorical predictors with more than 2 states, we might also want to know which categories are expected to have a greater expected value of $y$ than the other categories. The way parameters are estimated, our regression coefficients only describe the difference in expected $y$ between that state and the intercept/default state, but it does not describe the difference in expected $y$ between that state and any other non-default state. In our example, this means that the carnivora regression coefficient only describes the difference in expected population density between omnivores and carnivores, but not carnivores and herbivore. 
+
+Luckily, it is very easy to calculate the expected values of $y$ for each of categorical predictor's states -- then all state combinations can be compared directly. Here is a demonstration.
+
+```{r compare_states}
+
+m_2 %>%
+  spread_draws(b_Intercept, b_trophic_levelherbivore, b_trophic_levelcarnivore) %>%
+  transmute(omni = b_Intercept,
+         herb = b_Intercept + b_trophic_levelherbivore,
+         carn = b_Intercept + b_trophic_levelcarnivore) %>%
+  gather(key = trophic_state, value = value) %>%
+  ggplot() +
+  geom_density(mapping = aes(x = value, 
+                             group = trophic_state, 
+                             fill = trophic_state)) +
+  scale_fill_viridis(discrete = TRUE)
+
+```
+
+The differences in expected $y$ between three states are extremely obvious, but you could imagine calculating the probability that one state is greater than another. Here is the trivial example.
+
+
+```{r compare_calc}
+
+m_2 %>%
+  spread_draws(b_Intercept, b_trophic_levelherbivore, b_trophic_levelcarnivore) %>%
+  transmute(omni = b_Intercept,
+         herb = b_Intercept + b_trophic_levelherbivore,
+         carn = b_Intercept + b_trophic_levelcarnivore) %>%
+  dplyr::summarize(omni_gr_herb = sum(omni > herb) / length(omni),
+                   carn_gr_herb = sum(carn > herb) / length(omni),
+                   carn_gr_omni = sum(carn > omni) / length(omni)) %>%
+  gather(key = comparison, value = probability)
+
+```
 
 
 
@@ -382,7 +420,7 @@ pantheria_summary_ppc %>%
 
 ```
 
-this current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogenity in standard deviation between our groups -- while our model does a good job at approximateing the variation in population denisty of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
+The current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogenity in standard deviation between our groups -- while our model does a good job at approximateing the variation in population denisty of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
 
 
 
