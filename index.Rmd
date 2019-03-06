@@ -9,7 +9,7 @@ biblio-style: apalike
 link-citations: yes
 github-repo: psmits/paleo_book
 twitter-handle: PeterDSmits
-description: "An informal short-course on analytical paleobiology"
+description: "An informal course on analytical paleobiology"
 ---
 
 # Preface {-}
