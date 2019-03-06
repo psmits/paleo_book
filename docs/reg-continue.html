@@ -492,7 +492,7 @@ m_<span class="dv">2</span> &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_log_center, <span class="dt">y =</span> density_log)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .prediction),
                   <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>),
-                  <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+                  <span class="dt">size =</span> <span class="dv">0</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
@@ -587,7 +587,7 @@ pan_cut <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_log_center, <span class="dt">y =</span> density_log)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .prediction),
                   <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>),
-                  <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+                  <span class="dt">size =</span> <span class="dv">0</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pan_cut, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
