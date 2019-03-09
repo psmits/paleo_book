@@ -1,1 +1,32 @@
-# GLMs: Logistic regression
+# Logistic regression
+
+## Objectives
+
+```{r load_packages_06, message = F, results = 'hide'}
+
+library(pacman)
+
+p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       neotoma, knitr, kableExtra)
+
+theme_set(theme_bw())
+
+```
+
+
+```{r learn_neotoma}
+
+#gpids <- get_table(table.name = 'GeoPoliticalUnits')
+#canID <- gpids[which(gpids$GeoPoliticalName == 'Canada'),1]
+#v2kyr_datasets <- get_dataset(datasettype = 'vertebrate fauna',
+#															gpid = canID,
+#															ageold = 2000)
+#
+#v2kyr_down <- get_download(v2kyr_datasets)
+#
+#counts(v2kyr_down)
+
+```
+
+
+

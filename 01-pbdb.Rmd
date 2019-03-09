@@ -24,11 +24,11 @@ The following materials are recommended pre-readings before starting this sectio
 
 - [Verde Arregotia *et al.* 2018 "Good practices for sharing analysis-ready data in mammalogy and biodiversity research" **Hystrix, the Italian Journal of Mammalogy**](http://www.italian-journal-of-mammalogy.it/Good-practices-for-sharing-analysis-ready-data-in-mammalogy-and-biodiversity-research,101564,0,2.html).
 - [Wilson *et al.* 2017 "Good enough practices in scientific computing" **PLoS Computational Biology**](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510).
-- [Wickham 2014 "Tidy Data"](https://www.jstatsoft.org/article/view/v059i10).
 - [Bryan "Project oriented workflow" tidyverse.org](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/).
 - [Bryan "Zen and aRt of Workflow Maintenance" talk](https://speakerdeck.com/jennybc/zen-and-the-art-of-workflow-maintenance).
 - [Bryan "Code Smells and Feels" talk](https://github.com/jennybc/code-smells-and-feels#readme).
 - [Bryan 2017 "Excuse me, do you have a moment to talk about version control?" **PeerJ**](https://peerj.com/preprints/3159/).
+- [Wickham 2014 "Tidy Data"](https://www.jstatsoft.org/article/view/v059i10).
 
 
 
