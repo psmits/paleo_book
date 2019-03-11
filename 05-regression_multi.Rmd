@@ -8,13 +8,12 @@
 - Cover strategies for visualizing multivariate regression models.
 
 
-
 ```{r load_packages_05, message = F, results = 'hide'}
 
 library(pacman)
 
 p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       modelr, forcats, knitr, kableExtra)
+       modelr, forcats)
 
 theme_set(theme_bw())
 
@@ -67,7 +66,7 @@ The three general reasons for using a multivariate model are:
 So far all of the linear regression models we have encountered have either been intercept-only or with a single predictor. For this lesson we're going to continue our focus on three variables from the PanTHERIA dataset: population density, body size, and trophic level. Population density, measured as the number of individuals per square-kilometer, is our variable of interest -- we want to define a model which describes how population density varies between mammal species. We have previously investigated body size as a predictor of population density, but the posterior predictive analysis of our model of population density with only body mass as a predictor demonstrates that this model does not adequately describe the data. We were able to do this by asking if our model is able to describe differences in the data that we know about but that our model does not (e.g. trophic level).
 
 
-### Categorical predictor
+### Categorical predictor {#dummy}
 
 Trophic level is a categorical predictor with three levels. The previous categorical predictor we dealt with (Bivalve versus Brachiopod) was binary which made it very easy to interpret. In that lesson I briefly introduced the idea of dummy coding and demonstrated how that would work with a three level categorical variable. I'm going to reiterate and expand on that demonstration here.
 
@@ -76,12 +75,9 @@ Trophic level is a categorical predictor with three levels. The previous categor
 When we dummy code a categorical variable what we are doing is turning one variable with $k$ states into $k - 1$ binary variables. One state of the categorical variable is considered the "baseline" or the default condition for any observation. The other $k - 1$ binary variables then describe if the observation is different from the default -- these are called contrasts. The standard behavior for this in R is that the first state, alphabetically, is made the baseline.  Here is this in action:
 ```{r dummy_trophic}
 
-pantheria %>%
+(pantheria %>%
   drop_na(trophic_level) %>%
-  model_matrix(~ trophic_level) %>%
-  slice(1:10) %>%
-  kable() %>%
-  kableExtra::kable_styling()
+  model_matrix(~ trophic_level))
 
 ```
 
@@ -93,12 +89,9 @@ Let's see what happens when we suppress the intercept using R's [formula syntax]
 
 ```{r dummy_nointercept}
 
-pantheria %>%
+(pantheria %>%
   drop_na(trophic_level) %>%
-  model_matrix(~ -1 + trophic_level) %>%
-  slice(1:10) %>%
-  kable() %>%
-  kableExtra::kable_styling()
+  model_matrix(~ -1 + trophic_level))
 
 ```
 
@@ -112,13 +105,10 @@ Something I like to do is make the most common or most general class be the inte
 
 ```{r dummy_recode}
 
-pantheria %>%
+(pantheria %>%
   drop_na(trophic_level) %>%
   mutate(trophic_level = fct_infreq(trophic_level)) %>% # reorder by frequency
-  model_matrix(~ trophic_level) %>%
-  slice(1:10) %>%
-  kable() %>%
-  kableExtra::kable_styling()
+  model_matrix(~ trophic_level))
 
 ```
 
@@ -128,7 +118,7 @@ There are [many other strategies for encoding categorical variables](https://sta
 
 
 
-### Defining our model
+## Defining our model
 
 Now that we have refreshed our understanding of how categorical covariates are handled in a regression model, let's write out a model describing how `density_log` varies as a linear function of our `trophic_level` categorical predictor and the `mass_log` continuous covariate. As always, let's write out our model in statistical notation before implementing it in `brms`. 
 
@@ -166,7 +156,7 @@ But how do we interpret a regression coefficient when we have more than one regr
 
 
 
-### Fitting model in `brms`
+## Fitting model in `brms`
 
 Now that we've been able to write out our complete statistical model, we can not implement it in `brms`.
 
@@ -210,7 +200,7 @@ print(m_1)
 ```
 
 
-### Aside: Standardizing 
+## Aside: Standardizing 
 
 Remember, regression coefficients (e.g. $\beta_{1}$) are interpreted as the expected change in $y$ per unit change in the predictor (e.g. $m$). If our predictors are not on the same scale, it is "unfair" to compare them directly. For example, how can we compare the effect size of body mass versus being an herbivore on population density? While the regression coeffcient for being an herbivore (instead of an omnivore) has a greater magnitude than the coefficient for mass, but this is misleading because a complete difference in category to a 1-km$^2$ change in geographic range.
 
@@ -305,7 +295,7 @@ m_2 %>%
 
 
 
-### Checking model fit
+## Checking model fit
 
 So we've been able to fit our model and have (more) interpretable parameters. Our work with this model, however, is not done. As with our previous lessons, we now need to get an idea for how well our model represents our data -- can we "trust" inferences based on its parameter estimates?
 
@@ -385,7 +375,7 @@ pantheria_fit2 %>%
 ```
 
 
-Let's also look our model's ability to reconstruct specific point estimates. This means comparing point estimates from multiple (e.g. 100) posterior predictive datasets to those estimates from observed data. We've previously focused on the median population density for the trophic groups, but let's also take a look at the standard deviation of population denisty for those groups -- perhaps there is heterogenity in the spread of population density between the groups that we've yet to consider.
+Let's also look our model's ability to reconstruct specific point estimates. This means comparing point estimates from multiple (e.g. 100) posterior predictive datasets to those estimates from observed data. We've previously focused on the median population density for the trophic groups, but let's also take a look at the standard deviation of population density for those groups -- perhaps there is heterogeneity in the spread of population density between the groups that we've yet to consider.
 
 
 ```{r median_ppc}
@@ -420,8 +410,43 @@ pantheria_summary_ppc %>%
 
 ```
 
-The current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogenity in standard deviation between our groups -- while our model does a good job at approximateing the variation in population denisty of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
+The current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogeneity in standard deviation between our groups -- while our model does a good job at approximating the variation in population density of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
 
+
+## Aside: Matrix Notation 
+
+Regression models are frequently written in a compact form like
+$$
+\mu_{i} = \alpha + \sum^{n}_{j = 1} \beta_{j} x_{ji}
+$$
+where $j$ indexes each of the $n$ predictor variables. This statement can be unpacked as
+$$
+\mu_{i} = \alpha + \beta_{1} x_{1i} + \beta_{2} x_{2i} + \ldots + \beta_{n} x_{ni}.
+$$
+
+Both of these forms can be read as $\mu$ is modeled as the sum of an intercept and an additive combination of the products of parameters and predictors. This statement can be expressed more succinctly using matrix notation as
+$$
+\mu_{i} = X_{i} \beta,
+$$
+or even more succinctly as
+$$
+\mu = X \beta
+$$
+where $\mu$ is a vector of means, \beta is a vector of regression coefficients, and X is a *design matrix*.
+
+A design matrix has as mnay rows as the data, and as many columns as there are predictors plot one. This additional column is filled with 1s. These 1s are multiplied by the intercept and so return the unmodified intercept. Here is a quick visual on vector-matrix multiplication to help refresh your memory on how this all works to fit the vector $\mu$:
+![https://commons.wikimedia.org/wiki/File:Matrix_multiplication_row_column_correspondance.svg](figures/wiki_matrix_multi.png)
+
+You might have realized that we've actually interacted with design matrices before when we were exploring how [dummy coding is handled](#dummy) -- the column of all 1s called `Intercept` is eactly what I've described here. For example, we can peak at the design matrix from the regression model we developed in this lesson.
+
+```{r design_matrix}
+
+(pantheria_fit2 %>%
+  model_matrix(density_log ~ 1 + mass_log_stan + trophic_level))
+
+```
+
+Each row of the design matrix is multiplied by a vector of regression coefficients (which includes the intercept term), which are summed to give the estimate of $\mu$.
 
 
 ## Summary

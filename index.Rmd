@@ -9,12 +9,12 @@ biblio-style: apalike
 link-citations: yes
 github-repo: psmits/paleo_book
 twitter-handle: PeterDSmits
-description: "An informal short-course on analytical paleobiology"
+description: "An informal course on analytical paleobiology"
 ---
 
 # Preface {-}
 
-This book is a series of tutorials on data analysis with examples drawn from paleobiology, macroevolution, and macroecology. Each chapter of this book can act as a 2-hour tutorial, each building on the previous. 
+This book is a series of tutorials on data analysis with examples drawn from paleobiology, macroevolution, and macroecology. Each chapter of this book can act as a 2-hour tutorial, with each lesson building on the previous ones. 
 
 I emphasize Bayesian data analysis approaches throughout this text. Parameter inference is done using the [`brms`](https://github.com/paul-buerkner/brms) package which is a flexible tool for implementing [Stan-based](https://mc-stan.org/) models in R. 
 

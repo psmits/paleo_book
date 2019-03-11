@@ -21,6 +21,8 @@ The following materials are recommended pre-readings before starting this tutori
 - Chapter 2 "Small Worlds and Large Worlds" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 - OPTIONAL Chapter 3 "Sampling the Imaginary" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 
+Most of this section is based on material presented in **Statistical Rethinking** and code material from [Solomon Kurz's rewrite of **Statistical Rethinking**](https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/).
+
 
 ```{r load_packages_02, results = 'hide'}
 
@@ -106,7 +108,7 @@ Each part of the calculations we've done so far correspond directly to quantitie
 - The updated plausibility of any specific $p$ is called the *posterior probability*.
 
 
-### Building a model
+## Building a model
 
 Bayesian inference is made easier by working with probabilities instead of counts, but this makes everything look a lot harder. Let's explore this with a new problem.
 
@@ -137,12 +139,12 @@ To get the logic machinery working, we need to make some assumptions. These assu
     - Check model's adequacy for some purpose, or in light of stuff we don't know.
 
 
-#### A data story
+### A data story
 
 How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient enough to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.
 
 
-#### Bayesian updating
+### Bayesian updating
 
 A Bayesian model begins with one set of plausibilities assigned to each possible result: the prior plausibilities. These values are updated in light of data to produce our posterior plausibilities. This process is called *Bayesian updating*.
 
@@ -187,7 +189,7 @@ d %>%
 **Side note on sample size:** Bayesian estimates are valid and interpretable at any sample size. This fact is very much in contrast to the folk-wisdom around a minimum number of samples needed that you'll hear in non-Bayesian contexts. In non-Bayesian contests, statistical inference is justified by behaviour at large samples sizes, called asymptotic behaviour. The reason Bayesian estimates are always valid and interpretable comes down to the prior. If the prior is bad, the resulting posterior could be misleading. Regardless, all estimates in either context are based on assumptions -- the assumptions made during Bayesian analysis are just more obvious and capable of being directly interrogated.
 
 
-#### Evaluate
+### Evaluate
 
 Our model is learning from a "small world" of data. If there are important differences between the model and reality, then there is no guarantee of "large world" performance.
 
@@ -235,7 +237,7 @@ Instead, our objective should be to test the model's adequacy for some *purpose*
     - Sometimes written $p(\Theta | y)$.
 
 
-### Bayes' Theorem 
+## Bayes' Theorem 
 
 The logic defining the posterior distribution is called Bayes' Theorem. The theorem itself is an intuitive result from probability theory.
 
@@ -266,7 +268,7 @@ $$
 $E(\cdot)$ means to take the expectation, a (weighted) average. Notice also that $p(y)$ is a type of marginal probability distribution; the process of integrating out a term ($\Theta$) is called marginalization -- we are averaging $y$ over all values of $\Theta$. Remember also that an integral is like an average over a continuous distribution of values.
 
 
-### But how does it *work*?
+## But how does it *work*?
 
 Our model has three parts: likelihood, parameters, and the prior. These values get put into a "motor" that gives us a posterior distribution. The motor goes through the process of conditioning the prior on the data.
 
@@ -275,7 +277,7 @@ Turns out that knowing all the rules doesn't necessarily help us with the calcul
 All of the numerical techniques we use produce only *samples* from the posterior distribution, not the distribution itself. Luckily, samples from the distribution are easier to work with than the actual distribution -- this way we don't have to do integrals.
 
 
-#### Grid approximation
+### Grid approximation
 
 One of the simplest conditioning techniques is grid approximation. While most parameters are continuous, we can get a decent approximation of them by considering only a finite grid of parameter values. For any particular value $p'$, compute the posterior probability by multiplying the prior probability of $p'$ by the likelihood of $p'$.
 
@@ -324,7 +326,7 @@ tibble(p_grid = seq(from = 0, to = 1, length.out = 20), # define grid
 ```
 
 
-#### Markov chain Monte Carlo
+### Markov chain Monte Carlo
 
 For many models, grid approximation or quadratic approximation just aren't good enough. Grid approximation takes too long as your model gets bigger. Quadratic approximation chokes on complex models. Instead, we end up having to use a technique like Markov chain Monte Carlo (MCMC).
 
@@ -358,7 +360,7 @@ globe_brms %>%
 ```
 
 
-#### Aside on Interpreting Probabilities
+### Aside on Interpreting Probabilities
 
 From [Math with Bad Drawings](mathwithbaddrawings.com/2015/09/23/what-does-probability-mean-in-your-profession/).
 
@@ -367,7 +369,7 @@ From [Math with Bad Drawings](mathwithbaddrawings.com/2015/09/23/what-does-proba
 ![](figures/prob_starwars.jpg "Star Wars")
 
 
-### Working with samples
+## Working with samples
 
 In applied Bayesian analysis we rarely work directly with the integrals required by Bayes' theorem. Most numerical techniques we use, including MCMC methods, produce a set of samples that are individual draws from the posterior distribution. These samples transform a problem in calculus to a problem in data summary. It is easier to count the number of samples within an interval then calculate the integral for that interval.
 
@@ -382,7 +384,7 @@ Once our model produces a posterior distribution, the model's work is done. It i
 - Which parameter value has the highest posterior probability?
 
 
-#### Intervals of defined boundaries
+### Intervals of defined boundaries
 
 What is the posterior probability that the proportion of water is less than 50%? Count the number of observations that are less than 0.5, then divide by the number of samples.
 ```{r pp_lessthan}
@@ -399,14 +401,14 @@ globe_brms %>%
 ```
 
 
-#### Intervals of defined mass
+### Intervals of defined mass
 
 An interval of defined mass report two parameter values that contain between them the specified amount of posterior probability, a probability mass. You probably have heard of confidence intervals -- an interval of posterior probability is called a *credible interval*, though the distinction between the terms isn't terribly important.
 
 There are two kinds of intervals of defined mass: percentile (or quantile) interval, and highest posterior density interval.
 
 
-##### Percentile interval (PI)
+#### Percentile interval (PI)
 
 For example, you may want to know the boundaries of the lower 80% posterior interval. This interval has to start at 0, but where does it stop? How do we calculate the 80th percentile?
 ```{r percentile_80}
@@ -452,7 +454,7 @@ p1 + geom_area(data = subset(p1_df, x > qu$q10 & x < qu$q90),
 ```
 
 
-##### Highest posterior density interval 
+#### Highest posterior density interval 
 
 An HPDI is defined as the narrowest interval containing the specified probability mass. There are an infinite of posterior intervals with the same mass, but what if you want that interval that best represents the parameter values most consistent with the data AND you want the densest of these intervals.
 
@@ -477,7 +479,7 @@ Why are the PI and HPDI not equal?
 If the choice of interval makes a big difference in your summary, then you probably shouldn't be using intervals to summarize the posterior! The entire distribution of samples is our actual estimate, these summaries are just there to help digest this wealth of information. Do not only work with simplified versions of our posterior estimates!
 
 
-#### Point estimates
+### Point estimates
 
 Sometimes we only want a single point from the distribution. Given an entire posterior distribution, what value should we report? Mechanically, this task is simple -- pick a summary (e.g. mean) and go. Conceptually, however, this task is actually quite complex. The Bayesian parameter estimate is the entire posterior distribution, and not just a single number. In most cases, it is unnecessary to choose a single point estimate. It is always better to report *more* than necessary about the posterior distribution than not enough.
 

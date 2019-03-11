@@ -14,7 +14,7 @@ In the [previous lesson](#reg-intro) we introduced linear regression with a sing
 library(pacman)
 
 p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       modelr, knitr, kableExtra)
+       modelr)
 
 theme_set(theme_bw())
 
@@ -333,7 +333,7 @@ pantheria %>%
   ggplot(aes(x = mass_log_center, y = density_log)) +
   stat_lineribbon(mapping = aes(y = .prediction),
                   .width = c(0.9, 0.5, 0.1),
-                  colour = 'blue') +
+                  size = 0) +
   geom_point(data = pantheria, size = 2) +
   scale_fill_brewer() +
   NULL
@@ -445,7 +445,7 @@ pan_cut %>%
   ggplot(aes(x = mass_log_center, y = density_log)) +
   stat_lineribbon(mapping = aes(y = .prediction),
                   .width = c(0.9, 0.5, 0.1),
-                  colour = 'blue') +
+                  size = 0) +
   geom_point(data = pan_cut, size = 2) +
   scale_fill_brewer() +
   facet_wrap(~ trophic_level) +

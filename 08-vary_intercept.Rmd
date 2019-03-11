@@ -1,0 +1,29 @@
+# Varying-intercept(s)
+
+
+## Objectives
+
+- Introduce multilevel structures
+- Introduce varying intercept models
+
+
+```{r load_packages_08, message = F, results = 'hide'}
+
+library(pacman)
+
+p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       modelr, forcats, knitr, kableExtra)
+
+theme_set(theme_bw())
+
+```
+
+
+
+ARM: with grouped data, a regression that includes indicators for groups is called a varying-intercept model because it can be interepreted as a model with a different intercept for each group.
+
+$$
+\begin{align}
+y_{i} &= \text{Normal}(\alpha_{j[i]} + \beta x_{i}, \sigma)
+\end{align}
+$$

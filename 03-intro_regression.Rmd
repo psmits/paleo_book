@@ -152,7 +152,7 @@ tibble(sample_mu = rnorm(n, mean = 5, sd = 5),
 The resulting distribution describes the relative prior plausibilities we've defined for log valve lengths. Play around with the numbers in the priors and see its effect on the prior probability density of log valve lengths.
 
 
-#### Sampling from the model
+### Sampling from the model
 
 Now that we've completely defined out model (likelihood, data to condition on, parameters, and priors for all parameters) we can estimate the posterior plausibilities of our parameter values.
 
@@ -213,7 +213,7 @@ m_1 %>%
 We will be discussing the posterior predictive distribution further later in the lesson. For now, think of this as the distribution of outcomes implied by our model -- the distribution of plausible distributions.
 
 
-### Adding a predictor to the mix
+## Adding a predictor to the mix
 
 Currently, our model doesn't really resemble what we think of as "regression." Typically, we want to understand how the mean of our outcome variable is related to one or more predictor variables. 
 
@@ -294,7 +294,7 @@ plot(m_2)
 ```
 
 
-#### Aside: Dummy coding
+### Aside: Dummy coding
 
 `brm`, and R in general, will automatically translate categorical predictors like our taxon variable into what's called *dummy coding*. Here's an illustration of what that means using the subtype variable "sub" from our raw data:
 ```{r demo_dummy_coding}
@@ -317,7 +317,7 @@ There are [many other strategies for encoding categorical variables](https://sta
 Don't worry too much about understanding dummy coding yet -- just understand that it exists and that we will return to it in a later lesson.
 
 
-### Interpreting the model fit
+## Interpreting the model fit
 
 There are two broad categories of how we process model fit: tables, and plotting. Tables are fine, but plotting is key. It is easy to feel like you understand a table while still getting it wrong.
 
@@ -344,7 +344,7 @@ The second row is the slope term $\beta$. This parameter describes the expected 
 The third line is the standard deviation term $\sigma$, which describes the with of the distribution of log valve lengths. A useful trick for interpreting $\sigma$ is that about 95% of the probability of a Gaussian distribution lies between plus/minus two standard deviations from the mean. In this case, the estimate tells us that 95% of plausible log valve lengths lie within 1.68 log millimeters ($2\sigma$) of the mean log valve length.
 
 
-#### Linear predictor 
+### Linear predictor 
 
 Our regression model describes a line with an intercept and a slope. As demonstrated above, this is true even in the case of a binary predictor -- even though our predictor can only take one of two values, the formula still describes a line.
 
@@ -402,7 +402,7 @@ d %>%
 ```
 
 
-#### Posterior prediction
+### Posterior prediction
 
 An aspect of Bayesian models we've yet to discuss at length is the *posterior predictive distribution* $p(\tilde{y} | y)$.
 
@@ -431,12 +431,13 @@ d %>%
   geom_jitter(height = 0, alpha = 0.5) +
   stat_lineribbon(data = d_predicted,
                   mapping = aes(y = .prediction),
-                  alpha = 0.5) +
+                  .width = c(0.9, 0.5, 0.1),
+                  size = 0) +
   scale_fill_brewer()
 ```
 
 
-##### Posterior predictive tests
+### Posterior predictive tests
 
 What if we want to test how well our model fits specific parts of our data, and not just compare the similarities of their distributions? For example, how well does our model estimate the mean log valve size of each taxon? 
 
