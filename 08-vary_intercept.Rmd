@@ -18,6 +18,11 @@ theme_set(theme_bw())
 
 ```
 
+Motivation
+
+
+Dummy coding versus varying-intercepts
+
 
 
 ARM: with grouped data, a regression that includes indicators for groups is called a varying-intercept model because it can be interepreted as a model with a different intercept for each group.
@@ -27,3 +32,12 @@ $$
 y_{i} &= \text{Normal}(\alpha_{j[i]} + \beta x_{i}, \sigma)
 \end{align}
 $$
+
+
+
+
+
+Clustered data
+
+
+Repeated measurements

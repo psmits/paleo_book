@@ -19,27 +19,6 @@ theme_set(theme_bw())
 
 ```
 
-We're going to be using the PanTHERIA dataset like we did in the [previous lesson](#reg-continue). Just like last time, here is a quick clean up of the dataset before we do anything "principled."
-
-```{r pantheria_05}
-
-pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
-                      na = '-999.00') %>%
-  clean_names() %>% 
-  mutate(mass_log = log(x5_1_adult_body_mass_g),
-         range_group_log = log(x22_1_home_range_km2),
-         range_indiv_log = log(x22_2_home_range_indiv_km2),
-         density_log = log(x21_1_population_density_n_km2),
-         activity_cycle = case_when(x1_1_activity_cycle == 1 ~ 'nocturnal',
-                                    x1_1_activity_cycle == 2 ~ 'mixed',
-                                    x1_1_activity_cycle == 3 ~ 'diurnal'),
-         trophic_level = case_when(x6_2_trophic_level == 1 ~ 'herbivore',
-                                   x6_2_trophic_level == 2 ~ 'omnivore',
-                                   x6_2_trophic_level == 3 ~ 'carnivore'))
-
-```
-
-
 ## Reading
 
 The following materials are recommended pre-readings before starting this tutorial. 
@@ -61,9 +40,27 @@ The three general reasons for using a multivariate model are:
 
 - **Interactions**. Even in the absence of correlation, effects of two or more variables might depend on each other. An example would be plant growth as a function of light and water -- both are needed and only having one yields no benefit. In order to make effective inference about one variable, we need to consider the others as well.
 
-
-
 So far all of the linear regression models we have encountered have either been intercept-only or with a single predictor. For this lesson we're going to continue our focus on three variables from the PanTHERIA dataset: population density, body size, and trophic level. Population density, measured as the number of individuals per square-kilometer, is our variable of interest -- we want to define a model which describes how population density varies between mammal species. We have previously investigated body size as a predictor of population density, but the posterior predictive analysis of our model of population density with only body mass as a predictor demonstrates that this model does not adequately describe the data. We were able to do this by asking if our model is able to describe differences in the data that we know about but that our model does not (e.g. trophic level).
+
+We're going to be using the PanTHERIA dataset like we did in the [previous lesson](#reg-continue). Just like last time, here is a quick clean up of the dataset before we do anything "principled."
+
+```{r pantheria_05}
+
+pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
+                      na = '-999.00') %>%
+  clean_names() %>% 
+  mutate(mass_log = log(x5_1_adult_body_mass_g),
+         range_group_log = log(x22_1_home_range_km2),
+         range_indiv_log = log(x22_2_home_range_indiv_km2),
+         density_log = log(x21_1_population_density_n_km2),
+         activity_cycle = case_when(x1_1_activity_cycle == 1 ~ 'nocturnal',
+                                    x1_1_activity_cycle == 2 ~ 'mixed',
+                                    x1_1_activity_cycle == 3 ~ 'diurnal'),
+         trophic_level = case_when(x6_2_trophic_level == 1 ~ 'herbivore',
+                                   x6_2_trophic_level == 2 ~ 'omnivore',
+                                   x6_2_trophic_level == 3 ~ 'carnivore'))
+
+```
 
 
 ### Categorical predictor {#dummy}
