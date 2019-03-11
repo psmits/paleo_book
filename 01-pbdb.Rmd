@@ -183,7 +183,7 @@ carnivora <- read_csv(file = url) %>%
 ```
 
 
-### Binning observations
+## Binning observations
 
 Fossil occurrences in the PBDB have temporal information such as geologic stage, or a rough numerical age (max_ma, min_ma). The nature of the fossil record means that we do not have exact ages for anything, instead we have ranges. The numerical age of a fossil occurrence is bounded between a max and a min. This uncertainty in age presents a lot of problems that we have to deal with in our analyses, especially if the temporal order of our fossils matters to our question! An extremely common way to overcome this uncertainty is to coarsen the resolution of our fossils by binning them -- assigning similarly aged fossils to a shared temporal unit. Each temporal bin can be said to have a "width" -- the length of time covered by that bin. 
 

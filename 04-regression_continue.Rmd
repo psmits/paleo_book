@@ -14,7 +14,7 @@ In the [previous lesson](#reg-intro) we introduced linear regression with a sing
 library(pacman)
 
 p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       modelr, knitr, kableExtra)
+       modelr)
 
 theme_set(theme_bw())
 
