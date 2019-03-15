@@ -12,7 +12,7 @@
 library(pacman)
 
 p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       modelr, forcats, knitr, kableExtra)
+       modelr, forcats)
 
 theme_set(theme_bw())
 
@@ -20,8 +20,13 @@ theme_set(theme_bw())
 
 Motivation
 
+Simpson's Paradox
 
-Dummy coding versus varying-intercepts
+
+
+Dummy coding versus varying-intercepts. varying intercepts reframe problem. now the intercept is "universal" and the codes are their divergence from the mean.
+
+In both cases each group gets its "own intercept" but how that value is calculated differs. Also, in varying intercept models we can put a prior on the variance between the groups.
 
 
 
@@ -36,8 +41,59 @@ $$
 
 
 
-
 Clustered data
+
+```{r panteria_data}
+
+pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
+                      na = '-999.00') %>%
+  clean_names() %>% 
+  rename(order = msw05_order,
+         family = msw05_family,
+         genus = msw05_genus,
+         species = msw05_species,
+         binomial = msw05_binomial) %>%
+  mutate(mass_log = log(x5_1_adult_body_mass_g),
+         range_group_log = log(x22_1_home_range_km2),
+         range_indiv_log = log(x22_2_home_range_indiv_km2),
+         density_log = log(x21_1_population_density_n_km2),
+         activity_cycle = case_when(x1_1_activity_cycle == 1 ~ 'nocturnal',
+                                    x1_1_activity_cycle == 2 ~ 'mixed',
+                                    x1_1_activity_cycle == 3 ~ 'diurnal'),
+         trophic_level = case_when(x6_2_trophic_level == 1 ~ 'herbivore',
+                                   x6_2_trophic_level == 2 ~ 'omnivore',
+                                   x6_2_trophic_level == 3 ~ 'carnivore')) %>%
+  drop_na(density_log, mass_log, trophic_level, order, family, genus) %>%
+  mutate(mass_log_stan = (mass_log - mean(mass_log)) / (2 * sd(mass_log)),
+         trophic_level = fct_infreq(trophic_level))
+
+```
+
+
+```{r pantheria_family, cache = TRUE, message = FALSE, results = 'hide'}
+
+m_1 <- pantheria %>%
+  brm(data = .,
+      family = gaussian(),
+      formula = bf(density_log ~ 1 + mass_log_stan + trophic_level + (1 | order)),
+      prior = c(prior(normal(0, 10), class = 'Intercept'),
+                prior(normal(0, 5), class = 'b'),
+                prior(normal(-1, 5), class = 'b', coef = 'mass_log_stan'),
+                prior(cauchy(0, 5), class = 'sigma'),
+                prior(cauchy(0, 1), class = 'sd', group = 'order')),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0)
+
+```
+
 
 
 Repeated measurements
+
+
+
+
+
