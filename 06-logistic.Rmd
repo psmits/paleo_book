@@ -7,17 +7,94 @@
 library(pacman)
 
 p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       readxl)
+       readxl, arm)
 
 theme_set(theme_bw())
 
 ```
 
 
-```{r foram_data}
+This data is from Pearson and Ezard 2014 in Foram speciation. The authors were interested in seeing if there are any obvious trait changes associated with speciation in this lineage. While the authors of this study were interested in how various measures might change over time, we're going to be tackling a much simpler question: do measures of foram size and shape predict if an individual is sinistrally or dextrally coiled? Are they just simple mirror images or is there something more going on?
+
+
+```{r read_foram}
+
+# read in excel data directly
+foram <- read_xlsx(path = here::here('data', 'pearson_ezard', 
+                                     'turborotalia_data.xlsx')) %>%
+  janitor::clean_names() %>%
+  # useful derived measures
+  mutate(compression = diameter / axis,
+         chamber_aspect = chamber_height / chamber_width,
+         aperture_aspect = aperture_height / aperture_width,
+         dextral = as.factor(dextral))
 
 
 ```
 
 
 
+```{r explore_foram}
+
+gbase <- foram %>%
+  ggplot(aes(colour = dextral)) +
+  geom_point() +
+  scale_color_viridis(discrete = TRUE) +
+  NULL
+
+gbase + 
+  aes(x = baseline, y = diameter) +
+  labs(subtitle = 'baselength vs diameter')
+
+gbase +
+  aes(x = aperture_aspect, y = chamber_aspect) +
+  labs(subtitle = 'aperture aspect ratio vs chamber aspect ratio')
+
+gbase +
+  aes(x = area, y = chamber_number) +
+  labs(subtitle = 'area vs number of chambers in final whorl')
+
+```
+
+
+A common occurrence with measurement data is that many of the measures are derived from each other. The obvious examples here are the aspect ratios -- these are directly calculated from 2 other measures.
+
+Which measures do we include? I'm going to use the original paper as a guide.
+
+
+
+```{r foram_prepare}
+
+foram_ready <- 
+  foram %>%
+  dplyr::select(dextral,
+                compression, 
+                area, 
+                umbilical_angle,
+                aperture_aspect, 
+                chamber_aspect, 
+                chamber_number) %>%
+  mutate_at(.vars = vars(-dextral),
+            .funs = list(rescale = ~ arm::rescale(.))) %>%
+  dplyr::select(dextral, ends_with('rescale'))
+
+```
+
+
+
+```{r side_model}
+
+m_1 <- 
+  foram_ready %>%
+  brm(data = .,
+      family = bernoulli(),
+      formula = bf(dextral ~ .),
+      prior = c(prior(normal(0, 5), class = Intercept),
+                prior(normal(0, 1), class = b)),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0)
+
+```
