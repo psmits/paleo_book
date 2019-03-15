@@ -2,6 +2,12 @@
 
 ## Objectives
 
+- Introduce logistic regression
+- Interpret regression coefficients from logistic regression
+- Assess model adequacy
+
+
+
 ```{r load_packages_06, message = F, results = 'hide'}
 
 library(pacman)
@@ -14,12 +20,32 @@ theme_set(theme_bw())
 ```
 
 
-This data is from Pearson and Ezard 2014 in Foram speciation. The authors were interested in seeing if there are any obvious trait changes associated with speciation in this lineage. While the authors of this study were interested in how various measures might change over time, we're going to be tackling a much simpler question: do measures of foram size and shape predict if an individual is sinistrally or dextrally coiled? Are they just simple mirror images or is there something more going on?
 
+## Introduction
+
+Not all response variables we might be interested in are continuous variables between $-\infty$ and $\infty$. In some cases our variable of interest might be binary (0/1). For example, we might be interested in if a snail shell coils to the left or right, or if a species survives from one time to the next. The [globe tossing exercise from an earlier lesson](#globe-example) is an example of this type of data. But instead of just asking for the probability of an outcome, we'll now lean how to incorporate predictor variables into that type of model.
+
+
+Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, $y$, as following a Bernoulli distribution.
+
+The Bernoulli distribution has a single parameter, $\theta$, which is the probability of a "positive" outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the [globe tossing exercise](#globe-example), but describes the probability of individual events as opposed to the probability of those "positive" events in aggregate. But just because the type of the response variable has changed doesn't mean we have to completely reinvent the wheel. While we aren't going to use the Gaussian distribution to model our outcome like in linear regression, we're still going to use an additive series of covariates multiplied by regression coefficients.
+
+
+
+For this secion, we will develop a logistic regression model to describe the probability of a foram being dextrally coiling as a function of multiple measures of that foram's size and shape.
+
+To get to that point, we will first explore the foram measurement data. Once we have a handle on the data, we'll develop and write out a Bayesian logistic regression model and then fit that model using `brms`. Finally, as always, we'll then explore the adequacy of our model at describing out data.
+
+
+The data we will be focusing on is from a paper by [Pearson and Ezard](https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full) that explored changes to morphology associated with speciation. In the original study, the morpholgical measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on? 
+
+We're going to be ignoring the time structure of the data for now. We'll cover time series models in a later lesson. For now, we are just interested how size and shape measures predict coiling with the assumption that this relationship is constant over time. 
+
+Let's bring the data into the memory and start playing around with it. The Peason and Ezard paper describes a few derived measures, like compression ratio, that we can quickly recalculate.
 
 ```{r read_foram}
 
-# read in excel data directly
+# read in excel data directly with function from readxl
 foram <- read_xlsx(path = here::here('data', 'pearson_ezard', 
                                      'turborotalia_data.xlsx')) %>%
   janitor::clean_names() %>%
@@ -33,26 +59,16 @@ foram <- read_xlsx(path = here::here('data', 'pearson_ezard',
 ```
 
 
-
 ```{r explore_foram}
 
-gbase <- foram %>%
-  ggplot(aes(colour = dextral)) +
-  geom_point() +
-  scale_color_viridis(discrete = TRUE) +
-  NULL
-
-gbase + 
-  aes(x = baseline, y = diameter) +
-  labs(subtitle = 'baselength vs diameter')
-
-gbase +
-  aes(x = aperture_aspect, y = chamber_aspect) +
-  labs(subtitle = 'aperture aspect ratio vs chamber aspect ratio')
-
-gbase +
-  aes(x = area, y = chamber_number) +
-  labs(subtitle = 'area vs number of chambers in final whorl')
+foram %>%
+  dplyr::select(dextral, compression, area, umbilical_angle, aperture_aspect, 
+                chamber_aspect, chamber_number) %>%
+  gather(key = key, value = value, -dextral) %>%
+  ggplot(aes(x = value, fill = dextral)) +
+  geom_histogram() +
+  facet_wrap(~ key, scales = 'free') +
+  scale_fill_viridis(discrete = TRUE)
 
 ```
 

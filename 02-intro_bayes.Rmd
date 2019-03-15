@@ -108,7 +108,7 @@ Each part of the calculations we've done so far correspond directly to quantitie
 - The updated plausibility of any specific $p$ is called the *posterior probability*.
 
 
-## Building a model
+## Building a model {#globe-example}
 
 Bayesian inference is made easier by working with probabilities instead of counts, but this makes everything look a lot harder. Let's explore this with a new problem.
 
