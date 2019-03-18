@@ -410,7 +410,7 @@ pantheria_summary_ppc %>%
 The current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogeneity in standard deviation between our groups -- while our model does a good job at approximating the variation in population density of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
 
 
-## Aside: Matrix Notation 
+## Aside: Matrix Notation {#matrix-notation}
 
 Regression models are frequently written in a compact form like
 $$

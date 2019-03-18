@@ -26,13 +26,46 @@ theme_set(theme_bw())
 Not all response variables we might be interested in are continuous variables between $-\infty$ and $\infty$. In some cases our variable of interest might be binary (0/1). For example, we might be interested in if a snail shell coils to the left or right, or if a species survives from one time to the next. The [globe tossing exercise from an earlier lesson](#globe-example) is an example of this type of data. But instead of just asking for the probability of an outcome, we'll now lean how to incorporate predictor variables into that type of model.
 
 
-Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, $y$, as following a Bernoulli distribution.
-
-The Bernoulli distribution has a single parameter, $\theta$, which is the probability of a "positive" outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the [globe tossing exercise](#globe-example), but describes the probability of individual events as opposed to the probability of those "positive" events in aggregate. But just because the type of the response variable has changed doesn't mean we have to completely reinvent the wheel. While we aren't going to use the Gaussian distribution to model our outcome like in linear regression, we're still going to use an additive series of covariates multiplied by regression coefficients.
+Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, $y$, as following a Bernoulli distribution. The Bernoulli distribution has a single parameter, $\theta$, which is the probability of a "positive" outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the [globe tossing exercise](#globe-example), but describes the probability of individual events as opposed to the probability of those "positive" events in aggregate. 
 
 
+Just because the type of the response variable has changed doesn't mean we have to completely reinvent the wheel. While we aren't going to use the Gaussian distribution to model our outcome like in linear regression, we're still going to use an additive series of covariates multiplied by regression coefficients. But we have one huge complication: the Bernoulli distribution's only parameter $\theta$ is defined from 0 to 1 while a linear model $X \beta$ is defined from $-\infty$ to $\infty$. We need a tool (i.e. mathematical function) to make these definitions talk to each other. The logit, or log-odds, function does this exactly.
 
-For this secion, we will develop a logistic regression model to describe the probability of a foram being dextrally coiling as a function of multiple measures of that foram's size and shape.
+The logit function is defined as the logarithm of the odds of some probability $p$:
+$$
+\text{logit}(p) = \text{log} \frac{p}{1 - p}. 
+$$
+In the case of logistic regression, we would substitute the $\theta$ parameter from the Binomial which gives us an expression to map out linear model to:
+$$
+\text{logit}(\theta) = \text{log} \frac{\theta}{1 - \theta} = X \beta.
+$$
+Sometimes you will see the previous statement written using the inverse logit function, which is actually called the logitic function, which is defined
+$$
+\theta = \text{logit}^{-1} (X \beta) = \frac{\exp^{X \beta}}{1 + \exp^{X \beta}}.
+$$
+The logistic function is where logistic regression gets its name.
+
+Let's take a look at how the logistic transformation maps values from $-\infty$ to $\infty$ onto the (0, 1) space. 
+```{r logisitic-demo}
+
+df <- tibble(x = seq(from = -10, to = 10, by = .1)) %>%
+  mutate(y = arm::invlogit(x))         # inverse logit
+
+df %>%
+  ggplot() +
+  geom_line(aes(x = x, y = y))
+
+```
+This plot of the logistic function is very revealing. When `x` has a magnitude of 3 , `y` is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of `x` between -3 and 3 is much larger than the approximate slope of the logistic function for values of `x` with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. 
+
+Mapping functions, like the logit and logistic functions, let lot us model a parameter by a linear model, is frequently referred to as a **link function**.
+
+Now that we've defined a way to model the $\theta$ parameter of the Bernoulli distribution as a linear function, we can start building a logistic regression and explore how to interpret our model's regression coefficients.
+
+
+## Foram coiling 
+
+For this scion, we will develop a logistic regression model to describe the probability of a foram being dextrally coiling as a function of multiple measures of that foram's size and shape.
 
 To get to that point, we will first explore the foram measurement data. Once we have a handle on the data, we'll develop and write out a Bayesian logistic regression model and then fit that model using `brms`. Finally, as always, we'll then explore the adequacy of our model at describing out data.
 
@@ -46,18 +79,19 @@ Let's bring the data into the memory and start playing around with it. The Peaso
 ```{r read_foram}
 
 # read in excel data directly with function from readxl
-foram <- read_xlsx(path = here::here('data', 'pearson_ezard', 
+(foram <- read_xlsx(path = here::here('data', 'pearson_ezard', 
                                      'turborotalia_data.xlsx')) %>%
   janitor::clean_names() %>%
   # useful derived measures
   mutate(compression = diameter / axis,
          chamber_aspect = chamber_height / chamber_width,
          aperture_aspect = aperture_height / aperture_width,
-         dextral = as.factor(dextral))
-
+         dextral = as.factor(dextral)))
 
 ```
 
+
+A common occurrence with measurement data is that many of the measures are derived from each other. The obvious examples here are the aspect ratios -- these are directly calculated from 2 other measures. So which measures do we include in our analyses? I'm going to use the original paper as a guide and stick with compression, area, umbilical angle, aperture aspect ratio, chamber aspect ratio, and the number of chambers in the final whorl. 
 
 ```{r explore_foram}
 
@@ -72,10 +106,26 @@ foram %>%
 
 ```
 
+### Writing out a model
 
-A common occurrence with measurement data is that many of the measures are derived from each other. The obvious examples here are the aspect ratios -- these are directly calculated from 2 other measures.
+Now that we've defined our response variable (`dextral`) and isolated our predictors of interest, we can now start describing out model to predict if a specimen will be dextrally or sinistrally coiled.
 
-Which measures do we include? I'm going to use the original paper as a guide.
+Let's define the coiling of each observation as $y_{i}$ where $i$, where $i = 1, 2, ..., N$ and $N$ is the total number of observations. We can then define $X$ as our [design matrix](#matrix-notation) which is an $N$ by $D + 1$ matrix, where $D$ is the number of covariates. The additional column in $X$ is entirely 1s, so that it corresponds to the intercept term of the regression.
+
+Given these definitions, we can write out most of our logistic regression model.
+$$
+\begin{align}
+y_{i} &\sim \text{Bernoulli}(\theta) \\
+\text{logit}(\theta) &= X_{i} \beta \\
+\end{align}
+$$
+What key component(s) of this model are missing?
+
+When thinking about how to define the priors for our logistic regression model, let's return to our graph of the logistic function
+
+
+
+
 
 
 
@@ -91,6 +141,7 @@ foram_ready <-
                 chamber_aspect, 
                 chamber_number) %>%
   mutate_at(.vars = vars(-dextral),
+            # mean center, 2*sd standardize
             .funs = list(rescale = ~ arm::rescale(.))) %>%
   dplyr::select(dextral, ends_with('rescale'))
 

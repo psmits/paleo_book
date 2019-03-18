@@ -18,19 +18,19 @@ theme_set(theme_bw())
 
 ```{r poisson_demo}
 
-df <- tibble(x = seq(from = 0, to = 20, by = 1)) %>%
-  mutate(lambda_01 = dpois(x, lambda = 0.1))
-
-df %>%
-  gather(key = 'key', value = 'value', -x) %>% 
-  separate(key, c('type', 'scale')) %>%
-  mutate(scale = factor(scale, levels = sort(order(scale)))) %>%
-  ggplot(aes(x = x, y = value, colour = scale)) +
-  geom_line(size = 2) +
-  scale_y_continuous(NULL, breaks = NULL) +
-  scale_colour_viridis(discrete = TRUE) +
-  labs(colour = 'Scale') +
-  NULL
+#df <- tibble(x = seq(from = 0, to = 20, by = 1)) %>%
+#  mutate(lambda_01 = dpois(x, lambda = 0.1))
+#
+#df %>%
+#  gather(key = 'key', value = 'value', -x) %>% 
+#  separate(key, c('type', 'scale')) %>%
+#  mutate(scale = factor(scale, levels = sort(order(scale)))) %>%
+#  ggplot(aes(x = x, y = value, colour = scale)) +
+#  geom_line(size = 2) +
+#  scale_y_continuous(NULL, breaks = NULL) +
+#  scale_colour_viridis(discrete = TRUE) +
+#  labs(colour = 'Scale') +
+#  NULL
 
 
 ```
