@@ -29,7 +29,9 @@ Not all response variables we might be interested in are continuous variables be
 Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, $y$, as following a Bernoulli distribution. The Bernoulli distribution has a single parameter, $\theta$, which is the probability of a "positive" outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the [globe tossing exercise](#globe-example), but describes the probability of individual events as opposed to the probability of those "positive" events in aggregate. 
 
 
-Just because the type of the response variable has changed doesn't mean we have to completely reinvent the wheel. While we aren't going to use the Gaussian distribution to model our outcome like in linear regression, we're still going to use an additive series of covariates multiplied by regression coefficients. But we have one huge complication: the Bernoulli distribution's only parameter $\theta$ is defined from 0 to 1 while a linear model $X \beta$ is defined from $-\infty$ to $\infty$. We need a tool (i.e. mathematical function) to make these definitions talk to each other. The logit, or log-odds, function does this exactly.
+Just because the type of the response variable has changed doesn't mean we have to completely reinvent the wheel. While we aren't going to use the Gaussian distribution to model our outcome like in linear regression, we're still going to use an additive series of covariates multiplied by regression coefficients. But we have one huge complication: the Bernoulli distribution's only parameter $\theta$ is defined from 0 to 1 while a linear model $X \beta$ is defined from $-\infty$ to $\infty$. We need a tool (i.e. mathematical function) to make these definitions talk to each other. 
+
+The logit, or log-odds, function does this exactly.
 
 The logit function is defined as the logarithm of the odds of some probability $p$:
 $$
@@ -41,11 +43,12 @@ $$
 $$
 Sometimes you will see the previous statement written using the inverse logit function, which is actually called the logitic function, which is defined
 $$
-\theta = \text{logit}^{-1} (X \beta) = \frac{\exp^{X \beta}}{1 + \exp^{X \beta}}.
+\theta = \text{logit}^{-1} (X \beta) = \frac{e^{X \beta}}{1 + e^{X \beta}}.
 $$
 The logistic function is where logistic regression gets its name.
 
-Let's take a look at how the logistic transformation maps values from $-\infty$ to $\infty$ onto the (0, 1) space. 
+
+Let's take a look at how the logistic transformation maps values from $-\infty$ to $\infty$ onto the (0, 1) space.  Some people find it easier to work with the inverse logit (logit$^{-1}$) formulation because it can be easier to focus on the mapping of the linear predictor on to the probabilities, as opposed to the reverse. Howver, both of these formulations are equally valid so understanding both is important when reading the literature.
 ```{r logisitic-demo}
 
 df <- tibble(x = seq(from = -10, to = 10, by = .1)) %>%
@@ -53,14 +56,17 @@ df <- tibble(x = seq(from = -10, to = 10, by = .1)) %>%
 
 df %>%
   ggplot() +
-  geom_line(aes(x = x, y = y))
+  geom_line(aes(x = x, y = y)) +
+  labs(x = 'logit scale', y = 'probability scale')
 
 ```
-This plot of the logistic function is very revealing. When `x` has a magnitude of 3 , `y` is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of `x` between -3 and 3 is much larger than the approximate slope of the logistic function for values of `x` with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. 
+This plot of the logistic function is very revealing. When `x` has a magnitude of 3 , `y` is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of `x` between -3 and 3 is much larger than the approximate slope of the logistic function for values of `x` with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale -- a natural part of keeping probabilily bounded between 0 and 1.
+
 
 Mapping functions, like the logit and logistic functions, let lot us model a parameter by a linear model, is frequently referred to as a **link function**.
 
 Now that we've defined a way to model the $\theta$ parameter of the Bernoulli distribution as a linear function, we can start building a logistic regression and explore how to interpret our model's regression coefficients.
+
 
 
 ## Foram coiling 
@@ -106,11 +112,11 @@ foram %>%
 
 ```
 
-### Writing out a model
+## Writing out a model
 
 Now that we've defined our response variable (`dextral`) and isolated our predictors of interest, we can now start describing out model to predict if a specimen will be dextrally or sinistrally coiled.
 
-Let's define the coiling of each observation as $y_{i}$ where $i$, where $i = 1, 2, ..., N$ and $N$ is the total number of observations. We can then define $X$ as our [design matrix](#matrix-notation) which is an $N$ by $D + 1$ matrix, where $D$ is the number of covariates. The additional column in $X$ is entirely 1s, so that it corresponds to the intercept term of the regression.
+Let's define the coiling of each observation as $y_{i}$ where $i$, where $i = 1, 2, ..., N$ and $N$ is the total number of observations. We can then define $X$ as our [design matrix](#matrix-notation) which is an $N$ by $D + 1$ matrix, where $D$ is the number of covariates. The additional column in $X$ is entirely 1s, so that it corresponds to the intercept term of the regression. Let's define the first column of our design matrix as the one with all 1s. Lastly for now, let's define a vector of regression coefficients $\beta$ which has length $D + 1$ and the first element corresponds to the intercept.
 
 Given these definitions, we can write out most of our logistic regression model.
 $$
@@ -119,15 +125,63 @@ y_{i} &\sim \text{Bernoulli}(\theta) \\
 \text{logit}(\theta) &= X_{i} \beta \\
 \end{align}
 $$
-What key component(s) of this model are missing?
+What key component(s) of this model are missing? The priors! In order to assign priors for our regression coefficients, we first need to understand what those coefficients *mean*. 
 
-When thinking about how to define the priors for our logistic regression model, let's return to our graph of the logistic function
+### Interpreting logistic regression coefficients
+
+The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation. 
+
+There are two genres of effects that a regression coefficient in logistic regression can describe. The regression coefficient by itself describes the **relative effect** on the outcome expected from a change in the predictor. In contrast, the **absolute effect** of a regression coefficient is measured by the change in the probability of the outcome. This measure depends on the other parameters and describes the practical impact of a change in a predictor.
+
+
+Let's explore what this means with two examples. Suppose we have a logistic model defined
+$$
+\begin{align}
+y &\sim \text{Bernoulli}(\theta) \\
+\text{logit}(\theta) &= -1 + -0.5 x \\
+\end{align}
+$$
+
+The curvature of the logistic function requires us to choose where to evaluate changes, if we want to interpret on the probability scale. 
+
+But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses $x = 0$). For this example, $Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27$. 
+
+A positive increase in $x$ coresponds to a negative difference of approximately -0.5 in the logit probability of $y$. This is the relative effect of the predictor in $y$.
+
+We can calculate this difference in probability when x = 0 and when x = 1. So an increase of $x$ by 1 would decrease the probability of $y = 1$ by $\text{logit}^{-1}(-1 + -0.5 * 1) - \text{logit}^{-1}{-1 + -0.5 * 0} \approx -0.09$. This is the absolute effect of the predictor on $y$.
+
+
+## Odds ratios
+
+Another common way to interpret logistic regression coeffcients is in terms of **odds ratios**
+
+
+
+
+## Priors for our model
+
+When thinking about how to define the priors for our logistic regression model, let's return to our graph of the logistic function. Most of the action in this graph takes place between -3 and 3, and input values with magnitude greater than 5 barely move the value of the logistic function. When we think of this in terms possible regression coefficient values, we probably wouldn't expect an intercept term with magnitude much greater than 5 or a regression coefficient with magnitude much greater than 2. 
+
+
+Given our explorations, we can provide some weakly informative priors for reasonable regression coefficient values which reflect our understanding of the logistic function. Here is the full definition of our model including priors.
+$$
+\begin{align}
+y_{i} &\sim \text{Bernoulli}(\theta) \\
+\text{logit}(\theta) &= X_{i} \beta \\
+\beta_{d} &\sim
+  \begin{cases}
+  \text{Normal}(0, 5) $ \text{if } d = 1 \\ % for intercept
+  \text{Normal}(0, 1) $ \text{if } d \neq 1 \\
+  \end{cases}
+\end{align}
+$$
+Because the Bernoulli distribution only has a single parameter, we do not need to define a parameter for a scale term (e.g. standard deviation) like in a linear regression model.
 
 
 
 
 
-
+Before we analyze our data, we should mean-center and rescale our predictors by two times their standard deviations so that all regression coefficients are more interpretable and comparable.
 
 ```{r foram_prepare}
 
@@ -149,7 +203,7 @@ foram_ready <-
 
 
 
-```{r side_model}
+```{r side_model, cache = TRUE, message = FALSE, results = 'hide'}
 
 m_1 <- 
   foram_ready %>%
