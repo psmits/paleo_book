@@ -19,6 +19,14 @@ theme_set(theme_bw())
 
 ```
 
+## Reading
+
+The following materials are recommended pre-readings before starting this tutorial. 
+
+- Chapter 5 "Logistic regression" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+- Chapter 10 "Counting and Classification" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- OPTIONAL Chapter 9 "Big Entropy and the Generalized Linear Model" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+
 
 
 ## Introduction
@@ -151,11 +159,25 @@ A positive increase in $x$ coresponds to a negative difference of approximately 
 We can calculate this difference in probability when x = 0 and when x = 1. So an increase of $x$ by 1 would decrease the probability of $y = 1$ by $\text{logit}^{-1}(-1 + -0.5 * 1) - \text{logit}^{-1}{-1 + -0.5 * 0} \approx -0.09$. This is the absolute effect of the predictor on $y$.
 
 
-## Odds ratios
 
-Another common way to interpret logistic regression coeffcients is in terms of **odds ratios**
+#### Odds ratios
+
+Another common way to interpret logistic regression coefficients is in terms of **odds ratios**. 
+
+If two outcomes have the probabilities $(p, 1 - p)$, then $p / (1 - p)$ is the odds. An odds of 1 means the outcomes are equally likely because odds of 1 is equivalent to a probability of 0.5 ($1 = 0.5 / (1 - 0.5)$). Similarly, odds of 0.5 or 2 represent probabilities of 1/3 and 2/3, respectively.
+
+The ratio of two odds (e.g. $(p_{1} / (1 - p_{1})) / (p_{2} / (1 - p_{2}))$) is called an odds ratio. An odds ratio of 2 corresponds to a change from $p = 0.33$ to $p = 0.5$, or a change from $p = 0.5$ to $p = 0.67$.
+
+An advantage of working with odds ratios instead of probabilities is that it is possible to keep scaling up odds ratios indefinitely without running into the boundary points of 0 and 1.
+
+Exponentiated logistic regression coefficients can be interepreted as odds ratios. Let's illustrate this with an example model with only one predictor:
+$$
+\log \left( \frac{\text{Pr}(y = 1 | x)}{\text{Pr}(y = 0 | x)} \right) = \alpha + \beta x
+$$
+Adding 1 to $x$ in this equation as the effect of adding \beta to both sides of the equation. Exponentiating both sides means that the odds are then multiplied by $e^{\beta}$. So if $\beta = 0.3$, then a unit change in $x$ correponds to multiplicative change of $e^{0.3} \approx 1.35$ in the odds.
 
 
+I prefer to interpret coefficients on the probability scale and tend to recommend it. Most researchers don't understand odds in the first place, so the more obscure odds ratio only increases confusion.[Most researchers don't know the difference between an odds and a relative risk](https://www.theanalysisfactor.com/the-difference-between-relative-risk-and-odds-ratios/). People tend to understand the probability scale. By working with probabilities your interpretations are on the same scale as the data, not a transform of the data. It is important to understand the odds ratio interpretation, however, because it shows up often enough in the literature.
 
 
 ## Priors for our model
@@ -176,7 +198,6 @@ y_{i} &\sim \text{Bernoulli}(\theta) \\
 \end{align}
 $$
 Because the Bernoulli distribution only has a single parameter, we do not need to define a parameter for a scale term (e.g. standard deviation) like in a linear regression model.
-
 
 
 
