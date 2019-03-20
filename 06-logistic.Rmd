@@ -13,7 +13,7 @@
 library(pacman)
 
 p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       readxl, arm)
+       readxl, arm, modelr)
 
 theme_set(theme_bw())
 
@@ -200,7 +200,11 @@ $$
 Because the Bernoulli distribution only has a single parameter, we do not need to define a parameter for a scale term (e.g. standard deviation) like in a linear regression model.
 
 
+This is our first time exploring and writing out a logistic regression, so we should be careful to fully understand the implications of our priors. As discussed previously, the **prior predictive distribution** is just this -- the distribution of expected outcomes given just our prior information. 
 
+There are many ways we can go about simulating responses from the prior predictive distribution of our model. Two common ways are writing out an R function to simulate response data, and using the `brm()` function with the `sample_prior` argument given "only".
+
+Let's demonstrate both these options. First, though, we're going to need to prepare our data. While our model hasn't seen our data, we can still see what it'll guess for their coiling states.
 
 Before we analyze our data, we should mean-center and rescale our predictors by two times their standard deviations so that all regression coefficients are more interpretable and comparable.
 
@@ -222,6 +226,117 @@ foram_ready <-
 
 ```
 
+Writing an R function to simulate from the prior preductive distribution is probably the simplest but most time consuming approach.
+
+```{r logistic_prior_pred}
+
+#' Prior predictive distribution
+#'
+#' What it says on the tin. Simulate prior predictive draws from our coiling model. This function gives the probability of dextral coiling.
+#'
+#' @param x design matrix incl. intercept (default is 1x1 identity matrix)
+#' @param transform 
+coil_prior_prob <- function(x) {
+
+  # simulate values for each parameter
+  # how many predictors -> ncol(x)
+  b <- double(length = ncol(x))
+
+  if(length(b) == 1) {
+    b <- rnorm(1, 0, 5) 
+  } else if(length(b) > 1) {
+    b[1] <- rnorm(1, 0, 5)
+    b[-1] <- rnorm(length(b) - 1, 0, 1)
+  }
+    
+  # make linear function
+  lin <- x %*% b
+  out <- invlogit(lin)
+  out
+}
+
+```
+
+Now that we have a function to simulate prior predictive draws from data, let's apply it to our foram data. This means yielding a prior design matrix from `foram_ready` with an intercept column and all. We can just stick that matrix right into our function and get a single simulate dataset from the prior predictive distribution. Let's look at the distribution of 0s and 1s from the empirical data and compare it to the distribution from four simulated data sets 
+
+```{r hand_sim}
+
+foram_design <- foram_ready %>%
+  model_matrix(dextral ~ .) %>%
+  as.matrix()
+
+# rerun for different simulations
+draw <- rerun(4, coil_prior_prob(foram_design))
+
+sim_results <- tibble(sim = 1:4,
+                      prob = draw,
+                      coil_sim = map(draw, ~ ifelse(.x > 0.5, 1, 0)),
+                      coil_state = map(1:4, ~ foram_ready$dextral)) %>% 
+                 unnest()
+
+sim_results %>%
+  ggplot() +
+  geom_jitter(aes(x = coil_sim, y = coil_state), alpha = 0.1) +
+  facet_wrap(~ sim)
+
+```
+
+The big take away from this plot is that our priors imply equally random change of that observation being dextrally or sinestrally coiled.
+
+
+Another way to simulate from the prior predictive distribution is by using the `brm()` function that we usually use to fit our models. This approach doesn't involve writing our own function so it is more fool-proof. We still need to do an awkward amount by hand, though. This approach does require our model to be compiled and uses the HMC sampler to get our prior predictive draws, which means this process can take a lot longer. 
+
+```{r brm_sim, cache = TRUE, message = FALSE, results = 'hide'}
+
+foram_prior <- 
+  foram_ready %>%
+  brm(data = .,
+      family = bernoulli(),
+      formula = bf(dextral ~ .),
+      prior = c(prior(normal(0, 5), class = Intercept),
+                prior(normal(0, 1), class = b)),
+      sample_prior = 'only',
+      iter = 1004,                     # only need 4 after warmup
+      warmup = 1000,
+      chains = 4,                      
+      cores = 4,
+      refresh = 0)
+
+```
+```{r brm_sim_plot}
+
+reg_post <- foram_prior %>%
+ tidy_draws() %>%
+ dplyr::select(-(.chain:.draw), -(lp__:energy__)) %>%
+ as.matrix()
+
+foram_design <- foram_ready %>%
+  model_matrix(dextral ~ .) %>%
+  as.matrix()
+
+ppd <- (foram_design %*% t(reg_post[1:4, ])) %>%  # only first 4 draws
+  purrr::compose(as.list, as.data.frame)(.) %>%
+  map(., ~ invlogit(.x))
+
+sim_results <- tibble(sim = 1:4,
+                      prob = ppd,
+                      coil_sim = map(ppd, ~ ifelse(.x > 0.5, 1, 0)),
+                      coil_state = map(1:4, ~ foram_ready$dextral)) %>% 
+                 unnest()
+sim_results %>%
+  ggplot() +
+  geom_jitter(aes(x = coil_sim, y = coil_state), alpha = 0.1) +
+  facet_wrap(~ sim)
+
+```
+
+With complex models it is easier to use `brm()` to simulate from the prior predictive distribution.
+
+
+
+## Fitting our model
+
+We've explored our variables. We've written out a model. We've explored the implications of our priors. Now let's fit our model to our data!
 
 
 ```{r side_model, cache = TRUE, message = FALSE, results = 'hide'}

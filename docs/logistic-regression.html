@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-03-19">
+<meta name="date" content="2019-03-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -191,6 +191,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.5.1" data-path="logistic-regression.html"><a href="logistic-regression.html#interpreting-logistic-regression-coefficients"><i class="fa fa-check"></i><b>6.5.1</b> Interpreting logistic regression coefficients</a></li>
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="logistic-regression.html"><a href="logistic-regression.html#priors-for-our-model"><i class="fa fa-check"></i><b>6.6</b> Priors for our model</a></li>
+<li class="chapter" data-level="6.7" data-path="logistic-regression.html"><a href="logistic-regression.html#fitting-our-model"><i class="fa fa-check"></i><b>6.7</b> Fitting our model</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html"><i class="fa fa-check"></i><b>7</b> Poisson regression and others GLMs</a><ul>
 <li class="chapter" data-level="7.1" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#outline"><i class="fa fa-check"></i><b>7.1</b> Outline</a></li>
@@ -234,7 +235,7 @@ Proudly published with bookdown</a></li>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
 
 <span class="kw">p_load</span>(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
-       readxl, arm)
+       readxl, arm, modelr)
 
 <span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
@@ -369,6 +370,9 @@ y_{i} &amp;\sim \text{Bernoulli}(\theta) \\
   \end{cases}
 \end{align}
 \]</span> Because the Bernoulli distribution only has a single parameter, we do not need to define a parameter for a scale term (e.g. standard deviation) like in a linear regression model.</p>
+<p>This is our first time exploring and writing out a logistic regression, so we should be careful to fully understand the implications of our priors. As discussed previously, the <strong>prior predictive distribution</strong> is just this – the distribution of expected outcomes given just our prior information.</p>
+<p>There are many ways we can go about simulating responses from the prior predictive distribution of our model. Two common ways are writing out an R function to simulate response data, and using the <code>brm()</code> function with the <code>sample_prior</code> argument given “only”.</p>
+<p>Let’s demonstrate both these options. First, though, we’re going to need to prepare our data. While our model hasn’t seen our data, we can still see what it’ll guess for their coiling states.</p>
 <p>Before we analyze our data, we should mean-center and rescale our predictors by two times their standard deviations so that all regression coefficients are more interpretable and comparable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">foram_ready &lt;-<span class="st"> </span>
 <span class="st">  </span>foram <span class="op">%&gt;%</span>
@@ -383,6 +387,93 @@ y_{i} &amp;\sim \text{Bernoulli}(\theta) \\
             <span class="co"># mean center, 2*sd standardize</span>
             <span class="dt">.funs =</span> <span class="kw">list</span>(<span class="dt">rescale =</span> <span class="op">~</span><span class="st"> </span>arm<span class="op">::</span><span class="kw">rescale</span>(.))) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(dextral, <span class="kw">ends_with</span>(<span class="st">&#39;rescale&#39;</span>))</code></pre></div>
+<p>Writing an R function to simulate from the prior preductive distribution is probably the simplest but most time consuming approach.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; Prior predictive distribution</span>
+<span class="co">#&#39;</span>
+<span class="co">#&#39; What it says on the tin. Simulate prior predictive draws from our coiling model. This function gives the probability of dextral coiling.</span>
+<span class="co">#&#39;</span>
+<span class="co">#&#39; @param x design matrix incl. intercept (default is 1x1 identity matrix)</span>
+<span class="co">#&#39; @param transform </span>
+coil_prior_prob &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
+
+  <span class="co"># simulate values for each parameter</span>
+  <span class="co"># how many predictors -&gt; ncol(x)</span>
+  b &lt;-<span class="st"> </span><span class="kw">double</span>(<span class="dt">length =</span> <span class="kw">ncol</span>(x))
+
+  <span class="cf">if</span>(<span class="kw">length</span>(b) <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {
+    b &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">5</span>) 
+  } <span class="cf">else</span> <span class="cf">if</span>(<span class="kw">length</span>(b) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) {
+    b[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">5</span>)
+    b[<span class="op">-</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(b) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)
+  }
+    
+  <span class="co"># make linear function</span>
+  lin &lt;-<span class="st"> </span>x <span class="op">%*%</span><span class="st"> </span>b
+  out &lt;-<span class="st"> </span><span class="kw">invlogit</span>(lin)
+  out
+}</code></pre></div>
+<p>Now that we have a function to simulate prior predictive draws from data, let’s apply it to our foram data. This means yielding a prior design matrix from <code>foram_ready</code> with an intercept column and all. We can just stick that matrix right into our function and get a single simulate dataset from the prior predictive distribution. Let’s look at the distribution of 0s and 1s from the empirical data and compare it to the distribution from four simulated data sets</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">foram_design &lt;-<span class="st"> </span>foram_ready <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">model_matrix</span>(dextral <span class="op">~</span><span class="st"> </span>.) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as.matrix</span>()
+
+<span class="co"># rerun for different simulations</span>
+draw &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">4</span>, <span class="kw">coil_prior_prob</span>(foram_design))
+
+sim_results &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">sim =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,
+                      <span class="dt">prob =</span> draw,
+                      <span class="dt">coil_sim =</span> <span class="kw">map</span>(draw, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(.x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)),
+                      <span class="dt">coil_state =</span> <span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="op">~</span><span class="st"> </span>foram_ready<span class="op">$</span>dextral)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                 </span><span class="kw">unnest</span>()
+
+sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> coil_sim, <span class="dt">y =</span> coil_state), <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sim)</code></pre></div>
+<p><img src="paleo_book_files/figure-html/hand_sim-1.png" width="672" /></p>
+<p>The big take away from this plot is that our priors imply equally random change of that observation being dextrally or sinestrally coiled.</p>
+<p>Another way to simulate from the prior predictive distribution is by using the <code>brm()</code> function that we usually use to fit our models. This approach doesn’t involve writing our own function so it is more fool-proof. We still need to do an awkward amount by hand, though. This approach does require our model to be compiled and uses the HMC sampler to get our prior predictive draws, which means this process can take a lot longer.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">foram_prior &lt;-<span class="st"> </span>
+<span class="st">  </span>foram_ready <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">bernoulli</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(dextral <span class="op">~</span><span class="st"> </span>.),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">class =</span> b)),
+      <span class="dt">sample_prior =</span> <span class="st">&#39;only&#39;</span>,
+      <span class="dt">iter =</span> <span class="dv">1004</span>,                     <span class="co"># only need 4 after warmup</span>
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,                      
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg_post &lt;-<span class="st"> </span>foram_prior <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">tidy_draws</span>() <span class="op">%&gt;%</span>
+<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>(.chain<span class="op">:</span>.draw), <span class="op">-</span>(lp__<span class="op">:</span>energy__)) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">as.matrix</span>()
+
+foram_design &lt;-<span class="st"> </span>foram_ready <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">model_matrix</span>(dextral <span class="op">~</span><span class="st"> </span>.) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as.matrix</span>()
+
+ppd &lt;-<span class="st"> </span>(foram_design <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(reg_post[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, ])) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># only first 4 draws</span>
+<span class="st">  </span>purrr<span class="op">::</span><span class="kw">compose</span>(as.list, as.data.frame)(.) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">map</span>(., <span class="op">~</span><span class="st"> </span><span class="kw">invlogit</span>(.x))
+
+sim_results &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">sim =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,
+                      <span class="dt">prob =</span> ppd,
+                      <span class="dt">coil_sim =</span> <span class="kw">map</span>(ppd, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(.x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)),
+                      <span class="dt">coil_state =</span> <span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="op">~</span><span class="st"> </span>foram_ready<span class="op">$</span>dextral)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                 </span><span class="kw">unnest</span>()
+sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> coil_sim, <span class="dt">y =</span> coil_state), <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sim)</code></pre></div>
+<p><img src="paleo_book_files/figure-html/brm_sim_plot-1.png" width="672" /></p>
+<p>With complex models it is easier to use <code>brm()</code> to simulate from the prior predictive distribution.</p>
+</div>
+<div id="fitting-our-model" class="section level2">
+<h2><span class="header-section-number">6.7</span> Fitting our model</h2>
+<p>We’ve explored our variables. We’ve written out a model. We’ve explored the implications of our priors. Now let’s fit our model to our data!</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 <span class="st">  </span>foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
