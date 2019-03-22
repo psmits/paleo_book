@@ -68,6 +68,7 @@ df %>%
   labs(x = 'logit scale', y = 'probability scale')
 
 ```
+
 This plot of the logistic function is very revealing. When `x` has a magnitude of 3 , `y` is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of `x` between -3 and 3 is much larger than the approximate slope of the logistic function for values of `x` with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale -- a natural part of keeping probabilily bounded between 0 and 1.
 
 
@@ -336,8 +337,7 @@ With complex models it is easier to use `brm()` to simulate from the prior predi
 
 ## Fitting our model
 
-We've explored our variables. We've written out a model. We've explored the implications of our priors. Now let's fit our model to our data!
-
+We've explored our variables. We've written out a model. We've explored the implications of our priors. Now let's fit our model to our data! We've already coded up our model using `brm()` earlier when looking at the prior preditive distribution. Let's do that again but this time increase the number of samples and leave off the `sample_prior` argument.
 
 ```{r side_model, cache = TRUE, message = FALSE, results = 'hide'}
 
@@ -355,3 +355,69 @@ m_1 <-
       refresh = 0)
 
 ```
+```{r side_model_summary}
+
+print(m_1)
+
+```
+
+Looking directly at the parameter estimates let's us compare the relative effects of the predictors on the expected outcome. Let's plot the posterior estimates for the regression coefficients.
+
+```{r side_model_coef_relative}
+
+m_1 %>%
+ tidy_draws() %>%
+ dplyr::select(-(.chain:.draw), -(lp__:energy__)) %>%
+ gather(key = key, value = value) %>%
+ mutate(key = fct_inorder(key),
+        key = fct_rev(key)) %>%
+ ggplot(aes(x = value, y = key)) +
+ geom_halfeyeh(.width = c(0.9, 0.5)) + # alternative to ggridges
+ labs(x = 'Posterior estimate', y = 'Regression coefficient')
+
+```
+Remember, these parameters as written describe the expected change in logit $y$ per unit change in their respective variable -- this is the relative effect. To look at the absolute effect of these covariates we need to explore their effects on the probability scale.
+
+
+```{r side_model_coef_probability}
+
+m_1 %>%
+ tidy_draws() %>%
+ dplyr::select(-(.chain:.draw), -(lp__:energy__)) %>%
+ transmute(midpoint = invlogit(b_Intercept),
+           compression = invlogit(b_Intercept + b_compression_rescale * 1),
+           area = invlogit(b_Intercept + b_area_rescale * 1),
+           umbilical_angle = invlogit(b_Intercept + b_umbilical_angle_rescale * 1),
+           aperture_aspect = invlogit(b_Intercept + b_aperture_aspect_rescale * 1),
+           chamber_aspect = invlogit(b_Intercept + b_chamber_aspect_rescale * 1),
+           chamber_number = invlogit(b_Intercept + b_chamber_number_rescale * 1)) %>%
+ transmute_at(.vars = vars(-midpoint),
+              .funs = list(change = ~ . - midpoint)) %>%
+ gather(key = key, value = value) %>%
+ ggplot(aes(x = value, y = key)) +
+ geom_halfeyeh(.width = c(0.9, 0.5)) + # alternative to ggridges
+ labs(x = 'Change in probability at midpoint per unit increase in predictor', y = 'Predictor')
+
+```
+
+
+
+
+
+
+
+
+## Checking model adequacy
+
+
+
+
+
+
+
+## Summary
+
+
+
+
+

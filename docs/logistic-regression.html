@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -192,6 +192,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="logistic-regression.html"><a href="logistic-regression.html#priors-for-our-model"><i class="fa fa-check"></i><b>6.6</b> Priors for our model</a></li>
 <li class="chapter" data-level="6.7" data-path="logistic-regression.html"><a href="logistic-regression.html#fitting-our-model"><i class="fa fa-check"></i><b>6.7</b> Fitting our model</a></li>
+<li class="chapter" data-level="6.8" data-path="logistic-regression.html"><a href="logistic-regression.html#checking-model-adequacy"><i class="fa fa-check"></i><b>6.8</b> Checking model adequacy</a></li>
+<li class="chapter" data-level="6.9" data-path="logistic-regression.html"><a href="logistic-regression.html#summary-5"><i class="fa fa-check"></i><b>6.9</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html"><i class="fa fa-check"></i><b>7</b> Poisson regression and others GLMs</a><ul>
 <li class="chapter" data-level="7.1" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#outline"><i class="fa fa-check"></i><b>7.1</b> Outline</a></li>
@@ -269,7 +271,8 @@ df <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;logit scale&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;probability scale&#39;</span>)</code></pre></div>
-<p><img src="paleo_book_files/figure-html/logisitic-demo-1.png" width="672" /> This plot of the logistic function is very revealing. When <code>x</code> has a magnitude of 3 , <code>y</code> is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of <code>x</code> between -3 and 3 is much larger than the approximate slope of the logistic function for values of <code>x</code> with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale – a natural part of keeping probabilily bounded between 0 and 1.</p>
+<p><img src="paleo_book_files/figure-html/logisitic-demo-1.png" width="672" /></p>
+<p>This plot of the logistic function is very revealing. When <code>x</code> has a magnitude of 3 , <code>y</code> is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of <code>x</code> between -3 and 3 is much larger than the approximate slope of the logistic function for values of <code>x</code> with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale – a natural part of keeping probabilily bounded between 0 and 1.</p>
 <p>Mapping functions, like the logit and logistic functions, let lot us model a parameter by a linear model, is frequently referred to as a <strong>link function</strong>.</p>
 <p>Now that we’ve defined a way to model the <span class="math inline">\(\theta\)</span> parameter of the Bernoulli distribution as a linear function, we can start building a logistic regression and explore how to interpret our model’s regression coefficients.</p>
 </div>
@@ -473,7 +476,7 @@ sim_results <span class="op">%&gt;%</span>
 </div>
 <div id="fitting-our-model" class="section level2">
 <h2><span class="header-section-number">6.7</span> Fitting our model</h2>
-<p>We’ve explored our variables. We’ve written out a model. We’ve explored the implications of our priors. Now let’s fit our model to our data!</p>
+<p>We’ve explored our variables. We’ve written out a model. We’ve explored the implications of our priors. Now let’s fit our model to our data! We’ve already coded up our model using <code>brm()</code> earlier when looking at the prior preditive distribution. Let’s do that again but this time increase the number of samples and leave off the <code>sample_prior</code> argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 <span class="st">  </span>foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
@@ -486,6 +489,69 @@ sim_results <span class="op">%&gt;%</span>
       <span class="dt">chains =</span> <span class="dv">4</span>,
       <span class="dt">cores =</span> <span class="dv">4</span>,
       <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(m_<span class="dv">1</span>)</code></pre></div>
+<pre><code>##  Family: bernoulli 
+##   Links: mu = logit 
+## Formula: dextral ~ compression_rescale + area_rescale + umbilical_angle_rescale + aperture_aspect_rescale + chamber_aspect_rescale + chamber_number_rescale 
+##    Data: . (Number of observations: 10200) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##                         Estimate Est.Error l-95% CI u-95% CI Eff.Sample
+## Intercept                  -0.26      0.02    -0.31    -0.21       6274
+## compression_rescale        -1.75      0.08    -1.91    -1.60       4259
+## area_rescale               -0.92      0.05    -1.02    -0.81       5517
+## umbilical_angle_rescale    -0.26      0.05    -0.36    -0.17       5323
+## aperture_aspect_rescale    -0.46      0.05    -0.57    -0.36       5142
+## chamber_aspect_rescale      1.63      0.06     1.50     1.75       3856
+## chamber_number_rescale     -0.69      0.05    -0.80    -0.59       5135
+##                         Rhat
+## Intercept               1.00
+## compression_rescale     1.00
+## area_rescale            1.00
+## umbilical_angle_rescale 1.00
+## aperture_aspect_rescale 1.00
+## chamber_aspect_rescale  1.00
+## chamber_number_rescale  1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>Looking directly at the parameter estimates let’s us compare the relative effects of the predictors on the expected outcome. Let’s plot the posterior estimates for the regression coefficients.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">tidy_draws</span>() <span class="op">%&gt;%</span>
+<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>(.chain<span class="op">:</span>.draw), <span class="op">-</span>(lp__<span class="op">:</span>energy__)) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">gather</span>(<span class="dt">key =</span> key, <span class="dt">value =</span> value) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">key =</span> <span class="kw">fct_inorder</span>(key),
+        <span class="dt">key =</span> <span class="kw">fct_rev</span>(key)) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> key)) <span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_halfeyeh</span>(<span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># alternative to ggridges</span>
+<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Posterior estimate&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Regression coefficient&#39;</span>)</code></pre></div>
+<p><img src="paleo_book_files/figure-html/side_model_coef_relative-1.png" width="672" /> Remember, these parameters as written describe the expected change in logit <span class="math inline">\(y\)</span> per unit change in their respective variable – this is the relative effect. To look at the absolute effect of these covariates we need to explore their effects on the probability scale.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">tidy_draws</span>() <span class="op">%&gt;%</span>
+<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>(.chain<span class="op">:</span>.draw), <span class="op">-</span>(lp__<span class="op">:</span>energy__)) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">transmute</span>(<span class="dt">midpoint =</span> <span class="kw">invlogit</span>(b_Intercept),
+           <span class="dt">compression =</span> <span class="kw">invlogit</span>(b_Intercept <span class="op">+</span><span class="st"> </span>b_compression_rescale <span class="op">*</span><span class="st"> </span><span class="dv">1</span>),
+           <span class="dt">area =</span> <span class="kw">invlogit</span>(b_Intercept <span class="op">+</span><span class="st"> </span>b_area_rescale <span class="op">*</span><span class="st"> </span><span class="dv">1</span>),
+           <span class="dt">umbilical_angle =</span> <span class="kw">invlogit</span>(b_Intercept <span class="op">+</span><span class="st"> </span>b_umbilical_angle_rescale <span class="op">*</span><span class="st"> </span><span class="dv">1</span>),
+           <span class="dt">aperture_aspect =</span> <span class="kw">invlogit</span>(b_Intercept <span class="op">+</span><span class="st"> </span>b_aperture_aspect_rescale <span class="op">*</span><span class="st"> </span><span class="dv">1</span>),
+           <span class="dt">chamber_aspect =</span> <span class="kw">invlogit</span>(b_Intercept <span class="op">+</span><span class="st"> </span>b_chamber_aspect_rescale <span class="op">*</span><span class="st"> </span><span class="dv">1</span>),
+           <span class="dt">chamber_number =</span> <span class="kw">invlogit</span>(b_Intercept <span class="op">+</span><span class="st"> </span>b_chamber_number_rescale <span class="op">*</span><span class="st"> </span><span class="dv">1</span>)) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">transmute_at</span>(<span class="dt">.vars =</span> <span class="kw">vars</span>(<span class="op">-</span>midpoint),
+              <span class="dt">.funs =</span> <span class="kw">list</span>(<span class="dt">change =</span> <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>midpoint)) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">gather</span>(<span class="dt">key =</span> key, <span class="dt">value =</span> value) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> key)) <span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_halfeyeh</span>(<span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># alternative to ggridges</span>
+<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Change in probability at midpoint per unit increase in predictor&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Predictor&#39;</span>)</code></pre></div>
+<p><img src="paleo_book_files/figure-html/side_model_coef_probability-1.png" width="672" /></p>
+</div>
+<div id="checking-model-adequacy" class="section level2">
+<h2><span class="header-section-number">6.8</span> Checking model adequacy</h2>
+</div>
+<div id="summary-5" class="section level2">
+<h2><span class="header-section-number">6.9</span> Summary</h2>
 
 </div>
 </div>
