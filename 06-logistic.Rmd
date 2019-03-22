@@ -271,13 +271,13 @@ draw <- rerun(4, coil_prior_prob(foram_design))
 
 sim_results <- tibble(sim = 1:4,
                       prob = draw,
-                      coil_sim = map(draw, ~ ifelse(.x > 0.5, 1, 0)),
-                      coil_state = map(1:4, ~ foram_ready$dextral)) %>% 
+                      dextral_predict = map(draw, ~ ifelse(.x > 0.5, 1, 0)),
+                      dextral = map(1:4, ~ foram_ready$dextral)) %>% 
                  unnest()
 
 sim_results %>%
   ggplot() +
-  geom_jitter(aes(x = coil_sim, y = coil_state), alpha = 0.1) +
+  geom_jitter(aes(x = dextral_predict, y = dextral), alpha = 0.1) +
   facet_wrap(~ sim)
 
 ```
@@ -306,28 +306,14 @@ foram_prior <-
 ```
 ```{r brm_sim_plot}
 
-reg_post <- foram_prior %>%
- tidy_draws() %>%
- dplyr::select(-(.chain:.draw), -(lp__:energy__)) %>%
- as.matrix()
-
-foram_design <- foram_ready %>%
-  model_matrix(dextral ~ .) %>%
-  as.matrix()
-
-ppd <- (foram_design %*% t(reg_post[1:4, ])) %>%  # only first 4 draws
-  purrr::compose(as.list, as.data.frame)(.) %>%
-  map(., ~ invlogit(.x))
-
-sim_results <- tibble(sim = 1:4,
-                      prob = ppd,
-                      coil_sim = map(ppd, ~ ifelse(.x > 0.5, 1, 0)),
-                      coil_state = map(1:4, ~ foram_ready$dextral)) %>% 
-                 unnest()
-sim_results %>%
+foram_ready %>%
+  add_fitted_draws(model = foram_prior,
+                   n = 4) %>%
+  ungroup() %>%
+  mutate(dextral_predict = ifelse(.value > 0.5, 1, 0)) %>%
   ggplot() +
-  geom_jitter(aes(x = coil_sim, y = coil_state), alpha = 0.1) +
-  facet_wrap(~ sim)
+  geom_jitter(aes(x = dextral_predict, y = dextral), alpha = 0.1) +
+  facet_wrap(~ .draw)
 
 ```
 
@@ -401,7 +387,94 @@ m_1 %>%
 ```
 
 
+We can also visualize the relationship between the individual covariates and coiling state.
 
+```{r side_model_compression}
+
+line_data <- foram_ready %>%
+  data_grid(compression_rescale = seq_range(compression_rescale, n = 100),
+            area_rescale = 0,
+            umbilical_angle_rescale = 0,
+            aperture_aspect_rescale = 0,
+            chamber_aspect_rescale = 0,
+            chamber_number_rescale = 0) %>%
+  add_fitted_draws(model = m_1,
+                   n = 100) %>%
+  ungroup()
+
+ggplot(line_data) +
+  geom_jitter(data = foram_ready,
+              mapping = aes(x = compression_rescale,
+                            y = as.numeric(dextral) - 1),
+              alpha = 0.1,
+              width = 0,
+              height = 0.05) +
+  geom_line(mapping = aes(x = compression_rescale,
+                          y = .value,
+                          group = .draw), 
+            alpha = 0.1,
+            colour = 'skyblue') +
+  NULL
+
+```
+
+```{r side_model_chamber_aspect}
+
+line_data <- foram_ready %>%
+  data_grid(compression_rescale = 0,
+            area_rescale = 0,
+            umbilical_angle_rescale = 0,
+            aperture_aspect_rescale = 0,
+            chamber_aspect_rescale = seq_range(chamber_aspect_rescale, n = 100),
+            chamber_number_rescale = 0) %>%
+  add_fitted_draws(model = m_1,
+                   n = 100) %>%
+  ungroup()
+
+ggplot(line_data) +
+  geom_jitter(data = foram_ready,
+              mapping = aes(x = chamber_aspect_rescale,
+                            y = as.numeric(dextral) - 1),
+              alpha = 0.1,
+              width = 0,
+              height = 0.05) +
+  geom_line(mapping = aes(x = chamber_aspect_rescale,
+                          y = .value,
+                          group = .draw), 
+            alpha = 0.1,
+            colour = 'skyblue') +
+  NULL
+
+```
+
+```{r side_model_umbilical_angle}
+
+line_data <- foram_ready %>%
+  data_grid(compression_rescale = 0,
+            area_rescale = 0,
+            umbilical_angle_rescale = seq_range(umbilical_angle_rescale, n = 100),
+            aperture_aspect_rescale = 0,
+            chamber_aspect_rescale = 0,
+            chamber_number_rescale = 0) %>%
+  add_fitted_draws(model = m_1,
+                   n = 100) %>%
+  ungroup()
+
+ggplot(line_data) +
+  geom_jitter(data = foram_ready,
+              mapping = aes(x = umbilical_angle_rescale,
+                            y = as.numeric(dextral) - 1),
+              alpha = 0.1,
+              width = 0,
+              height = 0.05) +
+  geom_line(mapping = aes(x = umbilical_angle_rescale,
+                          y = .value,
+                          group = .draw), 
+            alpha = 0.1,
+            colour = 'skyblue') +
+  NULL
+
+```
 
 
 
@@ -410,6 +483,36 @@ m_1 %>%
 ## Checking model adequacy
 
 
+How can we measure our model's adequacy?
+
+
+```{r side_model_accuracy}
+
+# plot predicted versus observed for 4 posterior predictive draws
+foram_ready %>%
+  add_predicted_draws(model = m_1, n = 4) %>%
+  ungroup() %>%
+  ggplot() +
+  geom_jitter(aes(x = .prediction, y = dextral),
+              alpha = 0.1) +
+  labs(x = 'Predicted coiling state', y = 'Observed coiling state') +
+  facet_wrap(~ .draw)                  
+
+# calculate accuracy, look at distribution from 100 posterior preditive draws
+foram_ready %>%
+  add_predicted_draws(model = m_1, n = 100) %>%
+  ungroup() %>%
+  mutate(accurate = if_else(dextral == .prediction, 1, 0)) %>%
+  group_by(.draw) %>%
+  dplyr::summarize(accuracy = sum(accurate) / n()) %>%
+  ggplot() +
+  stat_density(aes(x = accuracy)) +
+  labs(x = 'Posterior Predictive Accuracy', y = '')
+
+
+```
+
+Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model?
 
 
 
