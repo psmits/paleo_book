@@ -282,6 +282,8 @@ sim_results %>%
 
 ```
 
+The above plot resembles a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) except we present a cloud of points in each of the quadrants as opposed to a count. However, the principle is the same -- we want to compare actual versus predicted.
+
 The big take away from this plot is that our priors imply equally random change of that observation being dextrally or sinestrally coiled.
 
 
@@ -387,7 +389,9 @@ m_1 %>%
 ```
 
 
-We can also visualize the relationship between the individual covariates and coiling state.
+We can also visualize the relationship between the individual covariates and coiling state. This involves holding all predictors constant except for one of them, and calculating the logistic function for the whole range of values.
+
+Let's look at the effects of three of the six covariates on expected coiling direction.
 
 ```{r side_model_compression}
 
@@ -482,11 +486,15 @@ ggplot(line_data) +
 
 ## Checking model adequacy
 
+Now that we've fit out model and taken a look at our parameter estimates, we should really investigate if our model is an adequate description of our data. How confident can we be in interpreting the results of our analysis?
 
-How can we measure our model's adequacy?
+For our linear regression models, we could just compare properties like the density or median of the response to a distribution of those measures from our poseterior predictive distribution. With binary data it isn't that easy. Instead, we have to explore other ways of summarizing our model's adequacy.
 
+A very simple measure of performance with binary data is to measure our model's **accuracy** -- does our model predict a 1 when our data is a 1? A 0 when the data is a 0? While other metrics exist (like [ROC/AUC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic), we're just going to cover accuracy in this lesson.
 
-```{r side_model_accuracy}
+We can plot the (mis)matches like we did when we explored our prior predictive distribution and create a visual confusion matrix.
+
+```{r side_model_confusion}
 
 # plot predicted versus observed for 4 posterior predictive draws
 foram_ready %>%
@@ -496,7 +504,14 @@ foram_ready %>%
   geom_jitter(aes(x = .prediction, y = dextral),
               alpha = 0.1) +
   labs(x = 'Predicted coiling state', y = 'Observed coiling state') +
-  facet_wrap(~ .draw)                  
+  facet_wrap(~ .draw) +
+  NULL
+
+```
+
+We can also just calculate accuracy as the percent of predictions that are correct for a single posterior predictive draw, repeat this 100s of times, and present a posterior distribution of accuracies.
+
+```{r side_model_accuracy}
 
 # calculate accuracy, look at distribution from 100 posterior preditive draws
 foram_ready %>%
@@ -507,20 +522,17 @@ foram_ready %>%
   dplyr::summarize(accuracy = sum(accurate) / n()) %>%
   ggplot() +
   stat_density(aes(x = accuracy)) +
-  labs(x = 'Posterior Predictive Accuracy', y = '')
-
+  labs(x = 'Posterior Predictive Accuracy', y = '') +
+  NULL
 
 ```
 
-Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model?
-
-
-
+Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model? Is this even a valid scientific question worth continuing with? 
 
 
 ## Summary
 
-
+This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. $\text{logit}(p) = X\beta$). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and aboluste effects and emphasizing interpreting coefficients on the probability scale. We also explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.
 
 
 

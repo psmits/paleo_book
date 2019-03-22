@@ -434,6 +434,7 @@ sim_results <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dextral_predict, <span class="dt">y =</span> dextral), <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sim)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/hand_sim-1.png" width="672" /></p>
+<p>The above plot resembles a <a href="https://en.wikipedia.org/wiki/Confusion_matrix">confusion matrix</a> except we present a cloud of points in each of the quadrants as opposed to a count. However, the principle is the same – we want to compare actual versus predicted.</p>
 <p>The big take away from this plot is that our priors imply equally random change of that observation being dextrally or sinestrally coiled.</p>
 <p>Another way to simulate from the prior predictive distribution is by using the <code>brm()</code> function that we usually use to fit our models. This approach doesn’t involve writing our own function so it is more fool-proof. We still need to do an awkward amount by hand, though. This approach does require our model to be compiled and uses the HMC sampler to get our prior predictive draws, which means this process can take a lot longer.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">foram_prior &lt;-<span class="st"> </span>
@@ -532,7 +533,8 @@ sim_results <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">geom_halfeyeh</span>(<span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># alternative to ggridges</span>
 <span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Change in probability at midpoint per unit increase in predictor&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Predictor&#39;</span>)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/side_model_coef_probability-1.png" width="672" /></p>
-<p>We can also visualize the relationship between the individual covariates and coiling state.</p>
+<p>We can also visualize the relationship between the individual covariates and coiling state. This involves holding all predictors constant except for one of them, and calculating the logistic function for the whole range of values.</p>
+<p>Let’s look at the effects of three of the six covariates on expected coiling direction.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">line_data &lt;-<span class="st"> </span>foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">compression_rescale =</span> <span class="kw">seq_range</span>(compression_rescale, <span class="dt">n =</span> <span class="dv">100</span>),
             <span class="dt">area_rescale =</span> <span class="dv">0</span>,
@@ -611,7 +613,10 @@ sim_results <span class="op">%&gt;%</span>
 </div>
 <div id="checking-model-adequacy" class="section level2">
 <h2><span class="header-section-number">6.8</span> Checking model adequacy</h2>
-<p>How can we measure our model’s adequacy?</p>
+<p>Now that we’ve fit out model and taken a look at our parameter estimates, we should really investigate if our model is an adequate description of our data. How confident can we be in interpreting the results of our analysis?</p>
+<p>For our linear regression models, we could just compare properties like the density or median of the response to a distribution of those measures from our poseterior predictive distribution. With binary data it isn’t that easy. Instead, we have to explore other ways of summarizing our model’s adequacy.</p>
+<p>A very simple measure of performance with binary data is to measure our model’s <strong>accuracy</strong> – does our model predict a 1 when our data is a 1? A 0 when the data is a 0? While other metrics exist (like <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">ROC/AUC</a>, we’re just going to cover accuracy in this lesson.</p>
+<p>We can plot the (mis)matches like we did when we explored our prior predictive distribution and create a visual confusion matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plot predicted versus observed for 4 posterior predictive draws</span>
 foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>, <span class="dt">n =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span>
@@ -620,8 +625,10 @@ foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">y =</span> dextral),
               <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Predicted coiling state&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Observed coiling state&#39;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>.draw)                  </code></pre></div>
-<p><img src="paleo_book_files/figure-html/side_model_accuracy-1.png" width="672" /></p>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>.draw) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/side_model_confusion-1.png" width="672" /></p>
+<p>We can also just calculate accuracy as the percent of predictions that are correct for a single posterior predictive draw, repeat this 100s of times, and present a posterior distribution of accuracies.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># calculate accuracy, look at distribution from 100 posterior preditive draws</span>
 foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>, <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
@@ -631,12 +638,14 @@ foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">accuracy =</span> <span class="kw">sum</span>(accurate) <span class="op">/</span><span class="st"> </span><span class="kw">n</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">stat_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> accuracy)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Posterior Predictive Accuracy&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;&#39;</span>)</code></pre></div>
-<p><img src="paleo_book_files/figure-html/side_model_accuracy-2.png" width="672" /></p>
-<p>Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model?</p>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Posterior Predictive Accuracy&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/side_model_accuracy-1.png" width="672" /></p>
+<p>Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model? Is this even a valid scientific question worth continuing with?</p>
 </div>
 <div id="summary-5" class="section level2">
 <h2><span class="header-section-number">6.9</span> Summary</h2>
+<p>This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. <span class="math inline">\(\text{logit}(p) = X\beta\)</span>). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and aboluste effects and emphasizing interpreting coefficients on the probability scale. We also explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.</p>
 
 </div>
 </div>
