@@ -153,7 +153,7 @@ $$
 
 The curvature of the logistic function requires us to choose where to evaluate changes, if we want to interpret on the probability scale. 
 
-But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses $x = 0$). For this example, $Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27$. 
+But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses $x = 0$). For this example, $Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27$. With mean-centered data, the central point descrbies the baseline probability of the result being a 1. For this example, at mean value of x (i.e. 0) there is an approximately 27% chance of $y = 1$.
 
 A positive increase in $x$ coresponds to a negative difference of approximately -0.5 in the logit probability of $y$. This is the relative effect of the predictor in $y$.
 
