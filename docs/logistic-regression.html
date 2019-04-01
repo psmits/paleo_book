@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-03-22">
+<meta name="date" content="2019-04-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -260,10 +260,10 @@ Proudly published with bookdown</a></li>
 \text{logit}(p) = \text{log} \frac{p}{1 - p}. 
 \]</span> In the case of logistic regression, we would substitute the <span class="math inline">\(\theta\)</span> parameter from the Binomial which gives us an expression to map out linear model to: <span class="math display">\[
 \text{logit}(\theta) = \text{log} \frac{\theta}{1 - \theta} = X \beta.
-\]</span> Sometimes you will see the previous statement written using the inverse logit function, which is actually called the logitic function, which is defined <span class="math display">\[
+\]</span> Sometimes you will see the previous statement written using the inverse logit function, which is actually called the logistic function, which is defined <span class="math display">\[
 \theta = \text{logit}^{-1} (X \beta) = \frac{e^{X \beta}}{1 + e^{X \beta}}.
 \]</span> The logistic function is where logistic regression gets its name.</p>
-<p>Let’s take a look at how the logistic transformation maps values from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(\infty\)</span> onto the (0, 1) space. Some people find it easier to work with the inverse logit (logit<span class="math inline">\(^{-1}\)</span>) formulation because it can be easier to focus on the mapping of the linear predictor on to the probabilities, as opposed to the reverse. Howver, both of these formulations are equally valid so understanding both is important when reading the literature.</p>
+<p>Let’s take a look at how the logistic transformation maps values from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(\infty\)</span> onto the (0, 1) space. Some people find it easier to work with the inverse logit (logit<span class="math inline">\(^{-1}\)</span>) formulation because it can be easier to focus on the mapping of the linear predictor on to the probabilities, as opposed to the reverse. However, both of these formulations are equally valid so understanding both is important when reading the literature.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-10</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">by =</span> <span class="fl">.1</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> arm<span class="op">::</span><span class="kw">invlogit</span>(x))         <span class="co"># inverse logit</span>
 
@@ -272,7 +272,7 @@ df <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;logit scale&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;probability scale&#39;</span>)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/logisitic-demo-1.png" width="672" /></p>
-<p>This plot of the logistic function is very revealing. When <code>x</code> has a magnitude of 3 , <code>y</code> is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of <code>x</code> between -3 and 3 is much larger than the approximate slope of the logistic function for values of <code>x</code> with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale – a natural part of keeping probabilily bounded between 0 and 1.</p>
+<p>This plot of the logistic function is very revealing. When <code>x</code> has a magnitude of 3 , <code>y</code> is either close to its maxima or minima. This behavior means that the approximate slope of the logistic function for values of <code>x</code> between -3 and 3 is much larger than the approximate slope of the logistic function for values of <code>x</code> with a magnitude of 3+. We will explore the importance of this behavior in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale – a natural part of keeping probability bounded between 0 and 1.</p>
 <p>Mapping functions, like the logit and logistic functions, let lot us model a parameter by a linear model, is frequently referred to as a <strong>link function</strong>.</p>
 <p>Now that we’ve defined a way to model the <span class="math inline">\(\theta\)</span> parameter of the Bernoulli distribution as a linear function, we can start building a logistic regression and explore how to interpret our model’s regression coefficients.</p>
 </div>
@@ -280,7 +280,7 @@ df <span class="op">%&gt;%</span>
 <h2><span class="header-section-number">6.4</span> Foram coiling</h2>
 <p>For this scion, we will develop a logistic regression model to describe the probability of a foram being dextrally coiling as a function of multiple measures of that foram’s size and shape.</p>
 <p>To get to that point, we will first explore the foram measurement data. Once we have a handle on the data, we’ll develop and write out a Bayesian logistic regression model and then fit that model using <code>brms</code>. Finally, as always, we’ll then explore the adequacy of our model at describing out data.</p>
-<p>The data we will be focusing on is from a paper by <a href="https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full">Pearson and Ezard</a> that explored changes to morphology associated with speciation. In the original study, the morpholgical measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on?</p>
+<p>The data we will be focusing on is from a paper by <a href="https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full">Pearson and Ezard</a> that explored changes to morphology associated with speciation. In the original study, the morphological measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on?</p>
 <p>We’re going to be ignoring the time structure of the data for now. We’ll cover time series models in a later lesson. For now, we are just interested how size and shape measures predict coiling with the assumption that this relationship is constant over time.</p>
 <p>Let’s bring the data into the memory and start playing around with it. The Peason and Ezard paper describes a few derived measures, like compression ratio, that we can quickly recalculate.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in excel data directly with function from readxl</span>
@@ -334,7 +334,7 @@ y_{i} &amp;\sim \text{Bernoulli}(\theta) \\
 \]</span> What key component(s) of this model are missing? The priors! In order to assign priors for our regression coefficients, we first need to understand what those coefficients <em>mean</em>.</p>
 <div id="interpreting-logistic-regression-coefficients" class="section level3">
 <h3><span class="header-section-number">6.5.1</span> Interpreting logistic regression coefficients</h3>
-<p>The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation.</p>
+<p>The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However, the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation.</p>
 <p>There are two genres of effects that a regression coefficient in logistic regression can describe. The regression coefficient by itself describes the <strong>relative effect</strong> on the outcome expected from a change in the predictor. In contrast, the <strong>absolute effect</strong> of a regression coefficient is measured by the change in the probability of the outcome. This measure depends on the other parameters and describes the practical impact of a change in a predictor.</p>
 <p>Let’s explore what this means with two examples. Suppose we have a logistic model defined <span class="math display">\[
 \begin{align}
@@ -343,8 +343,8 @@ y &amp;\sim \text{Bernoulli}(\theta) \\
 \end{align}
 \]</span></p>
 <p>The curvature of the logistic function requires us to choose where to evaluate changes, if we want to interpret on the probability scale.</p>
-<p>But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses <span class="math inline">\(x = 0\)</span>). For this example, <span class="math inline">\(Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27\)</span>. With mean-centered data, the central point descrbies the baseline probability of the result being a 1. For this example, at mean value of x (i.e. 0) there is an approximately 27% chance of <span class="math inline">\(y = 1\)</span>.</p>
-<p>A positive increase in <span class="math inline">\(x\)</span> coresponds to a negative difference of approximately -0.5 in the logit probability of <span class="math inline">\(y\)</span>. This is the relative effect of the predictor in <span class="math inline">\(y\)</span>.</p>
+<p>But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses <span class="math inline">\(x = 0\)</span>). For this example, <span class="math inline">\(Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27\)</span>. With mean-centered data, the central point describes the baseline probability of the result being a 1. For this example, at mean value of x (i.e. 0) there is an approximately 27% chance of <span class="math inline">\(y = 1\)</span>.</p>
+<p>A positive increase in <span class="math inline">\(x\)</span> corresponds to a negative difference of approximately -0.5 in the logit probability of <span class="math inline">\(y\)</span>. This is the relative effect of the predictor in <span class="math inline">\(y\)</span>.</p>
 <p>We can calculate this difference in probability when x = 0 and when x = 1. So an increase of <span class="math inline">\(x\)</span> by 1 would decrease the probability of <span class="math inline">\(y = 1\)</span> by <span class="math inline">\(\text{logit}^{-1}(-1 + -0.5 * 1) - \text{logit}^{-1}{-1 + -0.5 * 0} \approx -0.09\)</span>. This is the absolute effect of the predictor on <span class="math inline">\(y\)</span>.</p>
 <div id="odds-ratios" class="section level4">
 <h4><span class="header-section-number">6.5.1.1</span> Odds ratios</h4>
@@ -352,9 +352,9 @@ y &amp;\sim \text{Bernoulli}(\theta) \\
 <p>If two outcomes have the probabilities <span class="math inline">\((p, 1 - p)\)</span>, then <span class="math inline">\(p / (1 - p)\)</span> is the odds. An odds of 1 means the outcomes are equally likely because odds of 1 is equivalent to a probability of 0.5 (<span class="math inline">\(1 = 0.5 / (1 - 0.5)\)</span>). Similarly, odds of 0.5 or 2 represent probabilities of 1/3 and 2/3, respectively.</p>
 <p>The ratio of two odds (e.g. <span class="math inline">\((p_{1} / (1 - p_{1})) / (p_{2} / (1 - p_{2}))\)</span>) is called an odds ratio. An odds ratio of 2 corresponds to a change from <span class="math inline">\(p = 0.33\)</span> to <span class="math inline">\(p = 0.5\)</span>, or a change from <span class="math inline">\(p = 0.5\)</span> to <span class="math inline">\(p = 0.67\)</span>.</p>
 <p>An advantage of working with odds ratios instead of probabilities is that it is possible to keep scaling up odds ratios indefinitely without running into the boundary points of 0 and 1.</p>
-<p>Exponentiated logistic regression coefficients can be interepreted as odds ratios. Let’s illustrate this with an example model with only one predictor: <span class="math display">\[
+<p>Exponentiated logistic regression coefficients can be interpreted as odds ratios. Let’s illustrate this with an example model with only one predictor: <span class="math display">\[
 \log \left( \frac{\text{Pr}(y = 1 | x)}{\text{Pr}(y = 0 | x)} \right) = \alpha + \beta x
-\]</span> Adding 1 to <span class="math inline">\(x\)</span> in this equation as the effect of adding to both sides of the equation. Exponentiating both sides means that the odds are then multiplied by <span class="math inline">\(e^{\beta}\)</span>. So if <span class="math inline">\(\beta = 0.3\)</span>, then a unit change in <span class="math inline">\(x\)</span> correponds to multiplicative change of <span class="math inline">\(e^{0.3} \approx 1.35\)</span> in the odds.</p>
+\]</span> Adding 1 to <span class="math inline">\(x\)</span> in this equation as the effect of adding to both sides of the equation. Exponentiating both sides means that the odds are then multiplied by <span class="math inline">\(e^{\beta}\)</span>. So if <span class="math inline">\(\beta = 0.3\)</span>, then a unit change in <span class="math inline">\(x\)</span> corresponds to multiplicative change of <span class="math inline">\(e^{0.3} \approx 1.35\)</span> in the odds.</p>
 <p>I prefer to interpret coefficients on the probability scale and tend to recommend it. Most researchers don’t understand odds in the first place, so the more obscure odds ratio only increases confusion.<a href="https://www.theanalysisfactor.com/the-difference-between-relative-risk-and-odds-ratios/">Most researchers don’t know the difference between an odds and a relative risk</a>. People tend to understand the probability scale. By working with probabilities your interpretations are on the same scale as the data, not a transform of the data. It is important to understand the odds ratio interpretation, however, because it shows up often enough in the literature.</p>
 </div>
 </div>
@@ -423,16 +423,24 @@ coil_prior_prob &lt;-<span class="st"> </span><span class="cf">function</span>(x
 <span class="co"># rerun for different simulations</span>
 draw &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">4</span>, <span class="kw">coil_prior_prob</span>(foram_design))
 
-sim_results &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">sim =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,
-                      <span class="dt">prob =</span> draw,
-                      <span class="dt">dextral_predict =</span> <span class="kw">map</span>(draw, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(.x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)),
-                      <span class="dt">dextral =</span> <span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="op">~</span><span class="st"> </span>foram_ready<span class="op">$</span>dextral)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">                 </span><span class="kw">unnest</span>()
+sim_results &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">sim =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,
+         <span class="dt">prob =</span> draw,
+         <span class="dt">dextral_predict =</span> <span class="kw">map</span>(draw, <span class="op">~</span><span class="st"> </span><span class="kw">ifelse</span>(.x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)),
+         <span class="dt">dextral =</span> <span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="op">~</span><span class="st"> </span>foram_ready<span class="op">$</span>dextral)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dextral_predict =</span> <span class="kw">case_when</span>(dextral_predict <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;dextral&#39;</span>,
+                                     dextral_predict <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &#39;sinistral&#39;</span>),
+         <span class="dt">dextral =</span> <span class="kw">case_when</span>(dextral <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;dextral&#39;</span>,
+                             dextral <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> &#39;sinistral&#39;</span>))
 
 sim_results <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">x =</span> dextral_predict, <span class="dt">y =</span> dextral), <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sim)</code></pre></div>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>sim) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Predicted coiling state&#39;</span>,
+       <span class="dt">y =</span> <span class="st">&#39;Actual coiling state&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/hand_sim-1.png" width="672" /></p>
 <p>The above plot resembles a <a href="https://en.wikipedia.org/wiki/Confusion_matrix">confusion matrix</a> except we present a cloud of points in each of the quadrants as opposed to a count. However, the principle is the same – we want to compare actual versus predicted.</p>
 <p>The big take away from this plot is that our priors imply equally random change of that observation being dextrally or sinestrally coiled.</p>
@@ -531,7 +539,8 @@ sim_results <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">gather</span>(<span class="dt">key =</span> key, <span class="dt">value =</span> value) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> key)) <span class="op">+</span>
 <span class="st"> </span><span class="kw">geom_halfeyeh</span>(<span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># alternative to ggridges</span>
-<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Change in probability at midpoint per unit increase in predictor&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Predictor&#39;</span>)</code></pre></div>
+<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Change in probability at midpoint for 1 unit increase in predictor&#39;</span>, 
+      <span class="dt">y =</span> <span class="st">&#39;Predictor&#39;</span>)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/side_model_coef_probability-1.png" width="672" /></p>
 <p>We can also visualize the relationship between the individual covariates and coiling state. This involves holding all predictors constant except for one of them, and calculating the logistic function for the whole range of values.</p>
 <p>Let’s look at the effects of three of the six covariates on expected coiling direction.</p>
@@ -558,6 +567,8 @@ sim_results <span class="op">%&gt;%</span>
                           <span class="dt">group =</span> .draw), 
             <span class="dt">alpha =</span> <span class="fl">0.1</span>,
             <span class="dt">colour =</span> <span class="st">&#39;skyblue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Compression ratio (sd units)&#39;</span>, 
+       <span class="dt">y =</span> <span class="st">&#39;Coiling state (1 = dextral)&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/side_model_compression-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">line_data &lt;-<span class="st"> </span>foram_ready <span class="op">%&gt;%</span>
@@ -583,6 +594,8 @@ sim_results <span class="op">%&gt;%</span>
                           <span class="dt">group =</span> .draw), 
             <span class="dt">alpha =</span> <span class="fl">0.1</span>,
             <span class="dt">colour =</span> <span class="st">&#39;skyblue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Chamber aspect ratio (sd units)&#39;</span>, 
+       <span class="dt">y =</span> <span class="st">&#39;Coiling state (1 = dextral)&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/side_model_chamber_aspect-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">line_data &lt;-<span class="st"> </span>foram_ready <span class="op">%&gt;%</span>
@@ -608,6 +621,8 @@ sim_results <span class="op">%&gt;%</span>
                           <span class="dt">group =</span> .draw), 
             <span class="dt">alpha =</span> <span class="fl">0.1</span>,
             <span class="dt">colour =</span> <span class="st">&#39;skyblue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Umbilical angle (sd units)&#39;</span>, 
+       <span class="dt">y =</span> <span class="st">&#39;Coiling state (1 = dextral)&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/side_model_umbilical_angle-1.png" width="672" /></p>
 </div>
@@ -645,7 +660,7 @@ foram_ready <span class="op">%&gt;%</span>
 </div>
 <div id="summary-5" class="section level2">
 <h2><span class="header-section-number">6.9</span> Summary</h2>
-<p>This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. <span class="math inline">\(\text{logit}(p) = X\beta\)</span>). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and aboluste effects and emphasizing interpreting coefficients on the probability scale. We also explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.</p>
+<p>This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. <span class="math inline">\(\text{logit}(p) = X\beta\)</span>). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and absolute effects and emphasizing interpreting coefficients on the probability scale. We explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.</p>
 
 </div>
 </div>

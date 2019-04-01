@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-03-22">
+<meta name="date" content="2019-04-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -228,7 +228,7 @@ Proudly published with bookdown</a></li>
 <div id="introduction-to-bayesian-data-analysis" class="section level1">
 <h1><span class="header-section-number">2</span> Introduction to Bayesian data analysis</h1>
 <blockquote>
-<p>Statistical inference is concerned with drawing conclusions, from numerical data, about quantities that are not observed. – Gelman et al <strong>BDA3</strong>: 4.</p>
+<p>Statistical inference is concerned with drawing conclusions, from numerical data, about quantities that are not observed. – Gelman et al. <strong>BDA3</strong>: 4.</p>
 </blockquote>
 <blockquote>
 <p>Bayesian data analysis is just a logical procedure for processing information. – McElreath <strong>Statistical Rethinking</strong>: 12.</p>
@@ -244,7 +244,7 @@ Proudly published with bookdown</a></li>
 </div>
 <div id="reading" class="section level2">
 <h2><span class="header-section-number">2.2</span> Reading</h2>
-<p>The following materials are recommended pre-readings before starting this tutorial.</p>
+<p>The following materials are recommended prereadings before starting this tutorial.</p>
 <ul>
 <li>Chapter 1 “The Golem of Prague” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
 <li>Chapter 2 “Small Worlds and Large Worlds” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
@@ -425,7 +425,7 @@ plausibility of <span class="math inline">\(p\)</span> after <span class="math i
 ## 7 w            7         5
 ## 8 l            8         5
 ## 9 w            9         6</code></pre>
-<p>To get the logic machinery working, we need to make some assumptions. These assumptions constitute the our model. An ideal design loop for developing a Bayesian model has three steps:</p>
+<p>To get the logic machinery working, we need to make some assumptions. These assumptions constitute our model. An ideal design loop for developing a Bayesian model has three steps:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Data story</strong>
 <ul>
@@ -448,7 +448,7 @@ plausibility of <span class="math inline">\(p\)</span> after <span class="math i
 </ol>
 <div id="a-data-story" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> A data story</h3>
-<p>How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient enough to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.</p>
+<p>How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.</p>
 </div>
 <div id="bayesian-updating" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> Bayesian updating</h3>
@@ -572,7 +572,7 @@ p(y) = E(p(y | \Theta)) = \int p(y | \Theta) p(\Theta) d\Theta
 <h2><span class="header-section-number">2.7</span> But how does it <em>work</em>?</h2>
 <p>Our model has three parts: likelihood, parameters, and the prior. These values get put into a “motor” that gives us a posterior distribution. The motor goes through the process of conditioning the prior on the data.</p>
 <p>Turns out that knowing all the rules doesn’t necessarily help us with the calculations. For most interesting models we will ever consider, the necessary integrals in the Bayesian conditioning machinery have no closed form and can’t be calculated no matter how talented you are. Each new parameter effectively adds a new level to the integral used to calculate <span class="math inline">\(p(y)\)</span>. Instead, we need to rely on numerical techniques to approximate the mathematics defined in Bayes’ theorem.</p>
-<p>All of the numerical techniques we use produce only <em>samples</em> from the posterior distribution, not the distribution itself. Luckily, samples from the distribution are easier to work with than the actual distribution – this way we don’t have to do integrals.</p>
+<p>All the numerical techniques we use produce only <em>samples</em> from the posterior distribution, not the distribution itself. Luckily, samples from the distribution are easier to work with than the actual distribution – this way we don’t have to do integrals.</p>
 <div id="grid-approximation" class="section level3">
 <h3><span class="header-section-number">2.7.1</span> Grid approximation</h3>
 <p>One of the simplest conditioning techniques is grid approximation. While most parameters are continuous, we can get a decent approximation of them by considering only a finite grid of parameter values. For any particular value <span class="math inline">\(p&#39;\)</span>, compute the posterior probability by multiplying the prior probability of <span class="math inline">\(p&#39;\)</span> by the likelihood of <span class="math inline">\(p&#39;\)</span>.</p>
@@ -618,7 +618,7 @@ p(y) = E(p(y | \Theta)) = \int p(y | \Theta) p(\Theta) d\Theta
 <h3><span class="header-section-number">2.7.2</span> Markov chain Monte Carlo</h3>
 <p>For many models, grid approximation or quadratic approximation just aren’t good enough. Grid approximation takes too long as your model gets bigger. Quadratic approximation chokes on complex models. Instead, we end up having to use a technique like Markov chain Monte Carlo (MCMC).</p>
 <p>Unlike grid approximation, where we computed the posterior distribution directly, MCMC techniques merely draw samples from the posterior. You end up with a collection of parameter values, where the frequencies of those values correspond to the posterior plausibilities.</p>
-<p>Let’s do a quick example where we fit this model using <strong>brms</strong>. This package acts as an interface with <a href="http://mc-stan.org/">Stan probabilistic programming language</a> which implements Hamiltonian Monte Carlo sampling, a fancy type of MCMC. The function <code>brm()</code> is the workhorse of the <strong>brms</strong> package, and builds and compiles a Stan model as defined in R. If you’ve used functions like <code>lm()</code> or <code>glm()</code>, some of the syntax should look familiar to you.</p>
+<p>Let’s do a quick example where we fit this model using <strong>brms</strong>. This package acts as an interface with <a href="http://mc-stan.org/">Stan probabilistic programming language</a> which implements Hamiltonian Monte Carlo sampling, a fancy type of MCMC. The function <code>brm()</code> is the workhorse of the <strong>brms</strong> package, and builds and compiles a Stan model as defined in R. If you’ve used functions like <code>lm()</code> or <code>glm()</code>, the syntax should look familiar to you.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># this can take a bit as the model compiles</span>
 globe_brms &lt;-
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> <span class="kw">list</span>(<span class="dt">w =</span> <span class="dv">24</span>),             <span class="co"># generate data</span>

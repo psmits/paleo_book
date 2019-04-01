@@ -49,14 +49,14 @@ In the case of logistic regression, we would substitute the $\theta$ parameter f
 $$
 \text{logit}(\theta) = \text{log} \frac{\theta}{1 - \theta} = X \beta.
 $$
-Sometimes you will see the previous statement written using the inverse logit function, which is actually called the logitic function, which is defined
+Sometimes you will see the previous statement written using the inverse logit function, which is actually called the logistic function, which is defined
 $$
 \theta = \text{logit}^{-1} (X \beta) = \frac{e^{X \beta}}{1 + e^{X \beta}}.
 $$
 The logistic function is where logistic regression gets its name.
 
 
-Let's take a look at how the logistic transformation maps values from $-\infty$ to $\infty$ onto the (0, 1) space.  Some people find it easier to work with the inverse logit (logit$^{-1}$) formulation because it can be easier to focus on the mapping of the linear predictor on to the probabilities, as opposed to the reverse. Howver, both of these formulations are equally valid so understanding both is important when reading the literature.
+Let's take a look at how the logistic transformation maps values from $-\infty$ to $\infty$ onto the (0, 1) space.  Some people find it easier to work with the inverse logit (logit$^{-1}$) formulation because it can be easier to focus on the mapping of the linear predictor on to the probabilities, as opposed to the reverse. However, both of these formulations are equally valid so understanding both is important when reading the literature.
 ```{r logisitic-demo}
 
 df <- tibble(x = seq(from = -10, to = 10, by = .1)) %>%
@@ -69,7 +69,7 @@ df %>%
 
 ```
 
-This plot of the logistic function is very revealing. When `x` has a magnitude of 3 , `y` is either close to its maxima or minima. This behaviour means that the approximate slope of the logistic function for values of `x` between -3 and 3 is much larger than the approximate slope of the logistic function for values of `x` with a magnitude of 3+. We will explore the importance of this behaviour in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale -- a natural part of keeping probabilily bounded between 0 and 1.
+This plot of the logistic function is very revealing. When `x` has a magnitude of 3 , `y` is either close to its maxima or minima. This behavior means that the approximate slope of the logistic function for values of `x` between -3 and 3 is much larger than the approximate slope of the logistic function for values of `x` with a magnitude of 3+. We will explore the importance of this behavior in a latter part of this lesson. In general, any change on the logit scale is compressed at the ends of the probability scale -- a natural part of keeping probability bounded between 0 and 1.
 
 
 Mapping functions, like the logit and logistic functions, let lot us model a parameter by a linear model, is frequently referred to as a **link function**.
@@ -85,7 +85,7 @@ For this scion, we will develop a logistic regression model to describe the prob
 To get to that point, we will first explore the foram measurement data. Once we have a handle on the data, we'll develop and write out a Bayesian logistic regression model and then fit that model using `brms`. Finally, as always, we'll then explore the adequacy of our model at describing out data.
 
 
-The data we will be focusing on is from a paper by [Pearson and Ezard](https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full) that explored changes to morphology associated with speciation. In the original study, the morpholgical measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on? 
+The data we will be focusing on is from a paper by [Pearson and Ezard](https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full) that explored changes to morphology associated with speciation. In the original study, the morphological measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on? 
 
 We're going to be ignoring the time structure of the data for now. We'll cover time series models in a later lesson. For now, we are just interested how size and shape measures predict coiling with the assumption that this relationship is constant over time. 
 
@@ -138,7 +138,7 @@ What key component(s) of this model are missing? The priors! In order to assign 
 
 ### Interpreting logistic regression coefficients
 
-The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation. 
+The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However, the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation. 
 
 There are two genres of effects that a regression coefficient in logistic regression can describe. The regression coefficient by itself describes the **relative effect** on the outcome expected from a change in the predictor. In contrast, the **absolute effect** of a regression coefficient is measured by the change in the probability of the outcome. This measure depends on the other parameters and describes the practical impact of a change in a predictor.
 
@@ -153,9 +153,9 @@ $$
 
 The curvature of the logistic function requires us to choose where to evaluate changes, if we want to interpret on the probability scale. 
 
-But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses $x = 0$). For this example, $Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27$. With mean-centered data, the central point descrbies the baseline probability of the result being a 1. For this example, at mean value of x (i.e. 0) there is an approximately 27% chance of $y = 1$.
+But how do we interpret regression coefficients with values like -0.5? The mean of the input variables is a good starting point. As with linear regression, the intercept of a logistic can only be interpreted assuming zero values for all the other predictors. This point is the central point of the estimated logistic function (where on the probability axis the logistic function crosses $x = 0$). For this example, $Pr(y = 1) = \text{logit}^{-1}(-1) \approx 0.27$. With mean-centered data, the central point describes the baseline probability of the result being a 1. For this example, at mean value of x (i.e. 0) there is an approximately 27% chance of $y = 1$.
 
-A positive increase in $x$ coresponds to a negative difference of approximately -0.5 in the logit probability of $y$. This is the relative effect of the predictor in $y$.
+A positive increase in $x$ corresponds to a negative difference of approximately -0.5 in the logit probability of $y$. This is the relative effect of the predictor in $y$.
 
 We can calculate this difference in probability when x = 0 and when x = 1. So an increase of $x$ by 1 would decrease the probability of $y = 1$ by $\text{logit}^{-1}(-1 + -0.5 * 1) - \text{logit}^{-1}{-1 + -0.5 * 0} \approx -0.09$. This is the absolute effect of the predictor on $y$.
 
@@ -171,11 +171,11 @@ The ratio of two odds (e.g. $(p_{1} / (1 - p_{1})) / (p_{2} / (1 - p_{2}))$) is 
 
 An advantage of working with odds ratios instead of probabilities is that it is possible to keep scaling up odds ratios indefinitely without running into the boundary points of 0 and 1.
 
-Exponentiated logistic regression coefficients can be interepreted as odds ratios. Let's illustrate this with an example model with only one predictor:
+Exponentiated logistic regression coefficients can be interpreted as odds ratios. Let's illustrate this with an example model with only one predictor:
 $$
 \log \left( \frac{\text{Pr}(y = 1 | x)}{\text{Pr}(y = 0 | x)} \right) = \alpha + \beta x
 $$
-Adding 1 to $x$ in this equation as the effect of adding \beta to both sides of the equation. Exponentiating both sides means that the odds are then multiplied by $e^{\beta}$. So if $\beta = 0.3$, then a unit change in $x$ correponds to multiplicative change of $e^{0.3} \approx 1.35$ in the odds.
+Adding 1 to $x$ in this equation as the effect of adding \beta to both sides of the equation. Exponentiating both sides means that the odds are then multiplied by $e^{\beta}$. So if $\beta = 0.3$, then a unit change in $x$ corresponds to multiplicative change of $e^{0.3} \approx 1.35$ in the odds.
 
 
 I prefer to interpret coefficients on the probability scale and tend to recommend it. Most researchers don't understand odds in the first place, so the more obscure odds ratio only increases confusion.[Most researchers don't know the difference between an odds and a relative risk](https://www.theanalysisfactor.com/the-difference-between-relative-risk-and-odds-ratios/). People tend to understand the probability scale. By working with probabilities your interpretations are on the same scale as the data, not a transform of the data. It is important to understand the odds ratio interpretation, however, because it shows up often enough in the literature.
@@ -269,16 +269,24 @@ foram_design <- foram_ready %>%
 # rerun for different simulations
 draw <- rerun(4, coil_prior_prob(foram_design))
 
-sim_results <- tibble(sim = 1:4,
-                      prob = draw,
-                      dextral_predict = map(draw, ~ ifelse(.x > 0.5, 1, 0)),
-                      dextral = map(1:4, ~ foram_ready$dextral)) %>% 
-                 unnest()
+sim_results <- 
+  tibble(sim = 1:4,
+         prob = draw,
+         dextral_predict = map(draw, ~ ifelse(.x > 0.5, 1, 0)),
+         dextral = map(1:4, ~ foram_ready$dextral)) %>% 
+  unnest() %>%
+  mutate(dextral_predict = case_when(dextral_predict == 1 ~ 'dextral',
+                                     dextral_predict == 0 ~ 'sinistral'),
+         dextral = case_when(dextral == 1 ~ 'dextral',
+                             dextral == 0 ~ 'sinistral'))
 
 sim_results %>%
   ggplot() +
   geom_jitter(aes(x = dextral_predict, y = dextral), alpha = 0.1) +
-  facet_wrap(~ sim)
+  facet_wrap(~ sim) +
+  labs(x = 'Predicted coiling state',
+       y = 'Actual coiling state') +
+  NULL
 
 ```
 
@@ -384,7 +392,8 @@ m_1 %>%
  gather(key = key, value = value) %>%
  ggplot(aes(x = value, y = key)) +
  geom_halfeyeh(.width = c(0.9, 0.5)) + # alternative to ggridges
- labs(x = 'Change in probability at midpoint per unit increase in predictor', y = 'Predictor')
+ labs(x = 'Change in probability at midpoint for 1 unit increase in predictor', 
+      y = 'Predictor')
 
 ```
 
@@ -418,6 +427,8 @@ ggplot(line_data) +
                           group = .draw), 
             alpha = 0.1,
             colour = 'skyblue') +
+  labs(x = 'Compression ratio (sd units)', 
+       y = 'Coiling state (1 = dextral)') +
   NULL
 
 ```
@@ -447,6 +458,8 @@ ggplot(line_data) +
                           group = .draw), 
             alpha = 0.1,
             colour = 'skyblue') +
+  labs(x = 'Chamber aspect ratio (sd units)', 
+       y = 'Coiling state (1 = dextral)') +
   NULL
 
 ```
@@ -476,6 +489,8 @@ ggplot(line_data) +
                           group = .draw), 
             alpha = 0.1,
             colour = 'skyblue') +
+  labs(x = 'Umbilical angle (sd units)', 
+       y = 'Coiling state (1 = dextral)') +
   NULL
 
 ```
@@ -532,7 +547,7 @@ Our model appears to correctly guess the coiling state of any observation about 
 
 ## Summary
 
-This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. $\text{logit}(p) = X\beta$). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and aboluste effects and emphasizing interpreting coefficients on the probability scale. We also explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.
+This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. $\text{logit}(p) = X\beta$). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and absolute effects and emphasizing interpreting coefficients on the probability scale. We explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.
 
 
 
