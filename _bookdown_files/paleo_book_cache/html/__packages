@@ -24,3 +24,8 @@ viridis
 bayesplot
 nvimcom
 pacman
+readxl
+MASS
+Matrix
+lme4
+arm

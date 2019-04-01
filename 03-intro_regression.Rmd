@@ -5,7 +5,7 @@
 
 - Set up a linear regression model.
 - Interpret the parameters of a regression model.
-- Communicate a model descriptions to others.
+- Communicate and describe a statistical model clearly to others.
 - Fit regression models in **brms**.
 - Basics of summarizing and visualizing a model fit.
 
@@ -29,9 +29,9 @@ The following materials are recommended pre-readings before starting this tutori
 
 ## Linear regression
 
-Linear regression refers to a large family of statistical models which attempt to learn about the mean and variance of some measurement, using an additive combination of other measures. Linear regression is a descriptive model that corresponds to many different processes.
+Linear regression refers to a large family of statistical models which attempt to learn about the mean and variance of some measurement, using an additive combination of other measures. Linear regression is a descriptive model that corresponds to many processes.
 
-Normally regression is presented as a way of representing the relationship between two or more variables. I believe this description obscures the interpretation and meaning of regression results. Instead, we're going to think of linear regression as a method that summarizes how the *average* or expected values of a numerical outcome vary as a linear functions of one or more predictors. 
+Normally regression is presented as a way of representing the relationship between two or more variables. I believe this description obscures the interpretation and meaning of regression results. Instead, we're going to think of linear regression as a method that summarizes how the *average* or expected values of a numerical outcome vary as a linear function of one or more predictors. 
 
 Regression can be used to predict an outcome given a linear function of those predictors, and regression coefficients can be thought of as comparisons across predicted values or as comparisons among averages in the data. A regression coefficient describes the expected change in the response per unit change in its predictor. Linear regression uses a Gaussian/Normal distribution to describe the distribution of our measurement of interest. Like any model, linear regression is not universally applicable. But linear regression is pretty foundational in statistics because once you can build and interpret a linear regression model, it is easy to move on to other types of regression for when things aren't Normal. 
 
@@ -44,9 +44,9 @@ Here are the choices encoded in a model description:
 
 1. Outcome variable or variables that we hope to predict or understand ($y$).
 2. Likelihood distribution that defines the plausibility of the individual observations.
-3. Predictors or covariates -- a set of other measurements that we hope to use to predict or understand the outcome ($X$).
+3. Predictors or covariates -- a set of other measurements that we will use to predict or understand the outcome ($X$).
 4. Relation between the shape of the likelihood distribution (e.g. location and scale) to the predictor variables. The nature of this relation forces us to define all the parameters of the model.
-5. Priors for all of the parameters in the model.
+5. Priors for all the parameters in the model.
 
 Here's the globe tossing model from last week
 $$
@@ -189,7 +189,7 @@ We now have 4000 samples from the joint posterior. How do we want to summarize t
 # median and 95% quantile interval
 m_1 %>%
   gather_draws(b_Intercept, sigma) %>%
-  median_qi()                          # ?brms::point_interval for documentation
+  median_qi()                          # ?brms::point_interval for docs
 
 # posterior predictive distribution
 m_1 %>% 
@@ -256,7 +256,7 @@ s_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 $$
 What do each of the lines in the model represent? What has changed and why?
 
-But where did $\alpha$ and $\beta$ come from? We made them up! $\mu$ and $\sigma$ are necessary and sufficient for describing the Gaussian distribution. $\alpha$ and $\beta$ are devices we invent for manipulating $\mu$, allowing it vary across cases in our data.
+But where did $\alpha$ and $\beta$ come from? We made them up! $\mu$ and $\sigma$ are necessary and sufficient for describing the Gaussian distribution. $\alpha$ and $\beta$ are devices we invent for manipulating $\mu$, allowing it to vary across cases in our data.
 
 Making up new parameters like $\alpha$ and $\beta$ is a common strategy for expanding the amount of information in our model. These parameters are targets of our learning -- each must be described in the posterior density. When we want to learn something, we invent a parameter (or parameters) describing it.
 
@@ -286,10 +286,9 @@ m_2 <- brm(data = d,
            refresh = 0)                # less text output
 ```
 ```{r inspect_binary_model}
-# look at the brm summary
+# look at the brm summaries
 print(m_2)
 
-# look at the brm plot
 plot(m_2)
 ```
 
@@ -323,7 +322,7 @@ There are two broad categories of how we process model fit: tables, and plotting
 
 Plotting the implications of your estimates will allow you to inquire about several things that are sometimes hard to read from tables:
 
-1. Whether or not the model fitting procedure worked correctly.
+1. If the model fitting procedure worked correctly.
 2. The *absolute* magnitude, rather than merely *relative* magnitude, or a relationship between outcome and predictor.
 3. The uncertainty surrounding an average relationship.
 4. The uncertainty surrounding the implied predictions of the model, as these are distinct from mere parameter uncertainty.
@@ -502,5 +501,5 @@ Even though it should be obvious and mandatory to do go through with and report 
 
 ## Summary
 
-To review, this lesson was an exercise in developing, communicating, and summarizing a Bayesian model -- specifically, a linear regression model. We've slowly developed a linear regression model by expanding a Gaussian distribution to include the effects of predictor information. We first developed our model using the symbolic representation of a statistical model, and we then implemented our model using functions from **brms**. We explored a number of ways of representing and visualizing posterior distributions; these included tables and figures. We briefly covered the difference between fitted predictions and the posterior predictive distribution. Finally, we discussed the concept of posterior predictive tests.
+To review, this lesson was an exercise in developing, communicating, and summarizing a Bayesian model -- specifically, a linear regression model. We've slowly developed a linear regression model by expanding a Gaussian distribution to include the effects of predictor information, beginning with writing out the symbolic representation of a statistical model, and ending with implementing our model using functions from **brms**. Using out fitted model, we explored multiple ways of representing and visualizing the posterior distributions of the parameters as well as the posterior preidctive distribution. We briefly covered the difference between fitted predictions and the posterior predictive distribution. Finally, we discussed the concept of posterior predictive tests.
 

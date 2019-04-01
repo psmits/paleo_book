@@ -86,7 +86,7 @@ pantheria %>%
 
 There are tons of ways we could deconstruct this dataset, some much more logical than others. For this tutorial, we're going to focus on trying to understand how population density varies across mammals. There are tons of factors that can influence the population density of a species, so our process will be to slowly build up a model one predictor at a time while continually checking the quality of the model's fit to the data.
 
-Let's begin our population density model in a similar fashion to our previous one: an intercept-only model. Once this simplest model is established, we can then add our first continuous predictor from there.
+Let's begin our population density model similarly our previous one: an intercept-only model. Once this simplest model is established, we can then add our first continuous predictor from there.
 
 Our response variable `density_log` is a continuous value from $-\infty$ to $\infty$ so a good place to start is by assuming that this variable can be approximated by a Normal distribution, as is common with linear regression. The Normal distribution two parameters: mean and standard deviation. Sometimes the standard deviation term of the Normal distribution is replaced with a variance or precision parameter -- we're not going to deal with those alternative parameterizations. 
 
@@ -194,13 +194,13 @@ pantheria %>%
 
 ```
 
-While we might be describing the overall mean and standard deviation of our data, I do not think our simple model is capable of capturing a lot of the complexity in our data. Our data appears to be multimodal and has a very different spread than those datasets simulated from the posterior predictive distribution, especially on the right-hand side. We are probably going to have to include more information we if want to better descriptive model of our data.
+While we might be describing the overall mean and standard deviation of our data, I do not think our simple model is capable of capturing a lot of the complexity in our data. Our data appears to be multimodal and has a very different spread than those datasets simulated from the posterior predictive distribution, especially on the right-hand side. We are probably going to have to include more information in order to get a better descriptive model of our data.
 
 
 
 ## A single continuous predictor
 
-In linear regression, our predictors tend to describe change in mean $y$ has a function of an intercept, one or more regression coefficients, and one or more predictor. Just like in our previous lesson, we're going to try and improve upon on model by adding a predictor. What's new to this lesson is that that predictor is a continuous variable: average individual mass in log grams or `mass_log`. To do this, we need to define $\mu$ as a function of our predictor. Do you remember from last lesson how we did this? Try writing out a model definition by hand.
+In linear regression, our predictors tend to describe change in mean $y$ has a function of an intercept, one or more regression coefficients, and one or more predictor. Just like in our previous lesson, we're going to try to improve upon on model by adding a predictor. What's new to this lesson is that that predictor is a continuous variable: average individual mass in log grams or `mass_log`. To do this, we need to define $\mu$ as a function of our predictor. Do you remember from last lesson how we did this? Try writing out a model definition by hand.
 
 First, let's define $x$ as `mass_log`. Also, let's define two more variables: let $\alpha$ be the intercept of our regression, and let $\beta$ be the regression coefficient for $x$. Given this new information, here is how we can write out our regression model.
 $$
@@ -257,7 +257,7 @@ print(m_2)
 
 The intercept of a linear regression model is normally interpreted as the average value of $y$ when all predictors equal 0. A consequence of this definition means that the value of the intercept is frequently uninterpretable without also studying the regression coefficients. This is also the reason that we commonly need very weak priors for intercepts.
 
-A trick for improving our interpretation of the intercept $\alpha$ is **centering** our (continuous) predictors. Centering is the procedure of subtracting the mean of a variable from each value. Namely:
+A trick for improving our interpretation of the intercept $\alpha$ is **centering** our (continuous) predictors. Centering is the procedure of subtracting the mean of a variable from each value. This procedure is very easy to code in R:
 ```{r center}
 
 pantheria <- 
@@ -267,7 +267,7 @@ pantheria <-
 ```
 
 
-$\alpha$ is still the expected value of the outcome variable when the predictor is equal to zero. But now the mean value of the predictor is also zero. So the intercept now means: the expected value of the outcome, when the predictor is at its average value. This makes interpreting the intercept a lot easier.
+$\alpha$ is still the expected value of the outcome variable when the predictor is equal to zero. But now the mean value of the predictor is also zero. So the intercept now means: the expected value of the outcome, when the predictor is at its average value. The simple transform of mean-centering our predictors makes interpreting the intercept a lot easier.
 
 To illustrate this, let's refit the model with the newly centered data.
 
@@ -456,7 +456,7 @@ pan_cut %>%
 While our model does an okay job at predicting median population density of omnivores and herbivores, it is very bad at estimating the population density of carnivores. 
 
 
-Given all of the above plots, in particular the failure of our model to capture the differences between the (unmodeled) trophic levels, it appears that while this model does slightly better job at approximating our data than our earlier model it still fails are adequately representing our data. Even though we did not model the differences between the trophic groups, by seeing if our model captures these differences we get a better idea about how we might improve our model. In this case, because we know that while there are differences between trophic groups, these differences are not captured by the model. If we want to make sure we are describing the different sources of variation, we might want to include the tropic levels as additional predictors on top of body size.
+Given all the above plots, in particular the failure of our model to capture the differences between the (unmodeled) trophic levels, it appears that while this model does slightly better job at approximating our data than our earlier model it still fails are adequately representing our data. Even though we did not model the differences between the trophic groups, by seeing if our model captures these differences we get a better idea about how we might improve our model. In this case, because we know that while there are differences between trophic groups, these differences are not captured by the model. If we want to make sure we are describing the different sources of variation, we might want to include the tropic levels as additional predictors on top of body size.
 
 But what is this about adding more predictors? What does that mean? That is the subject of our next lesson.
 

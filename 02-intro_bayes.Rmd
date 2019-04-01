@@ -1,6 +1,6 @@
 # Introduction to Bayesian data analysis
 
-> Statistical inference is concerned with drawing conclusions, from numerical data, about quantities that are not observed. -- Gelman et al **BDA3**: 4.
+> Statistical inference is concerned with drawing conclusions, from numerical data, about quantities that are not observed. -- Gelman et al. **BDA3**: 4.
 
 > Bayesian data analysis is just a logical procedure for processing information. -- McElreath **Statistical Rethinking**: 12.
 
@@ -15,7 +15,7 @@
 
 ## Reading
 
-The following materials are recommended pre-readings before starting this tutorial. 
+The following materials are recommended prereadings before starting this tutorial. 
 
 - Chapter 1 "The Golem of Prague" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 - Chapter 2 "Small Worlds and Large Worlds" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
@@ -108,7 +108,7 @@ Each part of the calculations we've done so far correspond directly to quantitie
 - The updated plausibility of any specific $p$ is called the *posterior probability*.
 
 
-## Building a model
+## Building a model {#globe-example}
 
 Bayesian inference is made easier by working with probabilities instead of counts, but this makes everything look a lot harder. Let's explore this with a new problem.
 
@@ -123,7 +123,7 @@ d <- tibble(toss = c("w", "l", "w", "w", "w", "l", "w", "l", "w"))
         n_success = cumsum(toss == "w")))
 ```
 
-To get the logic machinery working, we need to make some assumptions. These assumptions constitute the our model. An ideal design loop for developing a Bayesian model has three steps:
+To get the logic machinery working, we need to make some assumptions. These assumptions constitute our model. An ideal design loop for developing a Bayesian model has three steps:
 
 1. **Data story** 
     - Describe aspects of the underlying reality and the sampling process. 
@@ -141,7 +141,7 @@ To get the logic machinery working, we need to make some assumptions. These assu
 
 ### A data story
 
-How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient enough to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.
+How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.
 
 
 ### Bayesian updating
@@ -274,7 +274,7 @@ Our model has three parts: likelihood, parameters, and the prior. These values g
 
 Turns out that knowing all the rules doesn't necessarily help us with the calculations. For most interesting models we will ever consider, the necessary integrals in the Bayesian conditioning machinery have no closed form and can't be calculated no matter how talented you are. Each new parameter effectively adds a new level to the integral used to calculate $p(y)$. Instead, we need to rely on numerical techniques to approximate the mathematics defined in Bayes' theorem.
 
-All of the numerical techniques we use produce only *samples* from the posterior distribution, not the distribution itself. Luckily, samples from the distribution are easier to work with than the actual distribution -- this way we don't have to do integrals.
+All the numerical techniques we use produce only *samples* from the posterior distribution, not the distribution itself. Luckily, samples from the distribution are easier to work with than the actual distribution -- this way we don't have to do integrals.
 
 
 ### Grid approximation
@@ -332,7 +332,7 @@ For many models, grid approximation or quadratic approximation just aren't good 
 
 Unlike grid approximation, where we computed the posterior distribution directly, MCMC techniques merely draw samples from the posterior. You end up with a collection of parameter values, where the frequencies of those values correspond to the posterior plausibilities.
 
-Let's do a quick example where we fit this model using **brms**. This package acts as an interface with [Stan probabilistic programming language](http://mc-stan.org/) which implements Hamiltonian Monte Carlo sampling, a fancy type of MCMC. The function `brm()` is the workhorse of the **brms** package, and builds and compiles a Stan model as defined in R. If you've used functions like `lm()` or `glm()`, some of the syntax should look familiar to you. 
+Let's do a quick example where we fit this model using **brms**. This package acts as an interface with [Stan probabilistic programming language](http://mc-stan.org/) which implements Hamiltonian Monte Carlo sampling, a fancy type of MCMC. The function `brm()` is the workhorse of the **brms** package, and builds and compiles a Stan model as defined in R. If you've used functions like `lm()` or `glm()`, the syntax should look familiar to you. 
 
 ```{r globe_model, cache = T, message = F, results = 'hide'}
 # this can take a bit as the model compiles

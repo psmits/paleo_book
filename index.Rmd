@@ -20,7 +20,7 @@ I emphasize Bayesian data analysis approaches throughout this text. Parameter in
 
 This book uses the [`tidyverse`](https://www.tidyverse.org/) collection of R packages with a particular emphasis on `dplyr`, `ggplot2`, and `purrr`. Other `tidyverse` packages are used as necessary (e.g. `modelr`). Management and processing of posterior estimates, as well as some some aspects of visualization, is done using the [`tidybayes`](http://mjskay.github.io/tidybayes/) package. The [`pacman`](https://github.com/trinker/pacman) package is used throughout to ensure that all packages are both installed and loaded into namespace. The [`here`](https://github.com/r-lib/here) package is used to ensure safe file paths. I attempt to stick to the [`tidyverse` style guide](https://style.tidyverse.org/) as much as possible.
 
-The material in this book is derived from material and examples presented in 
+A lot of material in this book is derived from material and examples presented in 
 [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/), 
 [**Bayesian Data Analysis 3** by Gelman et al.](http://www.stat.columbia.edu/~gelman/book/), and 
 [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
