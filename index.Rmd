@@ -26,3 +26,6 @@ A lot of material in this book is derived from material and examples presented i
 [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
 
 Additionally, some of the code used in this book is derived from [this rewriting](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse) of **Statistical Rethinking**.
+
+
+This textbook is made possible by my postdoctoral funding from [Seth Finnegan](https://finneganlab.org/) at UC-Berkeley.
