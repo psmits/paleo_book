@@ -1,5 +1,7 @@
 book_filename: "paleo_book"
 
+after_chapter_script: ['clean_namespace.R']
+
 repo: https://github.com/psmits/paleo_book/
 
 output_dir: docs
@@ -18,7 +20,7 @@ rmd_files: [
   'intro_regression.Rmd',
   'regression_continue.Rmd',
   'regression_multi.Rmd',
-  'interactions.Rmd'
+  'interactions.Rmd',
 
   'logistic.Rmd',
   'poisson.Rmd',

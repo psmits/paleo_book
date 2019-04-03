@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>6 Logistic regression | Analytical Paleobiology</title>
+  <title>7 Logistic regression | Analytical Paleobiology</title>
   <meta name="description" content="An informal course on analytical paleobiology">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="6 Logistic regression | Analytical Paleobiology" />
+  <meta property="og:title" content="7 Logistic regression | Analytical Paleobiology" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="psmits/paleo_book" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6 Logistic regression | Analytical Paleobiology" />
+  <meta name="twitter:title" content="7 Logistic regression | Analytical Paleobiology" />
   <meta name="twitter:site" content="@PeterDSmits" />
   <meta name="twitter:description" content="An informal course on analytical paleobiology" />
   
@@ -25,15 +25,15 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-01">
+<meta name="date" content="2019-04-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="multiple-predictors-and-interactions-in-linear-regression.html">
-
+<link rel="prev" href="interactions.html">
+<link rel="next" href="poisson-regression-and-others-glms.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -164,7 +164,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2" data-path="reg-continue.html"><a href="reg-continue.html#reading-2"><i class="fa fa-check"></i><b>4.2</b> Reading</a></li>
 <li class="chapter" data-level="4.3" data-path="reg-continue.html"><a href="reg-continue.html#our-first-example"><i class="fa fa-check"></i><b>4.3</b> Our first example</a></li>
 <li class="chapter" data-level="4.4" data-path="reg-continue.html"><a href="reg-continue.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.4</b> A single continuous predictor</a><ul>
-<li class="chapter" data-level="4.4.1" data-path="reg-continue.html"><a href="reg-continue.html#aside-centering"><i class="fa fa-check"></i><b>4.4.1</b> Aside: Centering</a></li>
+<li class="chapter" data-level="4.4.1" data-path="reg-continue.html"><a href="reg-continue.html#centering"><i class="fa fa-check"></i><b>4.4.1</b> Aside: Centering</a></li>
 <li class="chapter" data-level="4.4.2" data-path="reg-continue.html"><a href="reg-continue.html#checking-model-fit"><i class="fa fa-check"></i><b>4.4.2</b> Checking model fit</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.5</b> Summary</a></li>
@@ -182,18 +182,37 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.8" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
 <li class="chapter" data-level="5.9" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>6</b> Logistic regression</a><ul>
-<li class="chapter" data-level="6.1" data-path="logistic-regression.html"><a href="logistic-regression.html#objectives-5"><i class="fa fa-check"></i><b>6.1</b> Objectives</a></li>
-<li class="chapter" data-level="6.2" data-path="logistic-regression.html"><a href="logistic-regression.html#reading-4"><i class="fa fa-check"></i><b>6.2</b> Reading</a></li>
-<li class="chapter" data-level="6.3" data-path="logistic-regression.html"><a href="logistic-regression.html#introduction-1"><i class="fa fa-check"></i><b>6.3</b> Introduction</a></li>
-<li class="chapter" data-level="6.4" data-path="logistic-regression.html"><a href="logistic-regression.html#foram-coiling"><i class="fa fa-check"></i><b>6.4</b> Foram coiling</a></li>
-<li class="chapter" data-level="6.5" data-path="logistic-regression.html"><a href="logistic-regression.html#writing-out-a-model"><i class="fa fa-check"></i><b>6.5</b> Writing out a model</a><ul>
-<li class="chapter" data-level="6.5.1" data-path="logistic-regression.html"><a href="logistic-regression.html#interpreting-logistic-regression-coefficients"><i class="fa fa-check"></i><b>6.5.1</b> Interpreting logistic regression coefficients</a></li>
+<li class="chapter" data-level="6" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>6</b> Interactions</a><ul>
+<li class="chapter" data-level="6.1" data-path="interactions.html"><a href="interactions.html#objectives-5"><i class="fa fa-check"></i><b>6.1</b> Objectives</a></li>
+<li class="chapter" data-level="6.2" data-path="interactions.html"><a href="interactions.html#reading-4"><i class="fa fa-check"></i><b>6.2</b> Reading</a></li>
+<li class="chapter" data-level="6.3" data-path="interactions.html"><a href="interactions.html#introduction-1"><i class="fa fa-check"></i><b>6.3</b> Introduction</a></li>
+<li class="chapter" data-level="6.4" data-path="interactions.html"><a href="interactions.html#discrete-x-continuous"><i class="fa fa-check"></i><b>6.4</b> discrete X continuous</a></li>
+<li class="chapter" data-level="6.5" data-path="interactions.html"><a href="interactions.html#continuous-x-continuous"><i class="fa fa-check"></i><b>6.5</b> continuous X continuous</a></li>
 </ul></li>
-<li class="chapter" data-level="6.6" data-path="logistic-regression.html"><a href="logistic-regression.html#priors-for-our-model"><i class="fa fa-check"></i><b>6.6</b> Priors for our model</a></li>
-<li class="chapter" data-level="6.7" data-path="logistic-regression.html"><a href="logistic-regression.html#fitting-our-model"><i class="fa fa-check"></i><b>6.7</b> Fitting our model</a></li>
-<li class="chapter" data-level="6.8" data-path="logistic-regression.html"><a href="logistic-regression.html#checking-model-adequacy"><i class="fa fa-check"></i><b>6.8</b> Checking model adequacy</a></li>
-<li class="chapter" data-level="6.9" data-path="logistic-regression.html"><a href="logistic-regression.html#summary-5"><i class="fa fa-check"></i><b>6.9</b> Summary</a></li>
+<li class="chapter" data-level="7" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>7</b> Logistic regression</a><ul>
+<li class="chapter" data-level="7.1" data-path="logistic-regression.html"><a href="logistic-regression.html#objectives-6"><i class="fa fa-check"></i><b>7.1</b> Objectives</a></li>
+<li class="chapter" data-level="7.2" data-path="logistic-regression.html"><a href="logistic-regression.html#reading-5"><i class="fa fa-check"></i><b>7.2</b> Reading</a></li>
+<li class="chapter" data-level="7.3" data-path="logistic-regression.html"><a href="logistic-regression.html#introduction-2"><i class="fa fa-check"></i><b>7.3</b> Introduction</a></li>
+<li class="chapter" data-level="7.4" data-path="logistic-regression.html"><a href="logistic-regression.html#foram-coiling"><i class="fa fa-check"></i><b>7.4</b> Foram coiling</a></li>
+<li class="chapter" data-level="7.5" data-path="logistic-regression.html"><a href="logistic-regression.html#writing-out-a-model"><i class="fa fa-check"></i><b>7.5</b> Writing out a model</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="logistic-regression.html"><a href="logistic-regression.html#interpreting-logistic-regression-coefficients"><i class="fa fa-check"></i><b>7.5.1</b> Interpreting logistic regression coefficients</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="logistic-regression.html"><a href="logistic-regression.html#priors-for-our-model"><i class="fa fa-check"></i><b>7.6</b> Priors for our model</a></li>
+<li class="chapter" data-level="7.7" data-path="logistic-regression.html"><a href="logistic-regression.html#fitting-our-model"><i class="fa fa-check"></i><b>7.7</b> Fitting our model</a></li>
+<li class="chapter" data-level="7.8" data-path="logistic-regression.html"><a href="logistic-regression.html#checking-model-adequacy"><i class="fa fa-check"></i><b>7.8</b> Checking model adequacy</a></li>
+<li class="chapter" data-level="7.9" data-path="logistic-regression.html"><a href="logistic-regression.html#summary-5"><i class="fa fa-check"></i><b>7.9</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html"><i class="fa fa-check"></i><b>8</b> Poisson regression and others GLMs</a><ul>
+<li class="chapter" data-level="8.1" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
+<li class="chapter" data-level="8.2" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#poisson-distribution"><i class="fa fa-check"></i><b>8.2</b> Poisson distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="varying-intercepts.html"><a href="varying-intercepts.html"><i class="fa fa-check"></i><b>9</b> Varying-intercept(s)</a><ul>
+<li class="chapter" data-level="9.1" data-path="varying-intercepts.html"><a href="varying-intercepts.html#objectives-7"><i class="fa fa-check"></i><b>9.1</b> Objectives</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="varying-slopes.html"><a href="varying-slopes.html"><i class="fa fa-check"></i><b>10</b> Varying slope(s)</a></li>
+<li class="chapter" data-level="11" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>11</b> Varying slopes and intercepts</a></li>
+<li class="chapter" data-level="12" data-path="time-series.html"><a href="time-series.html"><i class="fa fa-check"></i><b>12</b> Time Series</a><ul>
+<li class="chapter" data-level="12.1" data-path="time-series.html"><a href="time-series.html#objectives-8"><i class="fa fa-check"></i><b>12.1</b> Objectives</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown">
@@ -217,9 +236,9 @@ Proudly published with bookdown</a></li>
 
             <section class="normal" id="section-">
 <div id="logistic-regression" class="section level1">
-<h1><span class="header-section-number">6</span> Logistic regression</h1>
-<div id="objectives-5" class="section level2">
-<h2><span class="header-section-number">6.1</span> Objectives</h2>
+<h1><span class="header-section-number">7</span> Logistic regression</h1>
+<div id="objectives-6" class="section level2">
+<h2><span class="header-section-number">7.1</span> Objectives</h2>
 <ul>
 <li>Introduce logistic regression</li>
 <li>Interpret regression coefficients from logistic regression</li>
@@ -232,17 +251,18 @@ Proudly published with bookdown</a></li>
 
 <span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
-<div id="reading-4" class="section level2">
-<h2><span class="header-section-number">6.2</span> Reading</h2>
+<div id="reading-5" class="section level2">
+<h2><span class="header-section-number">7.2</span> Reading</h2>
 <p>The following materials are recommended pre-readings before starting this tutorial.</p>
 <ul>
 <li>Chapter 5 “Logistic regression” from <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983"><strong>Data Analysis Using Regression and Multilevel/Hierarchical Models</strong> by Gelman and Hill</a>.</li>
 <li>Chapter 10 “Counting and Classification” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
 <li>OPTIONAL Chapter 9 “Big Entropy and the Generalized Linear Model” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
 </ul>
+<p>A lot of the material and advice for interpreting logistic regression coefficients, both as probabilities and odds, is based on Chapter 5 of <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983">Gelman and Hill</a>.</p>
 </div>
-<div id="introduction-1" class="section level2">
-<h2><span class="header-section-number">6.3</span> Introduction</h2>
+<div id="introduction-2" class="section level2">
+<h2><span class="header-section-number">7.3</span> Introduction</h2>
 <p>Not all response variables we might be interested in are continuous variables between <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span>. In some cases our variable of interest might be binary (0/1). For example, we might be interested in if a snail shell coils to the left or right, or if a species survives from one time to the next. The <a href="introduction-to-bayesian-data-analysis.html#globe-example">globe tossing exercise from an earlier lesson</a> is an example of this type of data. But instead of just asking for the probability of an outcome, we’ll now lean how to incorporate predictor variables into that type of model.</p>
 <p>Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, <span class="math inline">\(y\)</span>, as following a Bernoulli distribution. The Bernoulli distribution has a single parameter, <span class="math inline">\(\theta\)</span>, which is the probability of a “positive” outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the <a href="introduction-to-bayesian-data-analysis.html#globe-example">globe tossing exercise</a>, but describes the probability of individual events as opposed to the probability of those “positive” events in aggregate.</p>
 <p>Just because the type of the response variable has changed doesn’t mean we have to completely reinvent the wheel. While we aren’t going to use the Gaussian distribution to model our outcome like in linear regression, we’re still going to use an additive series of covariates multiplied by regression coefficients. But we have one huge complication: the Bernoulli distribution’s only parameter <span class="math inline">\(\theta\)</span> is defined from 0 to 1 while a linear model <span class="math inline">\(X \beta\)</span> is defined from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(\infty\)</span>. We need a tool (i.e. mathematical function) to make these definitions talk to each other.</p>
@@ -268,7 +288,7 @@ df <span class="op">%&gt;%</span>
 <p>Now that we’ve defined a way to model the <span class="math inline">\(\theta\)</span> parameter of the Bernoulli distribution as a linear function, we can start building a logistic regression and explore how to interpret our model’s regression coefficients.</p>
 </div>
 <div id="foram-coiling" class="section level2">
-<h2><span class="header-section-number">6.4</span> Foram coiling</h2>
+<h2><span class="header-section-number">7.4</span> Foram coiling</h2>
 <p>For this scion, we will develop a logistic regression model to describe the probability of a foram being dextrally coiling as a function of multiple measures of that foram’s size and shape.</p>
 <p>To get to that point, we will first explore the foram measurement data. Once we have a handle on the data, we’ll develop and write out a Bayesian logistic regression model and then fit that model using <code>brms</code>. Finally, as always, we’ll then explore the adequacy of our model at describing out data.</p>
 <p>The data we will be focusing on is from a paper by <a href="https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full">Pearson and Ezard</a> that explored changes to morphology associated with speciation. In the original study, the morphological measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on?</p>
@@ -314,7 +334,7 @@ df <span class="op">%&gt;%</span>
 <p><img src="paleo_book_files/figure-html/explore_foram-1.png" width="672" /></p>
 </div>
 <div id="writing-out-a-model" class="section level2">
-<h2><span class="header-section-number">6.5</span> Writing out a model</h2>
+<h2><span class="header-section-number">7.5</span> Writing out a model</h2>
 <p>Now that we’ve defined our response variable (<code>dextral</code>) and isolated our predictors of interest, we can now start describing out model to predict if a specimen will be dextrally or sinistrally coiled.</p>
 <p>Let’s define the coiling of each observation as <span class="math inline">\(y_{i}\)</span> where <span class="math inline">\(i\)</span>, where <span class="math inline">\(i = 1, 2, ..., N\)</span> and <span class="math inline">\(N\)</span> is the total number of observations. We can then define <span class="math inline">\(X\)</span> as our <a href="multiple-predictors-and-interactions-in-linear-regression.html#matrix-notation">design matrix</a> which is an <span class="math inline">\(N\)</span> by <span class="math inline">\(D + 1\)</span> matrix, where <span class="math inline">\(D\)</span> is the number of covariates. The additional column in <span class="math inline">\(X\)</span> is entirely 1s, so that it corresponds to the intercept term of the regression. Let’s define the first column of our design matrix as the one with all 1s. Lastly for now, let’s define a vector of regression coefficients <span class="math inline">\(\beta\)</span> which has length <span class="math inline">\(D + 1\)</span> and the first element corresponds to the intercept.</p>
 <p>Given these definitions, we can write out most of our logistic regression model. <span class="math display">\[
@@ -324,7 +344,7 @@ y_{i} &amp;\sim \text{Bernoulli}(\theta) \\
 \end{align}
 \]</span> What key component(s) of this model are missing? The priors! In order to assign priors for our regression coefficients, we first need to understand what those coefficients <em>mean</em>.</p>
 <div id="interpreting-logistic-regression-coefficients" class="section level3">
-<h3><span class="header-section-number">6.5.1</span> Interpreting logistic regression coefficients</h3>
+<h3><span class="header-section-number">7.5.1</span> Interpreting logistic regression coefficients</h3>
 <p>The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However, the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation.</p>
 <p>There are two genres of effects that a regression coefficient in logistic regression can describe. The regression coefficient by itself describes the <strong>relative effect</strong> on the outcome expected from a change in the predictor. In contrast, the <strong>absolute effect</strong> of a regression coefficient is measured by the change in the probability of the outcome. This measure depends on the other parameters and describes the practical impact of a change in a predictor.</p>
 <p>Let’s explore what this means with two examples. Suppose we have a logistic model defined <span class="math display">\[
@@ -338,7 +358,7 @@ y &amp;\sim \text{Bernoulli}(\theta) \\
 <p>A positive increase in <span class="math inline">\(x\)</span> corresponds to a negative difference of approximately -0.5 in the logit probability of <span class="math inline">\(y\)</span>. This is the relative effect of the predictor in <span class="math inline">\(y\)</span>.</p>
 <p>We can calculate this difference in probability when x = 0 and when x = 1. So an increase of <span class="math inline">\(x\)</span> by 1 would decrease the probability of <span class="math inline">\(y = 1\)</span> by <span class="math inline">\(\text{logit}^{-1}(-1 + -0.5 * 1) - \text{logit}^{-1}{-1 + -0.5 * 0} \approx -0.09\)</span>. This is the absolute effect of the predictor on <span class="math inline">\(y\)</span>.</p>
 <div id="odds-ratios" class="section level4">
-<h4><span class="header-section-number">6.5.1.1</span> Odds ratios</h4>
+<h4><span class="header-section-number">7.5.1.1</span> Odds ratios</h4>
 <p>Another common way to interpret logistic regression coefficients is in terms of <strong>odds ratios</strong>.</p>
 <p>If two outcomes have the probabilities <span class="math inline">\((p, 1 - p)\)</span>, then <span class="math inline">\(p / (1 - p)\)</span> is the odds. An odds of 1 means the outcomes are equally likely because odds of 1 is equivalent to a probability of 0.5 (<span class="math inline">\(1 = 0.5 / (1 - 0.5)\)</span>). Similarly, odds of 0.5 or 2 represent probabilities of 1/3 and 2/3, respectively.</p>
 <p>The ratio of two odds (e.g. <span class="math inline">\((p_{1} / (1 - p_{1})) / (p_{2} / (1 - p_{2}))\)</span>) is called an odds ratio. An odds ratio of 2 corresponds to a change from <span class="math inline">\(p = 0.33\)</span> to <span class="math inline">\(p = 0.5\)</span>, or a change from <span class="math inline">\(p = 0.5\)</span> to <span class="math inline">\(p = 0.67\)</span>.</p>
@@ -351,7 +371,7 @@ y &amp;\sim \text{Bernoulli}(\theta) \\
 </div>
 </div>
 <div id="priors-for-our-model" class="section level2">
-<h2><span class="header-section-number">6.6</span> Priors for our model</h2>
+<h2><span class="header-section-number">7.6</span> Priors for our model</h2>
 <p>When thinking about how to define the priors for our logistic regression model, let’s return to our graph of the logistic function. Most of the action in this graph takes place between -3 and 3, and input values with magnitude greater than 5 barely move the value of the logistic function. When we think of this in terms possible regression coefficient values, we probably wouldn’t expect an intercept term with magnitude much greater than 5 or a regression coefficient with magnitude much greater than 2.</p>
 <p>Given our explorations, we can provide some weakly informative priors for reasonable regression coefficient values which reflect our understanding of the logistic function. Here is the full definition of our model including priors. <span class="math display">\[
 \begin{align}
@@ -461,7 +481,7 @@ sim_results <span class="op">%&gt;%</span>
 <p>With complex models it is easier to use <code>brm()</code> to simulate from the prior predictive distribution.</p>
 </div>
 <div id="fitting-our-model" class="section level2">
-<h2><span class="header-section-number">6.7</span> Fitting our model</h2>
+<h2><span class="header-section-number">7.7</span> Fitting our model</h2>
 <p>We’ve explored our variables. We’ve written out a model. We’ve explored the implications of our priors. Now let’s fit our model to our data! We’ve already coded up our model using <code>brm()</code> earlier when looking at the prior preditive distribution. Let’s do that again but this time increase the number of samples and leave off the <code>sample_prior</code> argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 <span class="st">  </span>foram_ready <span class="op">%&gt;%</span>
@@ -534,7 +554,7 @@ sim_results <span class="op">%&gt;%</span>
       <span class="dt">y =</span> <span class="st">&#39;Predictor&#39;</span>)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/side_model_coef_probability-1.png" width="672" /></p>
 <p>We can also visualize the relationship between the individual covariates and coiling state. This involves holding all predictors constant except for one of them, and calculating the logistic function for the whole range of values.</p>
-<p>Let’s look at the effects of three of the six covariates on expected coiling direction.</p>
+<p>Let’s look at the effects of three of the six covariates on expected coiling direction. Remember, when we want to interpret the effects of one of these regression coefficients, we vary the one predictor of interest and hold all the others constant. With mean-centered data and holding all other predictors at 0, we can visuallize the effect of that one predictor on observations that are average for all other predictors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">line_data &lt;-<span class="st"> </span>foram_ready <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">compression_rescale =</span> <span class="kw">seq_range</span>(compression_rescale, <span class="dt">n =</span> <span class="dv">100</span>),
             <span class="dt">area_rescale =</span> <span class="dv">0</span>,
@@ -618,7 +638,7 @@ sim_results <span class="op">%&gt;%</span>
 <p><img src="paleo_book_files/figure-html/side_model_umbilical_angle-1.png" width="672" /></p>
 </div>
 <div id="checking-model-adequacy" class="section level2">
-<h2><span class="header-section-number">6.8</span> Checking model adequacy</h2>
+<h2><span class="header-section-number">7.8</span> Checking model adequacy</h2>
 <p>Now that we’ve fit out model and taken a look at our parameter estimates, we should really investigate if our model is an adequate description of our data. How confident can we be in interpreting the results of our analysis?</p>
 <p>For our linear regression models, we could just compare properties like the density or median of the response to a distribution of those measures from our poseterior predictive distribution. With binary data it isn’t that easy. Instead, we have to explore other ways of summarizing our model’s adequacy.</p>
 <p>A very simple measure of performance with binary data is to measure our model’s <strong>accuracy</strong> – does our model predict a 1 when our data is a 1? A 0 when the data is a 0? While other metrics exist (like <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">ROC/AUC</a>, we’re just going to cover accuracy in this lesson.</p>
@@ -650,7 +670,7 @@ foram_ready <span class="op">%&gt;%</span>
 <p>Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model? Is this even a valid scientific question worth continuing with?</p>
 </div>
 <div id="summary-5" class="section level2">
-<h2><span class="header-section-number">6.9</span> Summary</h2>
+<h2><span class="header-section-number">7.9</span> Summary</h2>
 <p>This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. <span class="math inline">\(\text{logit}(p) = X\beta\)</span>). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and absolute effects and emphasizing interpreting coefficients on the probability scale. We explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.</p>
 
 </div>
@@ -660,8 +680,8 @@ foram_ready <span class="op">%&gt;%</span>
           </div>
         </div>
       </div>
-<a href="multiple-predictors-and-interactions-in-linear-regression.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="interactions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="poisson-regression-and-others-glms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
