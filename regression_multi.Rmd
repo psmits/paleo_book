@@ -8,7 +8,7 @@
 - Cover strategies for visualizing multivariate regression models.
 
 
-```{r load_packages_05, message = F, results = 'hide'}
+```{r load_packages_reg_multi, message = F, results = 'hide'}
 
 library(pacman)
 

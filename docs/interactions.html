@@ -245,33 +245,68 @@ Proudly published with bookdown</a></li>
 <li>Cover strategies for interpreting statistical interactions</li>
 <li>Demonstrate ways of visualizing the effects of interaction terms</li>
 </ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
+
+<span class="kw">p_load</span>(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       modelr, forcats)
+
+<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
 <div id="reading-4" class="section level2">
 <h2><span class="header-section-number">6.2</span> Reading</h2>
 <ul>
 <li>Chapter 7 “Interactions” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
-<li>Chapter 3 “Linear regression: the basics” from <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983"><strong>Data Analysis Using Regression and Multilevel/Hierarchical Models</strong> by Gelman and Hill</a>.</li>
+<li>OPTIONAL Chapter 3 “Linear regression: the basics” from <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983"><strong>Data Analysis Using Regression and Multilevel/Hierarchical Models</strong> by Gelman and Hill</a>.</li>
 </ul>
 </div>
 <div id="introduction-1" class="section level2">
 <h2><span class="header-section-number">6.3</span> Introduction</h2>
-<p>today’s theme is: interaction effects – easy to compute, hard to explain</p>
+<p>this lesson’s theme is “interaction effects – easy to compute, hard to explain.”</p>
 <p>Conditioning</p>
 <p>Interaction</p>
 <p>Models with complex interactions are easy to fit to data, but they are considerably harder to understand.</p>
+<p>in practice predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions).</p>
+<p>Including interactions is a way to allow a model to be fit differently to different subsets of the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="kw">here</span>(<span class="st">&#39;data&#39;</span>, <span class="st">&#39;PanTHERIA_1-0_WR05_Aug2008.txt&#39;</span>), 
+                      <span class="dt">na =</span> <span class="st">&#39;-999.00&#39;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log =</span> <span class="kw">log</span>(x5_<span class="dv">1</span>_adult_body_mass_g),
+         <span class="dt">range_group_log =</span> <span class="kw">log</span>(x22_<span class="dv">1</span>_home_range_km2),
+         <span class="dt">range_indiv_log =</span> <span class="kw">log</span>(x22_<span class="dv">2</span>_home_range_indiv_km2),
+         <span class="dt">density_log =</span> <span class="kw">log</span>(x21_<span class="dv">1</span>_population_density_n_km2),
+         <span class="dt">activity_cycle =</span> <span class="kw">case_when</span>(x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;nocturnal&#39;</span>,
+                                    x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &#39;mixed&#39;</span>,
+                                    x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> &#39;diurnal&#39;</span>),
+         <span class="dt">trophic_level =</span> <span class="kw">case_when</span>(x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;herbivore&#39;</span>,
+                                   x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &#39;omnivore&#39;</span>,
+                                   x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> &#39;carnivore&#39;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">drop_na</span>(mass_log, density_log, trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_stan =</span> arm<span class="op">::</span><span class="kw">rescale</span>(mass_log), <span class="co"># center and scale</span>
+         <span class="dt">trophic_level =</span> <span class="kw">fct_infreq</span>(trophic_level)) <span class="co"># reorder by frequency</span></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   MSW05_Order = col_character(),
+##   MSW05_Family = col_character(),
+##   MSW05_Genus = col_character(),
+##   MSW05_Species = col_character(),
+##   MSW05_Binomial = col_character(),
+##   References = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
 </div>
 <div id="discrete-x-continuous" class="section level2">
 <h2><span class="header-section-number">6.4</span> discrete X continuous</h2>
 <p>Two ways to write out an interaction effect.</p>
 <p>standard form <span class="math display">\[
 \begin{align}
-y_{i} &amp;= N(\mu_{i}, \sigma) \\
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \alpha + \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} + \beta_{a} a_{i} \\
 \end{align}
 \]</span></p>
 <p>galaxy brain form <span class="math display">\[
 \begin{align}
-y_{i} &amp;= N(\mu_{i}, \sigma) \\
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \alpha + \gamma_{i} r_{i} + \beta_{a} a_{i} \\
 \gamma_{i} &amp;= \beta_{r} + \beta_{ar} a_{i} \\
 \end{align}
@@ -285,12 +320,119 @@ y_{i} &amp;= N(\mu_{i}, \sigma) \\
 \]</span> the galaxy brain form can help us interpret the interaction and understand what is happening more clearly. we want to know how the effect of r varies as a function of a.</p>
 <p>of course the galaxy brain notation could be done in the reverse. <span class="math display">\[
 \begin{align}
-y_{i} &amp;= N(\mu_{i}, \sigma) \\
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \alpha + \beta_{r} r_{i} + \delta_{i} a_{i} \\
 \delta_{i} &amp;= \beta_{a} + \beta_{ar} r_{i} \\
 \end{align}
 \]</span></p>
 <p>interactions are symmetrical! this is why the standard form is the standard form: it is harder to think about because it lays the symmetry bare.</p>
+<p><span class="math display">\[
+\begin{align}
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &amp;= \beta_{0} + \beta_{m} m_{i} + \beta_{h} h_{i} + \beta_{c} c_{i} + \beta_{mh} m_{i} h_{i} + \beta_{mc} m_{i} c_{i} \\ 
+&amp;= X_{i} \beta \\
+\beta_{0} &amp;\sim \text{Normal}(0, 10) \\
+\beta_{m} &amp;\sim \text{Normal}(-1, 1) \\
+\beta_{h} &amp;\sim \text{Normal}(0, 1) \\
+\beta_{c} &amp;\sim \text{Normal}(0, 1) \\
+\beta_{mh} &amp;\sim \text{Normal}(0, 1) \\
+\beta_{mc} &amp;\sim \text{Normal}(0, 1) \\
+\sigma &amp;\sim \text{Cauchy}^{+}(0, 1) \\
+\end{align}
+\]</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_stan <span class="op">*</span><span class="st"> </span>trophic_level),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">class =</span> b, <span class="dt">coef =</span> mass_stan),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_fitted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+                   <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_stan, <span class="dt">y =</span> density_log)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .value, <span class="dt">group =</span> .draw),
+            <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">20</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/inter_fitted-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_stan =</span> <span class="kw">seq_range</span>(mass_stan, <span class="dt">n =</span> <span class="dv">1000</span>),
+            trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_stan, <span class="dt">y =</span> density_log)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> .prediction),
+                  <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>),
+                  <span class="dt">size =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/inter_predicted-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">group =</span> .draw)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">alpha =</span> <span class="fl">0.1</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">data =</span> pantheria,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> density_log,
+                          <span class="dt">group =</span> <span class="ot">NULL</span>),
+            <span class="dt">colour =</span> <span class="st">&#39;black&#39;</span>,
+            <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Population density &#39;</span>, <span class="kw">log</span>(n <span class="op">/</span><span class="st"> </span>km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Population density, actual versus predicted&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/inter_dens_ppc-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pan_trophic_summary &lt;-
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(density_log),
+                   <span class="dt">sd =</span> <span class="kw">sd</span>(density_log)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(key, value, median, sd)
+
+pantheria_summary_ppc &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(.draw, trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(.prediction),
+                   <span class="dt">sd =</span> <span class="kw">sd</span>(.prediction)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(key, value, median, sd)
+
+pantheria_summary_ppc <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">fill =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">data =</span> pan_trophic_summary,
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">xintercept =</span> value),
+             <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(key <span class="op">~</span><span class="st"> </span>trophic_level, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>, <span class="dt">switch =</span> <span class="st">&#39;y&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Median population density&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="paleo_book_files/figure-html/inter_median_ppc-1.png" width="672" /></p>
 </div>
 <div id="continuous-x-continuous" class="section level2">
 <h2><span class="header-section-number">6.5</span> continuous X continuous</h2>

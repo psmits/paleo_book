@@ -9,7 +9,7 @@
 - Fit regression models in **brms**.
 - Basics of summarizing and visualizing a model fit.
 
-```{r load_packages_03, message = F, results = 'hide'}
+```{r load_packages_intro_reg, message = F, results = 'hide'}
 
 library(pacman)
 

@@ -9,7 +9,7 @@ In the [previous lesson](#reg-intro) we introduced linear regression with a sing
 - Continue to focus on evaluating model fit as major step in modeling.
 
 
-```{r load_packages_04, message = F, results = 'hide'}
+```{r load_packages_reg_continue, message = F, results = 'hide'}
 
 library(pacman)
 

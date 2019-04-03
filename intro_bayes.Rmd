@@ -24,7 +24,7 @@ The following materials are recommended prereadings before starting this tutoria
 Most of this section is based on material presented in **Statistical Rethinking** and code material from [Solomon Kurz's rewrite of **Statistical Rethinking**](https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/).
 
 
-```{r load_packages_02, results = 'hide'}
+```{r load_packages_intro, results = 'hide'}
 
 library(pacman)
 

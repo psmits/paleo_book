@@ -8,7 +8,7 @@
 - Learn how to make PBDB cleaner and tidier
 
 
-```{r load_packages_01, results = 'hide'}
+```{r load_packages_pbdb, results = 'hide'}
 
 library(pacman)
 

@@ -8,7 +8,7 @@
 - Cover strategies for interpreting statistical interactions
 - Demonstrate ways of visualizing the effects of interaction terms
 
-```{r load_packages_05, message = F, results = 'hide'}
+```{r load_packages_interact, message = F, results = 'hide'}
 
 library(pacman)
 
@@ -169,7 +169,7 @@ pantheria %>%
 
 ```  
 
-```{r multi_predicted}
+```{r inter_predicted}
 
 pantheria %>%
   data_grid(mass_stan = seq_range(mass_stan, n = 1000),

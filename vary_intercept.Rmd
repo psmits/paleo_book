@@ -7,7 +7,7 @@
 - Introduce varying intercept models
 
 
-```{r load_packages_08, message = F, results = 'hide'}
+```{r load_packages_vary_intercept, message = F, results = 'hide'}
 
 library(pacman)
 

@@ -8,7 +8,7 @@
 
 
 
-```{r load_packages_06, message = F, results = 'hide'}
+```{r load_packages_logistic, message = F, results = 'hide'}
 
 library(pacman)
 
