@@ -1,0 +1,88 @@
+# Interactions
+
+
+## Objectives
+
+- Introduce interaction terms for regression models
+- Demonstrate different "types" of interactions
+- Cover strategies for interpreting statistical interactions
+- Demonstrate ways of visualizing the effects of interaction terms
+
+
+
+## Reading
+
+- Chapter 7 "Interactions" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+- Chapter 3 "Linear regression: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+
+
+## Introduction
+
+today's theme is: interaction effects -- easy to compute, hard to explain
+
+Conditioning
+
+Interaction
+
+Models with complex interactions are easy to fit to data, but they are considerably harder to understand.
+
+
+
+
+## discrete X continuous
+
+
+
+Two ways to write out an interaction effect.
+
+standard form
+$$
+\begin{align}
+y_{i} &= N(\mu_{i}, \sigma) \\
+\mu_{i} &= \alpha + \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} + \beta_{a} a_{i} \\
+\end{align}
+$$
+
+galaxy brain form
+$$
+\begin{align}
+y_{i} &= N(\mu_{i}, \sigma) \\
+\mu_{i} &= \alpha + \gamma_{i} r_{i} + \beta_{a} a_{i} \\
+\gamma_{i} &= \beta_{r} + \beta_{ar} a_{i} \\
+\end{align}
+$$
+
+here is the algebra to prove it
+$$
+\begin{align}
+\gamma_{i} &= \beta_{r} + \beta_{ar} a_{i} \\
+\gamma_{i} r_{i} $= \left(\beta_{r} + \beta_{ar} a_{i}\right) r_{i} \\
+\gamma_{i} r_{i} $= \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} \\
+\end{align}
+$$
+the galaxy brain form can help us interpret the interaction and understand what is happening more clearly. we want to know how the effect of r varies as a function of a.
+
+
+
+
+of course the galaxy brain notation could be done in the reverse.
+$$
+\begin{align}
+y_{i} &= N(\mu_{i}, \sigma) \\
+\mu_{i} &= \alpha + \beta_{r} r_{i} + \delta_{i} a_{i} \\
+\delta_{i} &= \beta_{a} + \beta_{ar} r_{i} \\
+\end{align}
+$$
+
+interactions are symmetrical! this is why the standard form is the standard form: it is harder to think about because it lays the symmetry bare.
+
+
+
+
+
+
+## continuous X continuous
+
+[centering](#centering) helps with interpreting interactions, especially continuous X continuous ones.
+
+

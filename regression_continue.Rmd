@@ -253,7 +253,7 @@ print(m_2)
 
 ```
 
-### Aside: Centering
+### Aside: Centering {#centering}
 
 The intercept of a linear regression model is normally interpreted as the average value of $y$ when all predictors equal 0. A consequence of this definition means that the value of the intercept is frequently uninterpretable without also studying the regression coefficients. This is also the reason that we commonly need very weak priors for intercepts.
 

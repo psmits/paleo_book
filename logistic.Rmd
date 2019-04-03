@@ -28,11 +28,12 @@ The following materials are recommended pre-readings before starting this tutori
 - OPTIONAL Chapter 9 "Big Entropy and the Generalized Linear Model" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 
 
+A lot of the material and advice for interpreting logistic regression coefficients, both as probabilities and odds, is based on Chapter 5 of [Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+
 
 ## Introduction
 
 Not all response variables we might be interested in are continuous variables between $-\infty$ and $\infty$. In some cases our variable of interest might be binary (0/1). For example, we might be interested in if a snail shell coils to the left or right, or if a species survives from one time to the next. The [globe tossing exercise from an earlier lesson](#globe-example) is an example of this type of data. But instead of just asking for the probability of an outcome, we'll now lean how to incorporate predictor variables into that type of model.
-
 
 Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, $y$, as following a Bernoulli distribution. The Bernoulli distribution has a single parameter, $\theta$, which is the probability of a "positive" outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the [globe tossing exercise](#globe-example), but describes the probability of individual events as opposed to the probability of those "positive" events in aggregate. 
 
@@ -137,6 +138,7 @@ $$
 What key component(s) of this model are missing? The priors! In order to assign priors for our regression coefficients, we first need to understand what those coefficients *mean*. 
 
 ### Interpreting logistic regression coefficients
+
 
 The definition of a regression coefficient is that it describes the expected change in the response per unit change in its predictor. However, the logit (or inverse logit) function introduced into our model creates a nonlinearity which complicates the simplicity of this interpretation. 
 
@@ -400,7 +402,7 @@ m_1 %>%
 
 We can also visualize the relationship between the individual covariates and coiling state. This involves holding all predictors constant except for one of them, and calculating the logistic function for the whole range of values.
 
-Let's look at the effects of three of the six covariates on expected coiling direction.
+Let's look at the effects of three of the six covariates on expected coiling direction. Remember, when we want to interpret the effects of one of these regression coefficients, we vary the one predictor of interest and hold all the others constant. With mean-centered data and holding all other predictors at 0, we can visuallize the effect of that one predictor on observations that are average for all other predictors. 
 
 ```{r side_model_compression}
 
