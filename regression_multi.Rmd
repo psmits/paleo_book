@@ -44,7 +44,7 @@ So far all the linear regression models we have encountered have either been int
 
 This lesson uses the PanTHERIA dataset like we did in the [previous lesson](#reg-continue). Just like last time, here is a quick clean up of the dataset before we do anything "principled."
 
-```{r pantheria_05}
+```{r pantheria_regmulti}
 
 pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
                       na = '-999.00') %>%

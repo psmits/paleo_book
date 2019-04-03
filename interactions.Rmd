@@ -8,23 +8,61 @@
 - Cover strategies for interpreting statistical interactions
 - Demonstrate ways of visualizing the effects of interaction terms
 
+```{r load_packages_05, message = F, results = 'hide'}
 
+library(pacman)
+
+p_load(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot,
+       modelr, forcats)
+
+theme_set(theme_bw())
+
+```
 
 ## Reading
 
 - Chapter 7 "Interactions" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
-- Chapter 3 "Linear regression: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
+- OPTIONAL Chapter 3 "Linear regression: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983). 
 
 
 ## Introduction
 
-today's theme is: interaction effects -- easy to compute, hard to explain
+this lesson's theme is "interaction effects -- easy to compute, hard to explain."
 
 Conditioning
 
 Interaction
 
 Models with complex interactions are easy to fit to data, but they are considerably harder to understand.
+
+in practice predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions).
+
+Including interactions is a way to allow a model to be fit differently to different subsets of the data. 
+
+
+
+```{r pantheria_interact}
+
+pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
+                      na = '-999.00') %>%
+  clean_names() %>% 
+  mutate(mass_log = log(x5_1_adult_body_mass_g),
+         range_group_log = log(x22_1_home_range_km2),
+         range_indiv_log = log(x22_2_home_range_indiv_km2),
+         density_log = log(x21_1_population_density_n_km2),
+         activity_cycle = case_when(x1_1_activity_cycle == 1 ~ 'nocturnal',
+                                    x1_1_activity_cycle == 2 ~ 'mixed',
+                                    x1_1_activity_cycle == 3 ~ 'diurnal'),
+         trophic_level = case_when(x6_2_trophic_level == 1 ~ 'herbivore',
+                                   x6_2_trophic_level == 2 ~ 'omnivore',
+                                   x6_2_trophic_level == 3 ~ 'carnivore')) %>%
+  drop_na(mass_log, density_log, trophic_level) %>%
+  mutate(mass_stan = arm::rescale(mass_log), # center and scale
+         trophic_level = fct_infreq(trophic_level)) # reorder by frequency
+
+```
+
+
 
 
 
@@ -38,7 +76,7 @@ Two ways to write out an interaction effect.
 standard form
 $$
 \begin{align}
-y_{i} &= N(\mu_{i}, \sigma) \\
+y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &= \alpha + \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} + \beta_{a} a_{i} \\
 \end{align}
 $$
@@ -46,7 +84,7 @@ $$
 galaxy brain form
 $$
 \begin{align}
-y_{i} &= N(\mu_{i}, \sigma) \\
+y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &= \alpha + \gamma_{i} r_{i} + \beta_{a} a_{i} \\
 \gamma_{i} &= \beta_{r} + \beta_{ar} a_{i} \\
 \end{align}
@@ -68,7 +106,7 @@ the galaxy brain form can help us interpret the interaction and understand what 
 of course the galaxy brain notation could be done in the reverse.
 $$
 \begin{align}
-y_{i} &= N(\mu_{i}, \sigma) \\
+y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &= \alpha + \beta_{r} r_{i} + \delta_{i} a_{i} \\
 \delta_{i} &= \beta_{a} + \beta_{ar} r_{i} \\
 \end{align}
@@ -77,6 +115,134 @@ $$
 interactions are symmetrical! this is why the standard form is the standard form: it is harder to think about because it lays the symmetry bare.
 
 
+
+
+$$
+\begin{align}
+y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &= \beta_{0} + \beta_{m} m_{i} + \beta_{h} h_{i} + \beta_{c} c_{i} + \beta_{mh} m_{i} h_{i} + \beta_{mc} m_{i} c_{i} \\ 
+&= X_{i} \beta \\
+\beta_{0} &\sim \text{Normal}(0, 10) \\
+\beta_{m} &\sim \text{Normal}(-1, 1) \\
+\beta_{h} &\sim \text{Normal}(0, 1) \\
+\beta_{c} &\sim \text{Normal}(0, 1) \\
+\beta_{mh} &\sim \text{Normal}(0, 1) \\
+\beta_{mc} &\sim \text{Normal}(0, 1) \\
+\sigma &\sim \text{Cauchy}^{+}(0, 1) \\
+\end{align}
+$$
+
+
+```{r inter_disc_cont}
+
+m_1 <- 
+  pantheria %>%
+  brm(data = .,
+      family = gaussian(),
+      formula = bf(density_log ~ 1 + mass_stan * trophic_level),
+      prior = c(prior(normal(0, 10), class = Intercept),
+                prior(normal(0, 1), class = b),
+                prior(normal(-1, 1), class = b, coef = mass_stan),
+                prior(cauchy(0, 5), class = sigma)),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0)
+
+```
+
+```{r inter_fitted}
+
+pantheria %>%
+  add_fitted_draws(model = m_1,
+                   n = 100) %>%
+  ungroup() %>%
+  ggplot(aes(x = mass_stan, y = density_log)) +
+  geom_line(mapping = aes(y = .value, group = .draw),
+            alpha = 1 / 20,
+            colour = 'blue') +
+  geom_point(data = pantheria, size = 2) +
+  scale_fill_brewer() +
+  facet_wrap(~ trophic_level) +
+  NULL
+
+```  
+
+```{r multi_predicted}
+
+pantheria %>%
+  data_grid(mass_stan = seq_range(mass_stan, n = 1000),
+            trophic_level) %>%
+  add_predicted_draws(model = m_1,
+                      n = 100) %>%
+  ungroup() %>%
+  ggplot(aes(x = mass_stan, y = density_log)) +
+  stat_lineribbon(mapping = aes(y = .prediction),
+                  .width = c(0.9, 0.5, 0.1),
+                  size = 0) +
+  geom_point(data = pantheria, size = 2) +
+  scale_fill_brewer() +
+  facet_wrap(~ trophic_level) +
+  NULL
+
+```
+
+```{r inter_dens_ppc}
+
+pantheria %>%
+  add_predicted_draws(model = m_1,
+                      n = 100) %>%
+  ungroup() %>%
+  ggplot(aes(x = .prediction, group = .draw)) +
+  geom_line(stat = 'density',
+            alpha = 0.1,
+            colour = 'blue') +
+  geom_line(stat = 'density',
+            data = pantheria,
+            mapping = aes(x = density_log,
+                          group = NULL),
+            colour = 'black',
+            size = 1.5) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(x = expression(paste('Population density ', log(n / km^2))),
+       title = 'Population density, actual versus predicted') +
+  facet_wrap(~ trophic_level) +
+  NULL
+
+```
+
+```{r inter_median_ppc}
+
+pan_trophic_summary <-
+  pantheria %>%
+  group_by(trophic_level) %>%
+  dplyr::summarize(median = median(density_log),
+                   sd = sd(density_log)) %>%
+  gather(key, value, median, sd)
+
+pantheria_summary_ppc <- 
+  pantheria %>%
+  add_predicted_draws(model = m_1,
+                      n = 100) %>%
+  ungroup() %>%
+  group_by(.draw, trophic_level) %>%
+  dplyr::summarize(median = median(.prediction),
+                   sd = sd(.prediction)) %>%
+  ungroup() %>%
+  gather(key, value, median, sd)
+
+pantheria_summary_ppc %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(fill = 'blue') +
+  geom_vline(data = pan_trophic_summary,
+             mapping = aes(xintercept = value),
+             size = 2) +
+  facet_grid(key ~ trophic_level, scales = 'free', switch = 'y') +
+  labs(x = 'Median population density', y = '') +
+  NULL
+
+```
 
 
 
