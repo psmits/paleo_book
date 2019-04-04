@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-03">
+<meta name="date" content="2019-04-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -165,7 +165,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3" data-path="reg-continue.html"><a href="reg-continue.html#our-first-example"><i class="fa fa-check"></i><b>4.3</b> Our first example</a></li>
 <li class="chapter" data-level="4.4" data-path="reg-continue.html"><a href="reg-continue.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.4</b> A single continuous predictor</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="reg-continue.html"><a href="reg-continue.html#centering"><i class="fa fa-check"></i><b>4.4.1</b> Aside: Centering</a></li>
-<li class="chapter" data-level="4.4.2" data-path="reg-continue.html"><a href="reg-continue.html#checking-model-fit"><i class="fa fa-check"></i><b>4.4.2</b> Checking model fit</a></li>
+<li class="chapter" data-level="4.4.2" data-path="reg-continue.html"><a href="reg-continue.html#continue-ppc"><i class="fa fa-check"></i><b>4.4.2</b> Checking model fit</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.5</b> Summary</a></li>
 </ul></li>
@@ -178,7 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.4" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#defining-our-model"><i class="fa fa-check"></i><b>5.4</b> Defining our model</a></li>
 <li class="chapter" data-level="5.5" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.5</b> Fitting model in <code>brms</code></a></li>
 <li class="chapter" data-level="5.6" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#aside-standardizing"><i class="fa fa-check"></i><b>5.6</b> Aside: Standardizing</a></li>
-<li class="chapter" data-level="5.7" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#checking-model-fit-1"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
+<li class="chapter" data-level="5.7" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#multi-ppc"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
 <li class="chapter" data-level="5.8" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
 <li class="chapter" data-level="5.9" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
 </ul></li>
@@ -186,8 +186,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.1" data-path="interactions.html"><a href="interactions.html#objectives-5"><i class="fa fa-check"></i><b>6.1</b> Objectives</a></li>
 <li class="chapter" data-level="6.2" data-path="interactions.html"><a href="interactions.html#reading-4"><i class="fa fa-check"></i><b>6.2</b> Reading</a></li>
 <li class="chapter" data-level="6.3" data-path="interactions.html"><a href="interactions.html#introduction-1"><i class="fa fa-check"></i><b>6.3</b> Introduction</a></li>
-<li class="chapter" data-level="6.4" data-path="interactions.html"><a href="interactions.html#discrete-x-continuous"><i class="fa fa-check"></i><b>6.4</b> discrete X continuous</a></li>
-<li class="chapter" data-level="6.5" data-path="interactions.html"><a href="interactions.html#continuous-x-continuous"><i class="fa fa-check"></i><b>6.5</b> continuous X continuous</a></li>
+<li class="chapter" data-level="6.4" data-path="interactions.html"><a href="interactions.html#data-and-inital-model"><i class="fa fa-check"></i><b>6.4</b> Data and inital model</a></li>
+<li class="chapter" data-level="6.5" data-path="interactions.html"><a href="interactions.html#how-to-specify-an-interaction"><i class="fa fa-check"></i><b>6.5</b> How to specify an interaction</a></li>
+<li class="chapter" data-level="6.6" data-path="interactions.html"><a href="interactions.html#fitting-a-model-with-an-interaction"><i class="fa fa-check"></i><b>6.6</b> Fitting a model with an interaction</a></li>
+<li class="chapter" data-level="6.7" data-path="interactions.html"><a href="interactions.html#continuous-x-continuous"><i class="fa fa-check"></i><b>6.7</b> continuous X continuous</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>7</b> Logistic regression</a><ul>
 <li class="chapter" data-level="7.1" data-path="logistic-regression.html"><a href="logistic-regression.html#objectives-6"><i class="fa fa-check"></i><b>7.1</b> Objectives</a></li>
@@ -261,12 +263,17 @@ Proudly published with bookdown</a></li>
 </div>
 <div id="introduction-1" class="section level2">
 <h2><span class="header-section-number">6.3</span> Introduction</h2>
-<p>this lesson’s theme is “interaction effects – easy to compute, hard to explain.”</p>
-<p>Conditioning</p>
-<p>Interaction</p>
-<p>Models with complex interactions are easy to fit to data, but they are considerably harder to understand.</p>
-<p>in practice predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions).</p>
-<p>Including interactions is a way to allow a model to be fit differently to different subsets of the data.</p>
+<p>This lesson’s theme is “interaction effects – easy to compute, hard to explain.”</p>
+<p><strong>Conditioning</strong> is an extremely important principle in statistics. Our data are conditional on how they get into our sample. Posterior distributions are conditional on the data. All model-based inference is conditional on the model. Every inference in conditional on something, whether we notice it or not.</p>
+<p>The power of statistical modeling comes from the conditioning machines we construct that allow probability to be conditional of aspects of each case. Our linear regression models are crude robots that allow each outcome <span class="math inline">\(y_{i}\)</span> to be conditional on a set of predictors for each <span class="math inline">\(i\)</span>.</p>
+<p>However, these linear models can fail to provide enough conditioning. Our previous models have assumed that each predictor has an independent association with the mean of the outcome. What if we want to allow the association to be conditional – that the association of one predictor with the mean of the outcome also depends on another predictor?</p>
+<p>To model more complex conditionality, like the effect of one predictor which depends upon another predictor, we need what’s called an <strong>interaction</strong>. An interaction is a way to allow the posterior distributions of our parameters to be conditional on further aspects of the data. In practice it is common for predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions). Including interactions is a way to allow a model to be fit differently to different subsets of the data.</p>
+<p>Models with complex interactions are easy to fit to data, but they are considerably harder to understand. A linear interaction is the simplest kind of interaction and is built by extending the linear modeling strategy we’ve been following so far to parameters within the linear model itself. We’re going to be discussing these simple linear interactions in three contexts: specifying our model, interpreting our parameters, and visualizing them.</p>
+</div>
+<div id="data-and-inital-model" class="section level2">
+<h2><span class="header-section-number">6.4</span> Data and inital model</h2>
+<p>This lesson continues are use of the PanTHERIA dataset. We’ve already built a multiple/multivariable regression model of population density as predicted by average species body mass and trophic level. While the <a href="multiple-predictors-and-interactions-in-linear-regression.html#multi-ppc">model from our previous lesson was an improvement</a> over <a href="reg-continue.html#continue-ppc">simpler models using only body mass</a> as an individual predictor of population density, there was still room for improvement – especially when describing variation among omnivorous species. In this excercise we’re going to cover specify how a linear interaction between body size and trophic level affects (mean) population density.</p>
+<p>First, though, we need to import and clean up our data. We can also prepare our predictors by rescaling our continuous predictor body size and re-level trophic level at the same time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="kw">here</span>(<span class="st">&#39;data&#39;</span>, <span class="st">&#39;PanTHERIA_1-0_WR05_Aug2008.txt&#39;</span>), 
                       <span class="dt">na =</span> <span class="st">&#39;-999.00&#39;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
@@ -294,23 +301,71 @@ Proudly published with bookdown</a></li>
 ##   References = col_character()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
+<p>Let’s also write out the model we developed in the last lesson so that we have a place to start. <span class="math display">\[
+\begin{align}
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &amp;= \alpha + \beta_{m} m_{i} + \beta_{h} h_{i} + \beta_{c} c_{i} \\
+\alpha &amp;\sim \text{Normal}(0, 10) \\
+\beta_{m} &amp;\sim \text{Normal}(-1, 5) \\
+\beta_{h} &amp;\sim \text{Normal}(0, 5) \\
+\beta_{c} &amp;\sim \text{Normal}(0, 5) \\
+\sigma &amp;\sim \text{Cauchy}^{+}(0, 5) \\
+\end{align}
+\]</span></p>
+<p>And, of course, we can fit this model using <code>brm()</code> just like we did in the last lesson. This initial model will provide a useful comparison with the new model we will develop in this lesson.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_stan <span class="op">+</span><span class="st"> </span>trophic_level),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">class =</span> b, <span class="dt">coef =</span> mass_stan),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
 </div>
-<div id="discrete-x-continuous" class="section level2">
-<h2><span class="header-section-number">6.4</span> discrete X continuous</h2>
-<p>Two ways to write out an interaction effect.</p>
-<p>standard form <span class="math display">\[
+<div id="how-to-specify-an-interaction" class="section level2">
+<h2><span class="header-section-number">6.5</span> How to specify an interaction</h2>
+<p>Specifying an interaction term is extremely easy. Let’s explore this using a very basic model where the mean of <span class="math inline">\(y\)</span> is predicted by two variables, one continuous <span class="math inline">\(c\)</span> and one binary <span class="math inline">\(b\)</span>. We can just focus on the likelhood part of the model.</p>
+<p><span class="math display">\[
 \begin{align}
-y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
-\mu_{i} &amp;= \alpha + \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} + \beta_{a} a_{i} \\
+y &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &amp;= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} 
 \end{align}
 \]</span></p>
-<p>galaxy brain form <span class="math display">\[
+<p>In this case, we want to specify that the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> also depends on <span class="math inline">\(b\)</span>. The relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> is measured by the coeffcient <span class="math inline">\(\beta_{c}\)</span>. Following the same stragey by which we replace parameters like <span class="math inline">\(\mu\)</span> with linear models, the most straightforward way to make <span class="math inline">\(\beta_{c}\)</span> depend on <span class="math inline">\(b\)</span> is to just define the coefficient <span class="math inline">\(\beta_{c}\)</span> as a linear model itself with <span class="math inline">\(b\)</span> as a predictor!</p>
+<p><span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
-\mu_{i} &amp;= \alpha + \gamma_{i} r_{i} + \beta_{a} a_{i} \\
-\gamma_{i} &amp;= \beta_{r} + \beta_{ar} a_{i} \\
+\mu_{i} &amp;= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
+\gamma_{i} &amp;= \beta_{c} + \beta_{cb} b_{i} \\
 \end{align}
 \]</span></p>
+<p>While this is the first time we’ve written out a model with two linear models, its structure is still the same as all other linear regression models we’ve written. The issue is in how we interpret this model.</p>
+<p>The first line of this model defines our Gaussian likelihood as normal. The second line defines the linear model of <span class="math inline">\(\mu\)</span> – again, something we’ve seen before. The new symbol <span class="math inline">\(\gamma\)</span> is a placeholder TODO</p>
+<p>This form however obscures one very important part of interactions: they are symmetrical! By defining that the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> depends on <span class="math inline">\(b\)</span> also means that the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(b\)</span> also depends on <span class="math inline">\(c\)</span>. This fact becomes obvious with a little algebra. <span class="math display">\[
+\begin{align}
+\mu_{i} &amp;= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
+\gamma_{i} &amp;= \beta_{c} + \beta_{cb} b_{i} \\
+\mu_{i} &amp;= \alpha + (\beta_{c} + \beta_{cb} b_{i}) c_{i} + \beta_{b} b_{i} \\
+&amp;= \alpha + \beta_{c} c_{i} + \beta_{cb} b_{i} c_{i} + \beta_{b} b_{i} \\
+&amp;= \alpha + \beta_{c} c_{i} + (\beta_{b} + \beta_{cb} c_{i}) b_{i} \\
+\end{align}
+\]</span></p>
+<p>One of these intermediate steps is the standard way of expressing an interaction between predictors: <span class="math display">\[
+\begin{align}
+y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &amp;= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} + \beta_{cb} c_{i} b_{i} \\
+\end{align}
+\]</span> This standard form is useful for two reasons:</p>
+<ol style="list-style-type: decimal">
+<li>it highlights the symmetry of the interaction,</li>
+<li>this is how interactions are expressed in R.</li>
+</ol>
 <p>here is the algebra to prove it <span class="math display">\[
 \begin{align}
 \gamma_{i} &amp;= \beta_{r} + \beta_{ar} a_{i} \\
@@ -326,28 +381,31 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \end{align}
 \]</span></p>
 <p>interactions are symmetrical! this is why the standard form is the standard form: it is harder to think about because it lays the symmetry bare.</p>
+</div>
+<div id="fitting-a-model-with-an-interaction" class="section level2">
+<h2><span class="header-section-number">6.6</span> Fitting a model with an interaction</h2>
 <p><span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \beta_{0} + \beta_{m} m_{i} + \beta_{h} h_{i} + \beta_{c} c_{i} + \beta_{mh} m_{i} h_{i} + \beta_{mc} m_{i} c_{i} \\ 
 &amp;= X_{i} \beta \\
 \beta_{0} &amp;\sim \text{Normal}(0, 10) \\
-\beta_{m} &amp;\sim \text{Normal}(-1, 1) \\
-\beta_{h} &amp;\sim \text{Normal}(0, 1) \\
-\beta_{c} &amp;\sim \text{Normal}(0, 1) \\
-\beta_{mh} &amp;\sim \text{Normal}(0, 1) \\
-\beta_{mc} &amp;\sim \text{Normal}(0, 1) \\
-\sigma &amp;\sim \text{Cauchy}^{+}(0, 1) \\
+\beta_{m} &amp;\sim \text{Normal}(-1, 5) \\
+\beta_{h} &amp;\sim \text{Normal}(0, 5) \\
+\beta_{c} &amp;\sim \text{Normal}(0, 5) \\
+\beta_{mh} &amp;\sim \text{Normal}(0, 5) \\
+\beta_{mc} &amp;\sim \text{Normal}(0, 5) \\
+\sigma &amp;\sim \text{Cauchy}^{+}(0, 5) \\
 \end{align}
 \]</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">2</span> &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
       <span class="dt">family =</span> <span class="kw">gaussian</span>(),
       <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_stan <span class="op">*</span><span class="st"> </span>trophic_level),
       <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
-                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">class =</span> b),
-                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">class =</span> b, <span class="dt">coef =</span> mass_stan),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">class =</span> b, <span class="dt">coef =</span> mass_stan),
                 <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
       <span class="dt">iter =</span> <span class="dv">2000</span>,
       <span class="dt">warmup =</span> <span class="dv">1000</span>,
@@ -357,7 +415,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 <pre><code>## Compiling the C++ model</code></pre>
 <pre><code>## Start sampling</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fitted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+<span class="st">  </span><span class="kw">add_fitted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                    <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_stan, <span class="dt">y =</span> density_log)) <span class="op">+</span>
@@ -372,7 +430,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_stan =</span> <span class="kw">seq_range</span>(mass_stan, <span class="dt">n =</span> <span class="dv">1000</span>),
             trophic_level) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                       <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_stan, <span class="dt">y =</span> density_log)) <span class="op">+</span>
@@ -385,7 +443,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/inter_predicted-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                       <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">group =</span> .draw)) <span class="op">+</span>
@@ -413,7 +471,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 
 pantheria_summary_ppc &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">1</span>,
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                       <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(.draw, trophic_level) <span class="op">%&gt;%</span>
@@ -435,7 +493,7 @@ pantheria_summary_ppc <span class="op">%&gt;%</span>
 <p><img src="paleo_book_files/figure-html/inter_median_ppc-1.png" width="672" /></p>
 </div>
 <div id="continuous-x-continuous" class="section level2">
-<h2><span class="header-section-number">6.5</span> continuous X continuous</h2>
+<h2><span class="header-section-number">6.7</span> continuous X continuous</h2>
 <p><a href="reg-continue.html#centering">centering</a> helps with interpreting interactions, especially continuous X continuous ones.</p>
 
 </div>

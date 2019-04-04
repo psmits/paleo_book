@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-03">
+<meta name="date" content="2019-04-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -165,7 +165,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3" data-path="reg-continue.html"><a href="reg-continue.html#our-first-example"><i class="fa fa-check"></i><b>4.3</b> Our first example</a></li>
 <li class="chapter" data-level="4.4" data-path="reg-continue.html"><a href="reg-continue.html#a-single-continuous-predictor"><i class="fa fa-check"></i><b>4.4</b> A single continuous predictor</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="reg-continue.html"><a href="reg-continue.html#centering"><i class="fa fa-check"></i><b>4.4.1</b> Aside: Centering</a></li>
-<li class="chapter" data-level="4.4.2" data-path="reg-continue.html"><a href="reg-continue.html#checking-model-fit"><i class="fa fa-check"></i><b>4.4.2</b> Checking model fit</a></li>
+<li class="chapter" data-level="4.4.2" data-path="reg-continue.html"><a href="reg-continue.html#continue-ppc"><i class="fa fa-check"></i><b>4.4.2</b> Checking model fit</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.5</b> Summary</a></li>
 </ul></li>
@@ -178,7 +178,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.4" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#defining-our-model"><i class="fa fa-check"></i><b>5.4</b> Defining our model</a></li>
 <li class="chapter" data-level="5.5" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.5</b> Fitting model in <code>brms</code></a></li>
 <li class="chapter" data-level="5.6" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#aside-standardizing"><i class="fa fa-check"></i><b>5.6</b> Aside: Standardizing</a></li>
-<li class="chapter" data-level="5.7" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#checking-model-fit-1"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
+<li class="chapter" data-level="5.7" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#multi-ppc"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
 <li class="chapter" data-level="5.8" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
 <li class="chapter" data-level="5.9" data-path="multiple-predictors-and-interactions-in-linear-regression.html"><a href="multiple-predictors-and-interactions-in-linear-regression.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
 </ul></li>
@@ -186,8 +186,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.1" data-path="interactions.html"><a href="interactions.html#objectives-5"><i class="fa fa-check"></i><b>6.1</b> Objectives</a></li>
 <li class="chapter" data-level="6.2" data-path="interactions.html"><a href="interactions.html#reading-4"><i class="fa fa-check"></i><b>6.2</b> Reading</a></li>
 <li class="chapter" data-level="6.3" data-path="interactions.html"><a href="interactions.html#introduction-1"><i class="fa fa-check"></i><b>6.3</b> Introduction</a></li>
-<li class="chapter" data-level="6.4" data-path="interactions.html"><a href="interactions.html#discrete-x-continuous"><i class="fa fa-check"></i><b>6.4</b> discrete X continuous</a></li>
-<li class="chapter" data-level="6.5" data-path="interactions.html"><a href="interactions.html#continuous-x-continuous"><i class="fa fa-check"></i><b>6.5</b> continuous X continuous</a></li>
+<li class="chapter" data-level="6.4" data-path="interactions.html"><a href="interactions.html#data-and-inital-model"><i class="fa fa-check"></i><b>6.4</b> Data and inital model</a></li>
+<li class="chapter" data-level="6.5" data-path="interactions.html"><a href="interactions.html#how-to-specify-an-interaction"><i class="fa fa-check"></i><b>6.5</b> How to specify an interaction</a></li>
+<li class="chapter" data-level="6.6" data-path="interactions.html"><a href="interactions.html#fitting-a-model-with-an-interaction"><i class="fa fa-check"></i><b>6.6</b> Fitting a model with an interaction</a></li>
+<li class="chapter" data-level="6.7" data-path="interactions.html"><a href="interactions.html#continuous-x-continuous"><i class="fa fa-check"></i><b>6.7</b> continuous X continuous</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>7</b> Logistic regression</a><ul>
 <li class="chapter" data-level="7.1" data-path="logistic-regression.html"><a href="logistic-regression.html#objectives-6"><i class="fa fa-check"></i><b>7.1</b> Objectives</a></li>
@@ -517,7 +519,7 @@ m_<span class="dv">2</span> &lt;-<span class="st"> </span>
 <p>Centering will not change our models posterior predictive performance, but really improves the interpretability of our model parameters. Centering can also be beneficial for estimating parameter values by decreasing posterior correlation among the parameters.</p>
 <p>I recommend always centering your (continuous) predictors.</p>
 </div>
-<div id="checking-model-fit" class="section level3">
+<div id="continue-ppc" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> Checking model fit</h3>
 <p>Now let’s see how much adding this predictor improves our ability to describe <span class="math inline">\(y\)</span>. We can also visualize our data as a scatter plot with the linear predictor overlain to demonstrate our model estimates of <em>mean</em> population density as a function of species mass.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>

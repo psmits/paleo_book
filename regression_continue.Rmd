@@ -302,7 +302,7 @@ Centering will not change our models posterior predictive performance, but reall
 I recommend always centering your (continuous) predictors. 
 
 
-### Checking model fit
+### Checking model fit {#continue-ppc}
 
 Now let's see how much adding this predictor improves our ability to describe $y$. We can also visualize our data as a scatter plot with the linear predictor overlain to demonstrate our model estimates of *mean* population density as a function of species mass.
 

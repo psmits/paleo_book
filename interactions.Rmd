@@ -27,19 +27,24 @@ theme_set(theme_bw())
 
 ## Introduction
 
-this lesson's theme is "interaction effects -- easy to compute, hard to explain."
+This lesson's theme is "interaction effects -- easy to compute, hard to explain."
 
-Conditioning
+**Conditioning** is an extremely important principle in statistics. Our data are conditional on how they get into our sample. Posterior distributions are conditional on the data. All model-based inference is conditional on the model. Every inference in conditional on something, whether we notice it or not.
 
-Interaction
+The power of statistical modeling comes from the conditioning machines we construct that allow probability to be conditional of aspects of each case. Our linear regression models are crude robots that allow each outcome $y_{i}$ to be conditional on a set of predictors for each $i$.
 
-Models with complex interactions are easy to fit to data, but they are considerably harder to understand.
+However, these linear models can fail to provide enough conditioning. Our previous models have assumed that each predictor has an independent association with the mean of the outcome. What if we want to allow the association to be conditional -- that the association of one predictor with the mean of the outcome also depends on another predictor?
 
-in practice predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions).
+To model more complex conditionality, like the effect of one predictor which depends upon another predictor, we need what's called an **interaction**. An interaction is a way to allow the posterior distributions of our parameters to be conditional on further aspects of the data. In practice it is common for predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions). Including interactions is a way to allow a model to be fit differently to different subsets of the data. 
 
-Including interactions is a way to allow a model to be fit differently to different subsets of the data. 
+Models with complex interactions are easy to fit to data, but they are considerably harder to understand. A linear interaction is the simplest kind of interaction and is built by extending the linear modeling strategy we've been following so far to parameters within the linear model itself. We're going to be discussing these simple linear interactions in three contexts: specifying our model, interpreting our parameters, and visualizing them.  
 
 
+## Data and inital model {#inter-initial}
+
+This lesson continues are use of the PanTHERIA dataset. We've already built a multiple/multivariable regression model of population density as predicted by average species body mass and trophic level. While the [model from our previous lesson was an improvement](#multi-ppc) over [simpler models using only body mass](#continue-ppc) as an individual predictor of population density, there was still room for improvement -- especially when describing variation among omnivorous species. In this excercise we're going to cover specify how a linear interaction between body size and trophic level affects (mean) population density.
+
+First, though, we need to import and clean up our data. We can also prepare our predictors by rescaling our continuous predictor body size and re-level trophic level at the same time. 
 
 ```{r pantheria_interact}
 
@@ -63,32 +68,96 @@ pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'),
 ```
 
 
-
-
-
-
-## discrete X continuous
-
-
-
-Two ways to write out an interaction effect.
-
-standard form
+Let's also write out the model we developed in the last lesson so that we have a place to start. 
 $$
 \begin{align}
 y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
-\mu_{i} &= \alpha + \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} + \beta_{a} a_{i} \\
+\mu_{i} &= \alpha + \beta_{m} m_{i} + \beta_{h} h_{i} + \beta_{c} c_{i} \\
+\alpha &\sim \text{Normal}(0, 10) \\
+\beta_{m} &\sim \text{Normal}(-1, 5) \\
+\beta_{h} &\sim \text{Normal}(0, 5) \\
+\beta_{c} &\sim \text{Normal}(0, 5) \\
+\sigma &\sim \text{Cauchy}^{+}(0, 5) \\
 \end{align}
 $$
 
-galaxy brain form
+And, of course, we can fit this model using `brm()` just like we did in the last lesson. This initial model will provide a useful comparison with the new model we will develop in this lesson.
+```{r initial_model, cache = TRUE, message = FALSE, results = 'hide'}
+
+m_1 <- 
+  pantheria %>%
+  brm(data = .,
+      family = gaussian(),
+      formula = bf(density_log ~ 1 + mass_stan + trophic_level),
+      prior = c(prior(normal(0, 10), class = Intercept),
+                prior(normal(0, 5), class = b),
+                prior(normal(-1, 5), class = b, coef = mass_stan),
+                prior(cauchy(0, 5), class = sigma)),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0)
+
+```
+
+
+## How to specify an interaction
+
+
+Specifying an interaction term is extremely easy. Let's explore this using a very basic model where the mean of $y$ is predicted by two variables, one continuous $c$ and one binary $b$. We can just focus on the likelhood part of the model.
+
+$$
+\begin{align}
+y &\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} 
+\end{align}
+$$
+
+In this case, we want to specify that the relationship between $y$ and $c$ also depends on $b$. The relationship between $y$ and $c$ is measured by the coeffcient $\beta_{c}$. Following the same stragey by which we replace parameters like $\mu$ with linear models, the most straightforward way to make $\beta_{c}$ depend on $b$ is to just define the coefficient $\beta_{c}$ as a linear model itself with $b$ as a predictor!
+
 $$
 \begin{align}
 y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
-\mu_{i} &= \alpha + \gamma_{i} r_{i} + \beta_{a} a_{i} \\
-\gamma_{i} &= \beta_{r} + \beta_{ar} a_{i} \\
+\mu_{i} &= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
+\gamma_{i} &= \beta_{c} + \beta_{cb} b_{i} \\
 \end{align}
 $$
+
+While this is the first time we've written out a model with two linear models, its structure is still the same as all other linear regression models we've written. The issue is in how we interpret this model.
+
+The first line of this model defines our Gaussian likelihood as normal. The second line defines the linear model of $\mu$ -- again, something we've seen before. The new symbol $\gamma$ is a placeholder TODO
+
+
+
+
+
+### Symmetry of interactions
+
+
+This form however obscures one very important part of interactions: they are symmetrical! By defining that the relationship between $y$ and $c$ depends on $b$ also means that the relationship between $y$ and $b$ also depends on $c$. This fact becomes obvious with a little algebra.
+$$
+\begin{align}
+\mu_{i} &= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
+\gamma_{i} &= \beta_{c} + \beta_{cb} b_{i} \\
+\mu_{i} &= \alpha + (\beta_{c} + \beta_{cb} b_{i}) c_{i} + \beta_{b} b_{i} \\
+&= \alpha + \beta_{c} c_{i} + \beta_{cb} b_{i} c_{i} + \beta_{b} b_{i} \\
+&= \alpha + \beta_{c} c_{i} + (\beta_{b} + \beta_{cb} c_{i}) b_{i} \\
+\end{align}
+$$
+
+
+One of these intermediate steps is the standard way of expressing an interaction between predictors: 
+$$
+\begin{align}
+y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} + \beta_{cb} c_{i} b_{i} \\
+\end{align}
+$$
+This standard form is useful for two reasons:
+
+1. it highlights the symmetry of the interaction,
+2. this is how interactions are expressed in R.
 
 here is the algebra to prove it
 $$
@@ -117,32 +186,39 @@ interactions are symmetrical! this is why the standard form is the standard form
 
 
 
+
+## Fitting a model with an interaction
+
+Enough talk, let's fit a mode with an interaction and figure out what it means. Armed with what we've just covered, we can quickly update our [initial model](#inter_initial) by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model's intercept and the regression coefficients describing the difference in mean $y$ between the default state and that predictors state. We've releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.
+
+
 $$
 \begin{align}
 y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &= \beta_{0} + \beta_{m} m_{i} + \beta_{h} h_{i} + \beta_{c} c_{i} + \beta_{mh} m_{i} h_{i} + \beta_{mc} m_{i} c_{i} \\ 
 &= X_{i} \beta \\
 \beta_{0} &\sim \text{Normal}(0, 10) \\
-\beta_{m} &\sim \text{Normal}(-1, 1) \\
-\beta_{h} &\sim \text{Normal}(0, 1) \\
-\beta_{c} &\sim \text{Normal}(0, 1) \\
-\beta_{mh} &\sim \text{Normal}(0, 1) \\
-\beta_{mc} &\sim \text{Normal}(0, 1) \\
-\sigma &\sim \text{Cauchy}^{+}(0, 1) \\
+\beta_{m} &\sim \text{Normal}(-1, 5) \\
+\beta_{h} &\sim \text{Normal}(0, 5) \\
+\beta_{c} &\sim \text{Normal}(0, 5) \\
+\beta_{mh} &\sim \text{Normal}(0, 5) \\
+\beta_{mc} &\sim \text{Normal}(0, 5) \\
+\sigma &\sim \text{Cauchy}^{+}(0, 5) \\
 \end{align}
 $$
 
 
+
 ```{r inter_disc_cont}
 
-m_1 <- 
+m_2 <- 
   pantheria %>%
   brm(data = .,
       family = gaussian(),
       formula = bf(density_log ~ 1 + mass_stan * trophic_level),
       prior = c(prior(normal(0, 10), class = Intercept),
-                prior(normal(0, 1), class = b),
-                prior(normal(-1, 1), class = b, coef = mass_stan),
+                prior(normal(0, 5), class = b),
+                prior(normal(-1, 5), class = b, coef = mass_stan),
                 prior(cauchy(0, 5), class = sigma)),
       iter = 2000,
       warmup = 1000,
@@ -155,7 +231,7 @@ m_1 <-
 ```{r inter_fitted}
 
 pantheria %>%
-  add_fitted_draws(model = m_1,
+  add_fitted_draws(model = m_2,
                    n = 100) %>%
   ungroup() %>%
   ggplot(aes(x = mass_stan, y = density_log)) +
@@ -174,7 +250,7 @@ pantheria %>%
 pantheria %>%
   data_grid(mass_stan = seq_range(mass_stan, n = 1000),
             trophic_level) %>%
-  add_predicted_draws(model = m_1,
+  add_predicted_draws(model = m_2,
                       n = 100) %>%
   ungroup() %>%
   ggplot(aes(x = mass_stan, y = density_log)) +
@@ -191,7 +267,7 @@ pantheria %>%
 ```{r inter_dens_ppc}
 
 pantheria %>%
-  add_predicted_draws(model = m_1,
+  add_predicted_draws(model = m_2,
                       n = 100) %>%
   ungroup() %>%
   ggplot(aes(x = .prediction, group = .draw)) +
@@ -223,7 +299,7 @@ pan_trophic_summary <-
 
 pantheria_summary_ppc <- 
   pantheria %>%
-  add_predicted_draws(model = m_1,
+  add_predicted_draws(model = m_2,
                       n = 100) %>%
   ungroup() %>%
   group_by(.draw, trophic_level) %>%
