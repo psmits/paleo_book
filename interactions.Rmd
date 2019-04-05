@@ -126,16 +126,15 @@ $$
 
 While this is the first time we've written out a model with two linear models, its structure is still the same as all other linear regression models we've written. The issue is in how we interpret this model.
 
-The first line of this model defines our Gaussian likelihood as normal. The second line defines the linear model of $\mu$ -- again, something we've seen before. The new symbol $\gamma$ is a placeholder TODO
+The first line of this model defines our Gaussian likelihood as normal. The second line defines the linear model of $\mu$ -- again, something we've seen before. The linear function for $\gamma$ defines the interaction between $y$ and $c$. This is a linear interaction effect because the equation $\gamma$ is a linear model.
 
-
+By defining the relationship between $y$ and $c$ this way, we are explictly modeling the hypothesis that the slope between $y$ and $c$ is **conditional** on if $b$ is 1 or 0. The parameter $\beta_{cb}$ defines the strength of this dependency. If $\beta_{cb}$ is 0, then this model reduces to the non-interaction model. If $\beta_{cb} > 0$ then observations with $b = 1$ have a greater slope between $y$ and $c$ than observations where $b = 0$. Alternatively, if $\beta_{cb} < 0$ then observations with $b = 1$ have a lower slope between $y$ and $c$ than observations where $b = 0$. When $b = 0$, this model again reduces to the interaction no longer affects $\gamma$.
 
 
 
 ### Symmetry of interactions
 
-
-This form however obscures one very important part of interactions: they are symmetrical! By defining that the relationship between $y$ and $c$ depends on $b$ also means that the relationship between $y$ and $b$ also depends on $c$. This fact becomes obvious with a little algebra.
+The way we've specified our linear interaction effect actually obscures something very important about how interactions work: they are symmetrical! By defining that the relationship between $y$ and $c$ depends on $b$ also means that the relationship between $y$ and $b$ also depends on $c$. This fact becomes obvious with a little algebra.
 $$
 \begin{align}
 \mu_{i} &= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
@@ -146,50 +145,30 @@ $$
 \end{align}
 $$
 
+Not only are interactions symmetrical, we could just have easily defined $\gamma$ to be the slope of $b$ and a linear function of $c$.
 
-One of these intermediate steps is the standard way of expressing an interaction between predictors: 
+One of the intermediate steps of this little algebra excercise is actually the standard way of expressing an interaction between predictors: 
 $$
 \begin{align}
 y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
-\mu_{i} &= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} + \beta_{cb} c_{i} b_{i} \\
+\mu_{i} &= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} + \beta_{cb} c_{i} b_{i}. \\
 \end{align}
 $$
+
 This standard form is useful for two reasons:
 
 1. it highlights the symmetry of the interaction,
 2. this is how interactions are expressed in R.
 
-here is the algebra to prove it
-$$
-\begin{align}
-\gamma_{i} &= \beta_{r} + \beta_{ar} a_{i} \\
-\gamma_{i} r_{i} $= \left(\beta_{r} + \beta_{ar} a_{i}\right) r_{i} \\
-\gamma_{i} r_{i} $= \beta_{r} r_{i} + \beta_{ar} a_{i} r_{i} \\
-\end{align}
-$$
-the galaxy brain form can help us interpret the interaction and understand what is happening more clearly. we want to know how the effect of r varies as a function of a.
-
-
-
-
-of course the galaxy brain notation could be done in the reverse.
-$$
-\begin{align}
-y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
-\mu_{i} &= \alpha + \beta_{r} r_{i} + \delta_{i} a_{i} \\
-\delta_{i} &= \beta_{a} + \beta_{ar} r_{i} \\
-\end{align}
-$$
-
-interactions are symmetrical! this is why the standard form is the standard form: it is harder to think about because it lays the symmetry bare.
-
-
-
+This symmetry is important because if either $c$ or $b$ change, this will effect of the other on mean $y$ also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especillay just from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.
 
 
 ## Fitting a model with an interaction
 
-Enough talk, let's fit a mode with an interaction and figure out what it means. Armed with what we've just covered, we can quickly update our [initial model](#inter_initial) by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model's intercept and the regression coefficients describing the difference in mean $y$ between the default state and that predictors state. We've releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.
+We've spent a lot of time describing an interaction effect and how we can increase the conditionallity of our parameters, but we've yet to actually look at parameter estimates or discuss how to actually interpret interaction effects.
+
+
+Armed with what we've just covered, we can quickly update our [initial model](#inter_initial) by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model's intercept and the regression coefficients describing the difference in mean $y$ between the default state and that predictors state. We've releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.
 
 
 $$
@@ -207,7 +186,21 @@ y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \end{align}
 $$
 
+Luckily, there are some helpful R operators for specifying formulas. Interaction terms can be cleanly expressed in a few ways.
 
+```{r formula_ex, eval = FALSE}
+
+density_log ~ 1 + mass_stan + trophic_level + mass_stan:trophic_level
+
+density_log ~ 1 + mass_stan * trophic_level
+
+```
+
+In R formula syntax `:` represents the interaction between the relevant terms. While `*` also indicates an interaction, it also indicates the individual effects of the relevant forms because mass\_stan * trophic\_level expands to mass\_stan + trophic\_level + mass\_stan:trophic\_level. `*` is the compact way of indicating an interaction term.
+
+Of course, you can also calculate the interaction between `mass_stan` and `trophic_level` by hand -- it is just multiplication after all. The hurdle here is that you'll have to first do the dummy coding for `trophic_level` and then calculate the interaction for `mass_stan` and `trophic_levelheribivore` and the interaction with `trophic_levelcanivore`. I'll leave this activity for interested parties who want to explore than on their own.
+
+Now that we know how to specify an interaction using R formula syntax, we can implement and fit our model to the PanTHERIA dataset using `brm()`.
 
 ```{r inter_disc_cont}
 
@@ -227,6 +220,70 @@ m_2 <-
       refresh = 0)
 
 ```
+
+```{r inter_summary}
+
+print(m_2)
+
+```
+
+## Interpreting our model
+
+But how do we interpret these parameters? 
+
+**Statistical Rethinking** outlines two reasons why just looking at a table of posterior estimates is a bad idea.
+
+1. Adding an interaction to a model changes the meaning of the parameters. The "main effect" coefficient of the predictor in an interaction model no longer means the same thing as the variable with the same name in a model without an interaction. Their posterior distributions are not directly comparable.
+
+Interactions are tricky because this extra conditioning means that our normal interpretation of regression coefficients (expected change in $y$ per unit change in that predictor, holding all others constant) is no longer valid. If we manipulate the value of one predictor in an interaction, multiple parameters are involved and not just that single coefficient. 
+
+
+2. Tables make it difficult to incorporate uncertainty into our thinking -- we see a series individual numbers instead of the entire spread of numbers. This difficulty is exacerbated by the covariance between parameters being absent from our summary table, and when the effect of one predictor depends on multiple (2+) other predictors.
+
+Interpreting model with an interaction requires that we add/multiple multiple parameters together. Each of those parameters have posterior distributions. We aren't just adding mean estimates together, we're combining multiple posterior distributions to yield our final posterior distribution of effects.
+
+Recall our demo model:
+$$
+\begin{align}
+y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
+\mu_{i} &= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
+\gamma_{i} &= \beta_{c} + \beta_{cb} b_{i}. \\
+\end{align}
+$$
+$\gamma$ depends on $\beta_{c}$ and $\beta_{cb}$. Each of those parameters would have a posterior distribution. This means that $\gamma$ has a posterior distribution. When we just look at a table of parameter estimates, it is hard to readily incorporate all of our uncertainty into our interpretations.
+
+The easiest way around these difficulties is to plot our results and spend time visualizing the effect of the interaction on our estimates of $y$. We can visualize change across multiple parameters while also including all of our uncertainty around those estimates.
+
+
+So let's do that. Let's visualize how the effect of `mass_stan` varies by `trophic_level` (and vice-versa).
+
+```{r inter_vis}
+
+pantheria %>%
+  data_grid(mass_stan = seq_range(mass_stan, n = 1000),
+            trophic_level) %>%
+  add_predicted_draws(model = m_2,
+                      n = 100) %>%
+  ungroup() %>%
+  ggplot(aes(x = mass_stan, y = .prediction, fill = trophic_level, colour = trophic_level)) +
+  stat_lineribbon(aes(group = trophic_level), .width = c(.5, .9), alpha = 1/3) +
+  geom_point(data = pantheria,
+             mapping = aes(y = density_log), size = 2) +
+  labs(x = 'Body mass (sd units)', y = 'Population density') +
+  NULL
+
+```
+
+The slope of `mass_stan` on `density_log` for omnivores is different from the slopes for the other trophic levels! The interaction between `mass_stan` and `trophic_levelomnivore` on `density_log` manifests as a more negative slope when compared to the other `trophic_level` states. This can also be phrased as that relationship has a greater slope magnitude (higher absolute value).
+
+
+Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we'll notice that the posterior for `mass_stan:tophic_levelherbivore` is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between `mass_stan` and `trophic_levelomnivore`. The extent of this interaction is obvious from the plot we just made.
+
+
+
+
+
+## Have we improved on our previous model?
 
 ```{r inter_fitted}
 
@@ -319,6 +376,12 @@ pantheria_summary_ppc %>%
   NULL
 
 ```
+
+
+## Introducing root mean square error
+
+In addition to checking the internal consistency and adequacy of our model to our data, we can also compare the relative quality of fit between our model without the interaction term and out model with the interaction term.
+
 
 
 
