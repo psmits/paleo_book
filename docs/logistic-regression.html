@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-05">
+<meta name="date" content="2019-04-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -193,8 +193,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.6" data-path="interactions.html"><a href="interactions.html#fitting-a-model-with-an-interaction"><i class="fa fa-check"></i><b>6.6</b> Fitting a model with an interaction</a></li>
 <li class="chapter" data-level="6.7" data-path="interactions.html"><a href="interactions.html#interpreting-our-model"><i class="fa fa-check"></i><b>6.7</b> Interpreting our model</a></li>
 <li class="chapter" data-level="6.8" data-path="interactions.html"><a href="interactions.html#have-we-improved-on-our-previous-model"><i class="fa fa-check"></i><b>6.8</b> Have we improved on our previous model?</a></li>
-<li class="chapter" data-level="6.9" data-path="interactions.html"><a href="interactions.html#introducing-root-mean-square-error"><i class="fa fa-check"></i><b>6.9</b> Introducing root mean square error</a></li>
-<li class="chapter" data-level="6.10" data-path="interactions.html"><a href="interactions.html#continuous-x-continuous"><i class="fa fa-check"></i><b>6.10</b> continuous X continuous</a></li>
+<li class="chapter" data-level="6.9" data-path="interactions.html"><a href="interactions.html#continuouscontinuous-interactions"><i class="fa fa-check"></i><b>6.9</b> Continuous–Continuous interactions</a></li>
+<li class="chapter" data-level="6.10" data-path="interactions.html"><a href="interactions.html#summary-5"><i class="fa fa-check"></i><b>6.10</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="logistic-regression.html"><a href="logistic-regression.html"><i class="fa fa-check"></i><b>7</b> Logistic regression</a><ul>
 <li class="chapter" data-level="7.1" data-path="logistic-regression.html"><a href="logistic-regression.html#objectives-6"><i class="fa fa-check"></i><b>7.1</b> Objectives</a></li>
@@ -207,7 +207,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.6" data-path="logistic-regression.html"><a href="logistic-regression.html#priors-for-our-model"><i class="fa fa-check"></i><b>7.6</b> Priors for our model</a></li>
 <li class="chapter" data-level="7.7" data-path="logistic-regression.html"><a href="logistic-regression.html#fitting-our-model"><i class="fa fa-check"></i><b>7.7</b> Fitting our model</a></li>
 <li class="chapter" data-level="7.8" data-path="logistic-regression.html"><a href="logistic-regression.html#checking-model-adequacy"><i class="fa fa-check"></i><b>7.8</b> Checking model adequacy</a></li>
-<li class="chapter" data-level="7.9" data-path="logistic-regression.html"><a href="logistic-regression.html#summary-5"><i class="fa fa-check"></i><b>7.9</b> Summary</a></li>
+<li class="chapter" data-level="7.9" data-path="logistic-regression.html"><a href="logistic-regression.html#summary-6"><i class="fa fa-check"></i><b>7.9</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html"><i class="fa fa-check"></i><b>8</b> Poisson regression and others GLMs</a><ul>
 <li class="chapter" data-level="8.1" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
@@ -676,7 +676,7 @@ foram_ready <span class="op">%&gt;%</span>
 <p><img src="paleo_book_files/figure-html/side_model_accuracy-1.png" width="672" /></p>
 <p>Our model appears to correctly guess the coiling state of any observation about 62-63% of the time. Would you be confident in a model that is only this accurate? How might we improve upon this model? Is this even a valid scientific question worth continuing with?</p>
 </div>
-<div id="summary-5" class="section level2">
+<div id="summary-6" class="section level2">
 <h2><span class="header-section-number">7.9</span> Summary</h2>
 <p>This lesson introduced logistic regression and many of its gory details. We introduced the concept of a mapping or link function to connect our linear predictor to a parameter defined over a different range of values (e.g. <span class="math inline">\(\text{logit}(p) = X\beta\)</span>). We spent a lot of time discussing how to interpret the regression coefficients of a logistic regression, introducing the difference between relative and absolute effects and emphasizing interpreting coefficients on the probability scale. We explored the prior predictive distribution of our logistic regression model in order to get a handle on the implications of our priors. We also covered visualizing our regression coefficients and the effects of our predictors on the probability of our outcome (shell coiling direction). Finally, after fitting out logistic regression model, we measured our models adequacy using accuracy as a measure of performance.</p>
 

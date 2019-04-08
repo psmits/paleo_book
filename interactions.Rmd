@@ -35,14 +35,14 @@ The power of statistical modeling comes from the conditioning machines we constr
 
 However, these linear models can fail to provide enough conditioning. Our previous models have assumed that each predictor has an independent association with the mean of the outcome. What if we want to allow the association to be conditional -- that the association of one predictor with the mean of the outcome also depends on another predictor?
 
-To model more complex conditionality, like the effect of one predictor which depends upon another predictor, we need what's called an **interaction**. An interaction is a way to allow the posterior distributions of our parameters to be conditional on further aspects of the data. In practice it is common for predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions). Including interactions is a way to allow a model to be fit differently to different subsets of the data. 
+To model more complex conditionality, like the effect of one predictor which depends upon another predictor, we need what's called an **interaction**. An interaction is a way to allow the posterior distributions of our parameters to be conditional on further aspects of the data. In practice, it is common for predictors with large effects also tend to have large interactions with other predictors (however, small effects do not preclude the possibility of large interactions). Including interactions is a way to allow a model to be fit differently to different subsets of the data. 
 
 Models with complex interactions are easy to fit to data, but they are considerably harder to understand. A linear interaction is the simplest kind of interaction and is built by extending the linear modeling strategy we've been following so far to parameters within the linear model itself. We're going to be discussing these simple linear interactions in three contexts: specifying our model, interpreting our parameters, and visualizing them.  
 
 
 ## Data and inital model {#inter-initial}
 
-This lesson continues are use of the PanTHERIA dataset. We've already built a multiple/multivariable regression model of population density as predicted by average species body mass and trophic level. While the [model from our previous lesson was an improvement](#multi-ppc) over [simpler models using only body mass](#continue-ppc) as an individual predictor of population density, there was still room for improvement -- especially when describing variation among omnivorous species. In this excercise we're going to cover specify how a linear interaction between body size and trophic level affects (mean) population density.
+This lesson continues are use of the PanTHERIA dataset. We've already built a multiple/multivariable regression model of population density as predicted by average species body mass and trophic level. While the [model from our previous lesson was an improvement](#multi-ppc) over [simpler models using only body mass](#continue-ppc) as an individual predictor of population density, there was still room for improvement -- especially when describing variation among omnivorous species. In this exercise we're going to cover specify how a linear interaction between body size and trophic level affects (mean) population density.
 
 First, though, we need to import and clean up our data. We can also prepare our predictors by rescaling our continuous predictor body size and re-level trophic level at the same time. 
 
@@ -114,7 +114,7 @@ y &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \end{align}
 $$
 
-In this case, we want to specify that the relationship between $y$ and $c$ also depends on $b$. The relationship between $y$ and $c$ is measured by the coeffcient $\beta_{c}$. Following the same stragey by which we replace parameters like $\mu$ with linear models, the most straightforward way to make $\beta_{c}$ depend on $b$ is to just define the coefficient $\beta_{c}$ as a linear model itself with $b$ as a predictor!
+In this case, we want to specify that the relationship between $y$ and $c$ also depends on $b$. The relationship between $y$ and $c$ is measured by the coefficient $\beta_{c}$. Following the same strategy by which we replace parameters like $\mu$ with linear models, the most straightforward way to make $\beta_{c}$ depend on $b$ is to just define the coefficient $\beta_{c}$ as a linear model itself with $b$ as a predictor!
 
 $$
 \begin{align}
@@ -128,7 +128,7 @@ While this is the first time we've written out a model with two linear models, i
 
 The first line of this model defines our Gaussian likelihood as normal. The second line defines the linear model of $\mu$ -- again, something we've seen before. The linear function for $\gamma$ defines the interaction between $y$ and $c$. This is a linear interaction effect because the equation $\gamma$ is a linear model.
 
-By defining the relationship between $y$ and $c$ this way, we are explictly modeling the hypothesis that the slope between $y$ and $c$ is **conditional** on if $b$ is 1 or 0. The parameter $\beta_{cb}$ defines the strength of this dependency. If $\beta_{cb}$ is 0, then this model reduces to the non-interaction model. If $\beta_{cb} > 0$ then observations with $b = 1$ have a greater slope between $y$ and $c$ than observations where $b = 0$. Alternatively, if $\beta_{cb} < 0$ then observations with $b = 1$ have a lower slope between $y$ and $c$ than observations where $b = 0$. When $b = 0$, this model again reduces to the interaction no longer affects $\gamma$.
+By defining the relationship between $y$ and $c$ this way, we are explicitly modeling the hypothesis that the slope between $y$ and $c$ is **conditional** on if $b$ is 1 or 0. The parameter $\beta_{cb}$ defines the strength of this dependency. If $\beta_{cb}$ is 0, then this model reduces to the non-interaction model. If $\beta_{cb} > 0$ then observations with $b = 1$ have a greater slope between $y$ and $c$ than observations where $b = 0$. Alternatively, if $\beta_{cb} < 0$ then observations with $b = 1$ have a lower slope between $y$ and $c$ than observations where $b = 0$. When $b = 0$, this model again reduces to the interaction no longer affects $\gamma$.
 
 
 
@@ -147,7 +147,7 @@ $$
 
 Not only are interactions symmetrical, we could just have easily defined $\gamma$ to be the slope of $b$ and a linear function of $c$.
 
-One of the intermediate steps of this little algebra excercise is actually the standard way of expressing an interaction between predictors: 
+One of the intermediate steps of this little algebra exercise is actually the standard way of expressing an interaction between predictors: 
 $$
 \begin{align}
 y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
@@ -160,12 +160,12 @@ This standard form is useful for two reasons:
 1. it highlights the symmetry of the interaction,
 2. this is how interactions are expressed in R.
 
-This symmetry is important because if either $c$ or $b$ change, this will effect of the other on mean $y$ also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especillay just from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.
+This symmetry is important because if either $c$ or $b$ change, this will affect of the other on mean $y$ also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especially just from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.
 
 
 ## Fitting a model with an interaction
 
-We've spent a lot of time describing an interaction effect and how we can increase the conditionallity of our parameters, but we've yet to actually look at parameter estimates or discuss how to actually interpret interaction effects.
+We've spent a lot of time describing an interaction effect and how we can increase the conditionality of our parameters, but we've yet to actually look at parameter estimates or discuss how to actually interpret interaction effects.
 
 
 Armed with what we've just covered, we can quickly update our [initial model](#inter_initial) by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model's intercept and the regression coefficients describing the difference in mean $y$ between the default state and that predictors state. We've releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.
@@ -277,49 +277,16 @@ pantheria %>%
 The slope of `mass_stan` on `density_log` for omnivores is different from the slopes for the other trophic levels! The interaction between `mass_stan` and `trophic_levelomnivore` on `density_log` manifests as a more negative slope when compared to the other `trophic_level` states. This can also be phrased as that relationship has a greater slope magnitude (higher absolute value).
 
 
-Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we'll notice that the posterior for `mass_stan:tophic_levelherbivore` is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between `mass_stan` and `trophic_levelomnivore`. The extent of this interaction is obvious from the plot we just made.
-
+Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we'll notice that the posterior for `mass_stan:tophic_levelherbivore` is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between `mass_stan` and `trophic_levelomnivore`. The extent of this interaction is obvious from the plot we just made. Without making a plot visualizing our model's results, we are able to go back and actually understand what the table of parameter estimates actually means.
 
 
 
 
 ## Have we improved on our previous model?
 
-```{r inter_fitted}
+Now that we've fit our model and taken a quick look, we really should evaluate how well our model represents our data. Additionally, we might be curious if our interaction model is a better model of our data than the model without an interaction effect, and if so by how much.
 
-pantheria %>%
-  add_fitted_draws(model = m_2,
-                   n = 100) %>%
-  ungroup() %>%
-  ggplot(aes(x = mass_stan, y = density_log)) +
-  geom_line(mapping = aes(y = .value, group = .draw),
-            alpha = 1 / 20,
-            colour = 'blue') +
-  geom_point(data = pantheria, size = 2) +
-  scale_fill_brewer() +
-  facet_wrap(~ trophic_level) +
-  NULL
-
-```  
-
-```{r inter_predicted}
-
-pantheria %>%
-  data_grid(mass_stan = seq_range(mass_stan, n = 1000),
-            trophic_level) %>%
-  add_predicted_draws(model = m_2,
-                      n = 100) %>%
-  ungroup() %>%
-  ggplot(aes(x = mass_stan, y = density_log)) +
-  stat_lineribbon(mapping = aes(y = .prediction),
-                  .width = c(0.9, 0.5, 0.1),
-                  size = 0) +
-  geom_point(data = pantheria, size = 2) +
-  scale_fill_brewer() +
-  facet_wrap(~ trophic_level) +
-  NULL
-
-```
+We've already visualized our models predictions across the range of body sizes and trophic levels, so there is no need to plot that again. Let's instead just use the posterior predictive checks we've [before](#multi-ppc).
 
 ```{r inter_dens_ppc}
 
@@ -377,17 +344,16 @@ pantheria_summary_ppc %>%
 
 ```
 
+Visual comparison of these posterior predictive check results to those from our earlier, non-interaction model indicates the possibility that our model is doing a better job at predicting population density values for omnivorous taxa than our previous model while maintaining the high quality of fit to the population densities of the herbivorous and carnivorous observations.
 
-## Introducing root mean square error
-
-In addition to checking the internal consistency and adequacy of our model to our data, we can also compare the relative quality of fit between our model without the interaction term and out model with the interaction term.
-
+Visual comparisons can be sometimes unsatisfying when we're trying to understand how much of an improvement this model is over the previous one. In another lessons we will cover ways compare the relative quality of fit of different models. For now, we are just covering the "how-to" of developing, fitting, and understanding interaction models.
 
 
+## Continuous--Continuous interactions
+
+TODO
 
 
-## continuous X continuous
+## Summary
 
-[centering](#centering) helps with interpreting interactions, especially continuous X continuous ones.
-
-
+In this lesson we covered "how-to" develop, fit, and interpret regression models with a linear interaction. The refrain from this lesson is that "interactions are easy to fit, but hard to interpret." The concept and notation of interactions was first introduced in order to explain what exactly we're talking about when we talk bout "interaction terms." Next, following **Statistical Rethinking**, we emphasized understanding interactions through graphs and visualization instead of tables of parameter estimates. This involved developing and fitting a regression model of mammal population density that included an interaction between a continuous predictor and a multistate categorical predictor. This new model demonstrated a notable interaction between body size and omnivore that improved our models ability to represent our data when compared to a similar model without an interaction term.
