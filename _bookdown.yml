@@ -28,6 +28,8 @@ rmd_files: [
   'vary_intercept.Rmd',
   'vary_slope.Rmd',
   'vary_all.Rmd',
+
+  'model_comparison.Rmd',
   
   'time_series.Rmd',
 

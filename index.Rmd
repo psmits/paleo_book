@@ -28,4 +28,4 @@ A lot of material in this book is derived from material and examples presented i
 Additionally, some of the code used in this book is derived from [this rewriting](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse) of **Statistical Rethinking**.
 
 
-This textbook is made possible by my postdoctoral funding from [Seth Finnegan](https://finneganlab.org/) at UC-Berkeley.
+This textbook was made possible by my postdoctoral funding provided by [Seth Finnegan](https://finneganlab.org/) during my time at UC-Berkeley (2017-2019).

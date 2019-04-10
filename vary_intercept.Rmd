@@ -18,7 +18,76 @@ theme_set(theme_bw())
 
 ```
 
+## Reading
+
+- Chapter 12 "Multilevel Models" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
+
+
+
+
+
 Motivation
+
+Dummy variables derived multistate categorical variables force our model to consider the different states independently -- the logically related parameters are statistically independent.
+
+But we want models that use all of the information given, like that certain states are all from that category. And that inferences about one state can inform inferences about another.
+
+This does not mean treating all states as identical. Instead we want to understand the average state and the population of states.
+
+Simultaneously inference means we can transfer information between states and improve our inferences.
+
+
+
+Population of states. States are not identical, but they are from the same population. The distribution for the population of states is the prior for each state. Except this prior isn't exactly the same as we're used to. Instead, this prior is actually learned from the data.
+
+A parameter for each state as well as a mean and sd for the population. Every observation updates all of these parameters. If the population is highly variable, then the prior is flat and uninformative, which means that individual states have very little to do with each other. if the population contains little variation, then the prior is narrow and highly informative -- an observation about 1 state will have a big impact on the estiamtes of of another state.
+
+
+Multilevel models.
+
+Models that remember features of each (identified) cluster in the data as they learn about all of the clusters. The amount of variation among the clusters determines how much the model pools information across clusters and improving our overall estimates.
+
+
+Pragmatic benefits of multilevel modeling
+
+- Improved estimates for repeat sampling. when more than one observation arises from the same individual, location, or time, then traditional single-level models either maximally underfit or overfit the data.  By identifying and modeling that repeated sampling, we can improve our estimates of the variable being measured and propegate our uncertainty about that parameter. 
+- Improved estimates for imbalance in sampling.
+- Estimates of variation. If our research questions include variation among individuals or other groups within the data, then multilevel models are a bigh help because they model variation explicity. Dummy coding does not include the variation between the states, which is potentially very useful information. 
+- Avoid averaging, retatin variation. Too often people just summarize repeated sampling by pre-averaging some data to construct their variables. This can be dangerous because averaging removes variation. Also, there are lots of ways to average data. Averaging manufactures false confidence and introduces an arbitrary data transform. Multilevel models allow us to preserve our uncertainty and avoid unnecessary and unprincipled data transforms.
+
+
+
+Multilevel regression should be the default approach to regression. In the vast majority of cases, multilevel models are superior single-level models. 
+
+Once you grasp the basics of the multilevel modeling strategy it becomes much easier to incorporate related tricks such as allowing for measurement error in the data and even modeling missing data!
+
+Defining, implementing, and understanding a multilevel model is in general more complicated than a single-level model.
+
+We have to define the distribution of our states -- something that sounds a lot harder than it is. 
+
+Also, multilevel models are a lot harder to fit than most single-level models. This means more time tuning our MCMC algorithm, something we've so far been ableo to avoid.
+
+Finally, because multilevel models by their nature make statements at different "levels" of the data, they can be difficult for people to understanding. People rarely think about a population and the individual values within that population simultaneously.
+
+
+
+
+multilevel == hierachical == mixed effects
+
+
+shrinkage
+
+
+pooling
+
+- complete
+- none
+- partial
+
+
+
+
+
 
 Simpson's Paradox
 

@@ -1,0 +1,20 @@
+# Model Comparison 
+
+
+## Bias-Variance Trade-off
+
+### RMSE
+
+
+## Regularization
+
+
+## Information Criteria and WAIC
+
+
+## LOO(IC)
+
+
+
+
+

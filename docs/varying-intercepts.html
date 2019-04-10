@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-08">
+<meta name="date" content="2019-04-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -215,6 +215,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="9" data-path="varying-intercepts.html"><a href="varying-intercepts.html"><i class="fa fa-check"></i><b>9</b> Varying-intercept(s)</a><ul>
 <li class="chapter" data-level="9.1" data-path="varying-intercepts.html"><a href="varying-intercepts.html#objectives-7"><i class="fa fa-check"></i><b>9.1</b> Objectives</a></li>
+<li class="chapter" data-level="9.2" data-path="varying-intercepts.html"><a href="varying-intercepts.html#reading-6"><i class="fa fa-check"></i><b>9.2</b> Reading</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="varying-slopes.html"><a href="varying-slopes.html"><i class="fa fa-check"></i><b>10</b> Varying slope(s)</a></li>
 <li class="chapter" data-level="11" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>11</b> Varying slopes and intercepts</a></li>
@@ -256,7 +257,35 @@ Proudly published with bookdown</a></li>
        modelr, forcats)
 
 <span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
+</div>
+<div id="reading-6" class="section level2">
+<h2><span class="header-section-number">9.2</span> Reading</h2>
+<ul>
+<li>Chapter 12 “Multilevel Models” from <a href="https://xcelab.net/rm/statistical-rethinking/"><strong>Statistical Rethinking</strong> by Richard McElreath</a>.</li>
+</ul>
 <p>Motivation</p>
+<p>Dummy variables derived multistate categorical variables force our model to consider the different states independently – the logically related parameters are statistically independent.</p>
+<p>But we want models that use all of the information given, like that certain states are all from that category. And that inferences about one state can inform inferences about another.</p>
+<p>This does not mean treating all states as identical. Instead we want to understand the average state and the population of states.</p>
+<p>Simultaneously inference means we can transfer information between states and improve our inferences.</p>
+<p>Population of states. States are not identical, but they are from the same population. The distribution for the population of states is the prior for each state. Except this prior isn’t exactly the same as we’re used to. Instead, this prior is actually learned from the data.</p>
+<p>A parameter for each state as well as a mean and sd for the population. Every observation updates all of these parameters. If the population is highly variable, then the prior is flat and uninformative, which means that individual states have very little to do with each other. if the population contains little variation, then the prior is narrow and highly informative – an observation about 1 state will have a big impact on the estiamtes of of another state.</p>
+<p>Multilevel models.</p>
+<p>Models that remember features of each (identified) cluster in the data as they learn about all of the clusters. The amount of variation among the clusters determines how much the model pools information across clusters and improving our overall estimates.</p>
+<p>Pragmatic benefits of multilevel modeling</p>
+<ul>
+<li>Improved estimates for repeat sampling. when more than one observation arises from the same individual, location, or time, then traditional single-level models either maximally underfit or overfit the data. By identifying and modeling that repeated sampling, we can improve our estimates of the variable being measured and propegate our uncertainty about that parameter.</li>
+<li>Improved estimates for imbalance in sampling.</li>
+<li>Estimates of variation. If our research questions include variation among individuals or other groups within the data, then multilevel models are a bigh help because they model variation explicity. Dummy coding does not include the variation between the states, which is potentially very useful information.</li>
+<li>Avoid averaging, retatin variation. Too often people just summarize repeated sampling by pre-averaging some data to construct their variables. This can be dangerous because averaging removes variation. Also, there are lots of ways to average data. Averaging manufactures false confidence and introduces an arbitrary data transform. Multilevel models allow us to preserve our uncertainty and avoid unnecessary and unprincipled data transforms.</li>
+</ul>
+<p>Multilevel regression should be the default approach to regression. In the vast majority of cases, multilevel models are superior single-level models.</p>
+<p>Once you grasp the basics of the multilevel modeling strategy it becomes much easier to incorporate related tricks such as allowing for measurement error in the data and even modeling missing data!</p>
+<p>Defining, implementing, and understanding a multilevel model is in general more complicated than a single-level model.</p>
+<p>We have to define the distribution of our states – something that sounds a lot harder than it is.</p>
+<p>Also, multilevel models are a lot harder to fit than most single-level models. This means more time tuning our MCMC algorithm, something we’ve so far been ableo to avoid.</p>
+<p>Finally, because multilevel models by their nature make statements at different “levels” of the data, they can be difficult for people to understanding. People rarely think about a population and the individual values within that population simultaneously.</p>
+<p>multilevel == hierachical == mixed effects</p>
 <p>Simpson’s Paradox</p>
 <p>Dummy coding versus varying-intercepts. varying intercepts reframe problem. now the intercept is “universal” and the codes are their divergence from the mean.</p>
 <p>In both cases each group gets its “own intercept” but how that value is calculated differs. Also, in varying intercept models we can put a prior on the variance between the groups.</p>
