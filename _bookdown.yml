@@ -26,7 +26,6 @@ rmd_files: [
   'poisson.Rmd',
   
   'vary_intercept.Rmd',
-  'vary_slope.Rmd',
   'vary_all.Rmd',
 
   'model_comparison.Rmd',

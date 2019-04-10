@@ -21,7 +21,8 @@ theme_set(theme_bw())
 ## Reading
 
 - Chapter 12 "Multilevel Models" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
-
+- Chapter 12 "Multilevel linear models: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983).  
+- OPTIONAL Chapter 11 "Multilevel structures" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983).  
 
 
 
@@ -84,6 +85,10 @@ pooling
 - none
 - partial
 
+
+
+
+the first step of multilevel modeling is to set up a regression with varying coefficients; the second step is to set up a regression model for the coefficients themselves.
 
 
 
