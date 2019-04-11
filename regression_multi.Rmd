@@ -93,7 +93,7 @@ Let's see what happens when we suppress the intercept using R's [formula syntax]
 
 By suppressing the intercept in our model matrix, we've dramatically changed the first column of our tibble. Instead of being labeled `(Intercept)` and being a column of only 1s, we have a column named `trophic_levelcarnivora` which is a binary variable indicating if an observation is a carnivore or not. 
 
-I do not recommend suppressing the intercept when developing a model, especially if you are generating your contrasts independent of the model formula (e.g. when using `brm()`), and extra especially if you have more predictors in your model than just the categorical variable being coded out. If you are not careful, you might end up with the equivalent of two intercepts which causes a model to be completely undefined and useless.
+I do not recommend suppressing the intercept when developing a model, especially if you are generating your contrasts independent of the model formula (e.g. when using `brm()`), and extra especially if you have more predictors in your model than the categorical variable being coded out. If you are not careful, you might end up with the equivalent of two intercepts which causes a model to be completely undefined and useless.
 
 As we've discussed before, R tacitly converts our categorical variables (e.g. variables where our observations are character data) into dummy coding. While this is convenient, it can lead to confusion if you aren't super familiar with categorical variables. For example, I once had a colleague ask, "How are there 5 parameters when we only have 1 predictor in our linear regression (they expected three)?" 
 
@@ -221,7 +221,7 @@ To standardize our data, [Gelman and Hill](http://www.stat.columbia.edu/~gelman/
 
 But why 2 standard deviations and not 1? By dividing by 2 standard deviations we gain comparability between our continuous covariates and the binary predictors. For example, consider a simple binary variable $x$ where 0 and 1 occur with equal probability. The standard deviation of this variable is then $\sqrt{0.5 \cdot 0.5} = 0.5$, which means the standardized variable, $(x - \mu_{x}) / (2 \sigma_{x})$, takes on the values $\pm 0.5$, and its coefficient reflects comparisons between $x = 0$ and $x = 1$. In contrast, dividing by 1 standard deviation means that the scaled variable takes on values $\pm 1$ and its coefficients correspond to half the difference between the two possible values of $x$.
 
-[Gelman and Hill](http://www.stat.columbia.edu/~gelman/arm/) also state that in complicated regression models with lots of predictors, we can leave our binary inputs as is and just transform our continuous predictors. In that case, the 2 standard deviation rule gives rough comparability in the coefficients. I generally just center and rescale my continuous covariates. 
+[Gelman and Hill](http://www.stat.columbia.edu/~gelman/arm/) also state that in complicated regression models with lots of predictors, we can leave our binary inputs as is and transform our continuous predictors. In that case, the 2 standard deviation rule gives rough comparability in the coefficients. I generally center and rescale my continuous covariates. 
 
 
 Our goal should be able to have meaningful interpretations for as many parameters as possible, especially regression coefficients. To ensure this, we should center and scale all continuous predictor variables before analysis. If these transformations aren't done, then we can have difficulty interpreting our models intercept and can incorrectly and unfairly compare the estimates of our regression coefficients.
@@ -265,7 +265,7 @@ print(m_2)
 ```
 
 
-Now that we've fit our model with standardized data, we can directly compare the regression coefficients. With multiple predictors we might want to know which the relative importance of the predictors or which predictor has the largest effect size. In general, comparing effect sizes just means calculating the probability that the absolute value of the posterior distribution of one coefficient is greater than another. Remember that in math, magnitude means absolute value. So when you compare effect sizes, you are comparing the relative magnitudes of the regression coefficients.
+Now that we've fit our model with standardized data, we can directly compare the regression coefficients. With multiple predictors we might want to know which the relative importance of the predictors or which predictor has the largest effect size. In general, comparing effect sizes means calculating the probability that the absolute value of the posterior distribution of one coefficient is greater than another. Remember that in math, magnitude means absolute value. So when you compare effect sizes, you are comparing the relative magnitudes of the regression coefficients.
 
 For categorical predictors with more than 2 states, we might also want to know which categories are expected to have a greater expected value of $y$ than the other categories. The way parameters are estimated, our regression coefficients only describe the difference in expected $y$ between that state and the intercept/default state, but it does not describe the difference in expected $y$ between that state and any other non-default state. In our example, this means that the carnivora regression coefficient only describes the difference in expected population density between omnivores and carnivores, but not carnivores and herbivore. 
 
@@ -421,7 +421,7 @@ pantheria_summary_ppc %>%
 
 ```
 
-The current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogeneity in standard deviation between our groups -- while our model does a good job at approximating the variation in population density of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data just as much as its central tendency?
+The current model is doing a much better job at capturing the median population densities compared to our [previous model](#reg-continue). We also notice some evidence of heterogeneity in standard deviation between our groups -- while our model does a good job at approximating the variation in population density of herbivores and omnivores, it fails to approximate that of carnivores. How do we resolve this situation? Do we need to deal with this in order to answer our scientific questions? Are we concerned with the spread of our data as much as its central tendency?
 
 
 ## Aside: Matrix Notation {#matrix-notation}

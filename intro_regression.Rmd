@@ -35,7 +35,7 @@ Normally regression is presented as a way of representing the relationship betwe
 
 Regression can be used to predict an outcome given a linear function of those predictors, and regression coefficients can be thought of as comparisons across predicted values or as comparisons among averages in the data. A regression coefficient describes the expected change in the response per unit change in its predictor. Linear regression uses a Gaussian/Normal distribution to describe the distribution of our measurement of interest. Like any model, linear regression is not universally applicable. But linear regression is pretty foundational in statistics because once you can build and interpret a linear regression model, it is easy to move on to other types of regression for when things aren't Normal. 
 
-Models of normally distributed data are very common: t-test, single regression, multiple regression, ANOVA, ANCOVA, MANOVA, MANCOVA, etc. All of these models are functionally equivalent. Learning and understanding each of these special cases is a lot of unnecessary work; instead, we're going to focus on a general modeling strategy that subsumes all of these special cases as just variations on a theme. Additionally, we're going to cover a statistical notation for communicating a model that encodes all of our assumptions and presents them clearly for other readers (including yourself in the future).
+Models of normally distributed data are very common: t-test, single regression, multiple regression, ANOVA, ANCOVA, MANOVA, MANCOVA, etc. All of these models are functionally equivalent. Learning and understanding each of these special cases is a lot of unnecessary work; instead, we're going to focus on a general modeling strategy that subsumes all of these special cases as variations on a theme. Additionally, we're going to cover a statistical notation for communicating a model that encodes all of our assumptions and presents them clearly for other readers (including yourself in the future).
 
 
 ### Talking about models
@@ -109,7 +109,7 @@ $$
 
 What do the different terms and symbols in this statement mean?
 
-To complete this model we need to define the priors for the parameters $\mu$ and $\sigma$. We need a joint prior $Pr(\mu, \sigma)$, but most of the time we can just define independent priors for each parameter -- this is equivalent to saying $Pr(\mu, \sigma) = Pr(\mu)Pr(\sigma)$. Here's a more complete look at the Gaussian model of log valve length:
+To complete this model we need to define the priors for the parameters $\mu$ and $\sigma$. We need a joint prior $Pr(\mu, \sigma)$, but most of the time we can define independent priors for each parameter -- this is equivalent to saying $Pr(\mu, \sigma) = Pr(\mu)Pr(\sigma)$. Here's a more complete look at the Gaussian model of log valve length:
 $$
 \begin{align}
 s_{i} &\sim \text{Normal}(\mu, \sigma) \\
@@ -260,7 +260,7 @@ But where did $\alpha$ and $\beta$ come from? We made them up! $\mu$ and $\sigma
 
 Making up new parameters like $\alpha$ and $\beta$ is a common strategy for expanding the amount of information in our model. These parameters are targets of our learning -- each must be described in the posterior density. When we want to learn something, we invent a parameter (or parameters) describing it.
 
-In the case of the linear model, $\mu_{i} = \alpha + \beta x_{i}$, we are now asking two questions about the mean of $s$ instead of just one.
+In the case of the linear model, $\mu_{i} = \alpha + \beta x_{i}$, we are now asking two questions about the mean of $s$ instead of one.
 
 1. What is the expected log valve length when $x_{i} = 0$ (e.g. species is a Bivalve)? The parameter $\alpha$ answers this question. For this reason, $\alpha$ is called the *intercept*.
 2. What is the change in expected log valve length, when $x_{i}$ changes by 1 unit? The parameter $\beta$ answers this questions, and is often called a slope.
@@ -313,7 +313,7 @@ One of the values of the column is designated to be the intercept. In R, the def
 
 There are [many other strategies for encoding categorical variables](https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/), but dummy coding is by far the most common -- it helps that it is the R default.
 
-Don't worry too much about understanding dummy coding yet -- just understand that it exists and that we will return to it in a later lesson.
+Don't worry too much about understanding dummy coding yet -- understand that it exists and that we will return to it in a later lesson.
 
 
 ## Interpreting the model fit
@@ -409,7 +409,7 @@ Prediction is when, given our model and parameter estimates, we want to estimate
 
 Our full model describes log valve length as a Gaussian distribution with a mean (as a linear model) and a standard deviation. Our previous plots only considered the linear model aspect which describes the mean of the distribution, but there is still more information in our model that we've yet to consider: the estimated standard deviation $\sigma$. 
 
-The `brms::add_predicted_draws()` function does this exactly. For each "new" observation, we obtain a series of predictions about that observations log valve length, not just the *expected* value of log valve length. This function is similar to the `brms::add_fitted_draws()` function we used above, but instead of predicting from the linear model we are predicting from the entire distribution.
+The `brms::add_predicted_draws()` function does this exactly. For each "new" observation, we obtain a series of predictions about that observations log valve length, not the *expected* value of log valve length. This function is similar to the `brms::add_fitted_draws()` function we used above, but instead of predicting from the linear model we are predicting from the entire distribution.
 
 Let's illustrate this by comparing our log valve length data to our posterior predictive distribution for that data:
 ```{r vis_pp_dist}
@@ -438,7 +438,7 @@ d %>%
 
 ### Posterior predictive tests
 
-What if we want to test how well our model fits specific parts of our data, and not just compare the similarities of their distributions? For example, how well does our model estimate the mean log valve size of each taxon? 
+What if we want to test how well our model fits specific parts of our data, and not compare the similarities of their distributions? For example, how well does our model estimate the mean log valve size of each taxon? 
 
 Here's the logic of posterior predictive tests: if data simulated from our posterior predictive distribution is able to reproduce a specific aspect of the original data, then the model *might* be doing something right. And if there are systematic failures in our model's ability to predict the data, then the model *must* be doing something wrong.
 

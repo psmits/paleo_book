@@ -1,4 +1,4 @@
-# Varying-intercept(s)
+# Varying-intercept models
 
 
 ## Objectives
@@ -20,22 +20,28 @@ theme_set(theme_bw())
 
 ## Reading
 
+The following materials are recommended pre-readings before starting this tutorial. 
+
 - Chapter 12 "Multilevel Models" from [**Statistical Rethinking** by Richard McElreath](https://xcelab.net/rm/statistical-rethinking/).
 - Chapter 12 "Multilevel linear models: the basics" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983).  
 - OPTIONAL Chapter 11 "Multilevel structures" from [**Data Analysis Using Regression and Multilevel/Hierarchical Models** by Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983).  
 
+This lesson is a major conceptual leap forward in our studies. I highly recommend you check out [this interactive visualization](http://mfviz.com/hierarchical-models/) to get a handle on what we're going to be covering in this lesson. Also, if you have not already read the [lesson on interactions](#interactions), please do as there are strong conceptual similarities. 
+
+
+## Introduction 
+
+
+When collecting or analyzing data, we frequently encounter groupings or nested structures underpinning that data. For example, we might have multiple measurements from the same individual or species, species co-occurrences across multiple temporal windows, 
 
 
 
-Motivation
+Grouped or nested data.
 
-Dummy variables derived multistate categorical variables force our model to consider the different states independently -- the logically related parameters are statistically independent.
 
-But we want models that use all of the information given, like that certain states are all from that category. And that inferences about one state can inform inferences about another.
 
-This does not mean treating all states as identical. Instead we want to understand the average state and the population of states.
 
-Simultaneously inference means we can transfer information between states and improve our inferences.
+In our previous lessons we've covered how to include [categorical predictors](#dummy) in our regression models. Dummy variables derived multistate categorical variables force our model to consider the different states independently -- the logically related parameters are statistically independent. But we want models that use all of the information given, like that certain states are all from that category. And that inferences about one state can inform inferences about another. This does not mean treating all states as identical. Instead we want to understand the average state and the population of states. Simultaneously inference means we can transfer information between states and improve our inferences.
 
 
 

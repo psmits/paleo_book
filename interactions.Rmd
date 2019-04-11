@@ -81,7 +81,7 @@ y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \end{align}
 $$
 
-And, of course, we can fit this model using `brm()` just like we did in the last lesson. This initial model will provide a useful comparison with the new model we will develop in this lesson.
+And, of course, we can fit this model using `brm()` like we did in the last lesson. This initial model will provide a useful comparison with the new model we will develop in this lesson.
 ```{r initial_model, cache = TRUE, message = FALSE, results = 'hide'}
 
 m_1 <- 
@@ -105,7 +105,7 @@ m_1 <-
 ## How to specify an interaction
 
 
-Specifying an interaction term is extremely easy. Let's explore this using a very basic model where the mean of $y$ is predicted by two variables, one continuous $c$ and one binary $b$. We can just focus on the likelhood part of the model.
+Specifying an interaction term is extremely easy. Let's explore this using a very basic model where the mean of $y$ is predicted by two variables, one continuous $c$ and one binary $b$. We can focus on the likelhood part of the model.
 
 $$
 \begin{align}
@@ -114,7 +114,7 @@ y &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \end{align}
 $$
 
-In this case, we want to specify that the relationship between $y$ and $c$ also depends on $b$. The relationship between $y$ and $c$ is measured by the coefficient $\beta_{c}$. Following the same strategy by which we replace parameters like $\mu$ with linear models, the most straightforward way to make $\beta_{c}$ depend on $b$ is to just define the coefficient $\beta_{c}$ as a linear model itself with $b$ as a predictor!
+In this case, we want to specify that the relationship between $y$ and $c$ also depends on $b$. The relationship between $y$ and $c$ is measured by the coefficient $\beta_{c}$. Following the same strategy by which we replace parameters like $\mu$ with linear models, the most straightforward way to make $\beta_{c}$ depend on $b$ is to define the coefficient $\beta_{c}$ as a linear model itself with $b$ as a predictor!
 
 $$
 \begin{align}
@@ -145,7 +145,7 @@ $$
 \end{align}
 $$
 
-Not only are interactions symmetrical, we could just have easily defined $\gamma$ to be the slope of $b$ and a linear function of $c$.
+Not only are interactions symmetrical, we could have defined $\gamma$ to be the slope of $b$ and a linear function of $c$.
 
 One of the intermediate steps of this little algebra exercise is actually the standard way of expressing an interaction between predictors: 
 $$
@@ -160,7 +160,7 @@ This standard form is useful for two reasons:
 1. it highlights the symmetry of the interaction,
 2. this is how interactions are expressed in R.
 
-This symmetry is important because if either $c$ or $b$ change, this will affect of the other on mean $y$ also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especially just from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.
+This symmetry is important because if either $c$ or $b$ change, this will affect of the other on mean $y$ also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especially from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.
 
 
 ## Fitting a model with an interaction
@@ -168,7 +168,7 @@ This symmetry is important because if either $c$ or $b$ change, this will affect
 We've spent a lot of time describing an interaction effect and how we can increase the conditionality of our parameters, but we've yet to actually look at parameter estimates or discuss how to actually interpret interaction effects.
 
 
-Armed with what we've just covered, we can quickly update our [initial model](#inter_initial) by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model's intercept and the regression coefficients describing the difference in mean $y$ between the default state and that predictors state. We've releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.
+Armed with what we've covered, we can quickly update our [initial model](#inter_initial) by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model's intercept and the regression coefficients describing the difference in mean $y$ between the default state and that predictors state. We've releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.
 
 
 $$
@@ -198,7 +198,7 @@ density_log ~ 1 + mass_stan * trophic_level
 
 In R formula syntax `:` represents the interaction between the relevant terms. While `*` also indicates an interaction, it also indicates the individual effects of the relevant forms because mass\_stan * trophic\_level expands to mass\_stan + trophic\_level + mass\_stan:trophic\_level. `*` is the compact way of indicating an interaction term.
 
-Of course, you can also calculate the interaction between `mass_stan` and `trophic_level` by hand -- it is just multiplication after all. The hurdle here is that you'll have to first do the dummy coding for `trophic_level` and then calculate the interaction for `mass_stan` and `trophic_levelheribivore` and the interaction with `trophic_levelcanivore`. I'll leave this activity for interested parties who want to explore than on their own.
+Of course, you can also calculate the interaction between `mass_stan` and `trophic_level` by hand -- it is multiplication after all. The hurdle here is that you'll have to first do the dummy coding for `trophic_level` and then calculate the interaction for `mass_stan` and `trophic_levelheribivore` and the interaction with `trophic_levelcanivore`. I'll leave this activity for interested parties who want to explore than on their own.
 
 Now that we know how to specify an interaction using R formula syntax, we can implement and fit our model to the PanTHERIA dataset using `brm()`.
 
@@ -231,16 +231,16 @@ print(m_2)
 
 But how do we interpret these parameters? 
 
-**Statistical Rethinking** outlines two reasons why just looking at a table of posterior estimates is a bad idea.
+**Statistical Rethinking** outlines two reasons why looking at a table of posterior estimates is a bad idea.
 
 1. Adding an interaction to a model changes the meaning of the parameters. The "main effect" coefficient of the predictor in an interaction model no longer means the same thing as the variable with the same name in a model without an interaction. Their posterior distributions are not directly comparable.
 
-Interactions are tricky because this extra conditioning means that our normal interpretation of regression coefficients (expected change in $y$ per unit change in that predictor, holding all others constant) is no longer valid. If we manipulate the value of one predictor in an interaction, multiple parameters are involved and not just that single coefficient. 
+Interactions are tricky because this extra conditioning means that our normal interpretation of regression coefficients (expected change in $y$ per unit change in that predictor, holding all others constant) is no longer valid. If we manipulate the value of one predictor in an interaction, multiple parameters are involved and not that single coefficient. 
 
 
 2. Tables make it difficult to incorporate uncertainty into our thinking -- we see a series individual numbers instead of the entire spread of numbers. This difficulty is exacerbated by the covariance between parameters being absent from our summary table, and when the effect of one predictor depends on multiple (2+) other predictors.
 
-Interpreting model with an interaction requires that we add/multiple multiple parameters together. Each of those parameters have posterior distributions. We aren't just adding mean estimates together, we're combining multiple posterior distributions to yield our final posterior distribution of effects.
+Interpreting model with an interaction requires that we add/multiple multiple parameters together. Each of those parameters have posterior distributions. We aren't adding mean estimates together, we're combining multiple posterior distributions to yield our final posterior distribution of effects.
 
 Recall our demo model:
 $$
@@ -250,7 +250,7 @@ y_{i} &\sim \text{Normal}(\mu_{i}, \sigma) \\
 \gamma_{i} &= \beta_{c} + \beta_{cb} b_{i}. \\
 \end{align}
 $$
-$\gamma$ depends on $\beta_{c}$ and $\beta_{cb}$. Each of those parameters would have a posterior distribution. This means that $\gamma$ has a posterior distribution. When we just look at a table of parameter estimates, it is hard to readily incorporate all of our uncertainty into our interpretations.
+$\gamma$ depends on $\beta_{c}$ and $\beta_{cb}$. Each of those parameters would have a posterior distribution. This means that $\gamma$ has a posterior distribution. When we look at a table of parameter estimates, it is hard to readily incorporate all of our uncertainty into our interpretations.
 
 The easiest way around these difficulties is to plot our results and spend time visualizing the effect of the interaction on our estimates of $y$. We can visualize change across multiple parameters while also including all of our uncertainty around those estimates.
 
@@ -277,7 +277,7 @@ pantheria %>%
 The slope of `mass_stan` on `density_log` for omnivores is different from the slopes for the other trophic levels! The interaction between `mass_stan` and `trophic_levelomnivore` on `density_log` manifests as a more negative slope when compared to the other `trophic_level` states. This can also be phrased as that relationship has a greater slope magnitude (higher absolute value).
 
 
-Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we'll notice that the posterior for `mass_stan:tophic_levelherbivore` is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between `mass_stan` and `trophic_levelomnivore`. The extent of this interaction is obvious from the plot we just made. Without making a plot visualizing our model's results, we are able to go back and actually understand what the table of parameter estimates actually means.
+Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we'll notice that the posterior for `mass_stan:tophic_levelherbivore` is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between `mass_stan` and `trophic_levelomnivore`. The extent of this interaction is obvious from the plot we made. Without making a plot visualizing our model's results, we are able to go back and actually understand what the table of parameter estimates actually means.
 
 
 
@@ -286,7 +286,7 @@ Also, the slopes for herbivores and carnivores are almost identical. If we look 
 
 Now that we've fit our model and taken a quick look, we really should evaluate how well our model represents our data. Additionally, we might be curious if our interaction model is a better model of our data than the model without an interaction effect, and if so by how much.
 
-We've already visualized our models predictions across the range of body sizes and trophic levels, so there is no need to plot that again. Let's instead just use the posterior predictive checks we've [before](#multi-ppc).
+We've already visualized our models predictions across the range of body sizes and trophic levels, so there is no need to plot that again. Let's instead use the posterior predictive checks we've [before](#multi-ppc).
 
 ```{r inter_dens_ppc}
 
@@ -346,7 +346,7 @@ pantheria_summary_ppc %>%
 
 Visual comparison of these posterior predictive check results to those from our earlier, non-interaction model indicates the possibility that our model is doing a better job at predicting population density values for omnivorous taxa than our previous model while maintaining the high quality of fit to the population densities of the herbivorous and carnivorous observations.
 
-Visual comparisons can be sometimes unsatisfying when we're trying to understand how much of an improvement this model is over the previous one. In another lessons we will cover ways compare the relative quality of fit of different models. For now, we are just covering the "how-to" of developing, fitting, and understanding interaction models.
+Visual comparisons can be sometimes unsatisfying when we're trying to understand how much of an improvement this model is over the previous one. In another lessons we will cover ways compare the relative quality of fit of different models. For now, we are covering the "how-to" of developing, fitting, and understanding interaction models.
 
 
 ## Continuous--Continuous interactions

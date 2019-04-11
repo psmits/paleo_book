@@ -20,7 +20,7 @@ theme_set(theme_bw())
 
 ## Reading  {#project-reading}
 
-The following materials are recommended pre-readings before starting this section. You do not have to read all of them, just pick at least one. 
+The following materials are recommended pre-readings before starting this section. You do not have to read all of them, pick at least one. 
 
 - [Verde Arregotia *et al.* 2018 "Good practices for sharing analysis-ready data in mammalogy and biodiversity research" **Hystrix, the Italian Journal of Mammalogy**](http://www.italian-journal-of-mammalogy.it/Good-practices-for-sharing-analysis-ready-data-in-mammalogy-and-biodiversity-research,101564,0,2.html).
 - [Wilson *et al.* 2017 "Good enough practices in scientific computing" **PLoS Computational Biology**](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510).
@@ -74,7 +74,7 @@ carnivora <- read_csv(file = url)
 
 ```
 
-The `carnivora` object now has the information from our PBDB call in data.frame form. By using a direct API call to the PBDB instead of relying on a previously downloaded file our analyses can instantly be updated when new data is added to the PBDB. Because the URL points directly to a CSV (or JSON) file, we don't have to save a copy of the data to our local machine, and we can instead just have it live in memory during our analyses -- though you might want to download and store the data every so often (e.g. `write_csv()`) so you can work offline or share you data with a less savvy colleague. 
+The `carnivora` object now has the information from our PBDB call in data.frame form. By using a direct API call to the PBDB instead of relying on a previously downloaded file our analyses can instantly be updated when new data is added to the PBDB. Because the URL points directly to a CSV (or JSON) file, we don't have to save a copy of the data to our local machine, and we can instead have it live in memory during our analyses -- though you might want to download and store the data every so often (e.g. `write_csv()`) so you can work offline or share you data with a less savvy colleague. 
 
 I find tibbles easier to process than data.frame-s, so API calls in my own code tend to look like this:
 ```{r read_carnivora_astibble, message = FALSE, results = 'hide', warning = FALSE}
@@ -140,9 +140,9 @@ knitr::kable(carnivora_table) %>%
 
 In many cases there is good correspondence between the identified name and the accepted name. However, there are some inconsistencies. For example, the ninth of this table corresponds to a fossil identified as "Cormocyon cv. copei" but is given the accepted name of "Cormocyon copei" -- an identification that is arguably overconfident. But does it matter? That's up to you and your research, but let's assume it does for this tutorial. How do we resolve this and downgrade these overconfident identifications?
 
-The simplest way might be to downgrade any identified names that include punctuation and non-character symbols to just their genus. After all, "cf.", "sp." and "n. sp." all involve punctuation. 
+The simplest way might be to downgrade any identified names that include punctuation and non-character symbols to their genus. After all, "cf.", "sp." and "n. sp." all involve punctuation. 
 
-But how do we deal with text information? Turns out there is a whole special language for dealing with text called [regular expressions](https://en.wikipedia.org/wiki/Regular_expression), or RegEx for short. RegEx are sequences of characters that help us match specific patterns in text. In this example, I'm using a specialized bit of RegEx to identify all cases where there is punctuation present in the identified name -- I don't care *where* the punctuation is, just that there *is* punctuation. To do this, I'm going to be using functions from the [`stringr`](https://stringr.tidyverse.org/) package which provide for easier interaction with text and regular expressions than using the factions available base R. 
+But how do we deal with text information? Turns out there is a whole special language for dealing with text called [regular expressions](https://en.wikipedia.org/wiki/Regular_expression), or RegEx for short. RegEx are sequences of characters that help us match specific patterns in text. In this example, I'm using a specialized bit of RegEx to identify all cases where there is punctuation present in the identified name -- I don't care *where* the punctuation is, that there *is* punctuation. To do this, I'm going to be using functions from the [`stringr`](https://stringr.tidyverse.org/) package which provide for easier interaction with text and regular expressions than using the factions available base R. 
 
 I find RegEx unintuitive before I use them as they are not intuitive, so don't worry too much if you find regular expressions bewildering when you start using them. I always spend a lot of time on Google and StackExchange figuring out the correct RegEx I need for the task at hand. 
 
@@ -202,7 +202,7 @@ carnivora_clean %>%
 
 We can see that a lot of our fossils have age uncertainty of 5 million years or less, and a few of them have large ranges of 10 million years or more. Fossils with age ranges greater than 10 million years are potentially suspect or at least are not high quality -- certainly trying to assign them to a single 2 million year bin isn't going to be ideal as it adds confidence where there is none. In your own analyses you might consider these situations on a case-by-case basis or try to find more information from other sources, but for purposes of this tutorial we will exclude those occurrences whose age ranges are 10 million years or greater.
 
-We can dither over an "optimal" bin width for our data, but for the purpose of this exercise let's just assign all our fossil occurrences to 2 million year bins. 
+We can dither over an "optimal" bin width for our data, but for the purpose of this exercise let's assign all our fossil occurrences to 2 million year bins. 
 
 Because binning data is so common, I've written a function, `bin_ages()` to do this. I present it here and will use it to bin our data. The `bin_ages()` function follows that convention that the youngest bin is bin 1. I've written documentation for this function using `roxygen` formatting. Feel free to modify it or write your own. This function requires you to assign a single age to the fossil, after which it is binned. In the example that follows, I calculate the midpoint age of each fossil and proceed from there.
 
@@ -245,7 +245,7 @@ bin_ages <- function(x, by = NULL, number = NULL, age = FALSE) {
   # assign memberships
   uu <- map2(unt1, unt2, ~ which(between(x, left = .x, right = .y)))
 
-  # what if we want the "age" of the bin, not just number?
+  # what if we want the "age" of the bin, not number?
   if(age == TRUE) {
     unt_age <- map2_dbl(unt1, unt2, ~ median(c(.x, .y)))
   }
@@ -322,7 +322,7 @@ carnivora <- read_csv(file = url) %>%
 
 So far we have generated two "kinds" of data tables: the raw data output from the PBDB that is returned from our URL-based API call, and the cleaned data we've crafted with a bit of code. Both of these datasets are extremely important and should be shared with the audience.
 
-There are two ways to share the raw data associated with our study: the URL-based API call, and a spreadsheet of the downloaded information. Because the information on the PBDB updates over time, an API call made today might not yield an identical dataset. Earlier I hailed this as fantastic, which it is, but it is also limiting -- someone might not be able completely reproduce your analysis using just this information because the data could be different. The API call is useful for improving and expanding on previous analyses, but by itself is not enough to reproduce your analysis. You also need to share the raw data download so that your complete analysis, including filtering and cleaning, is reproducible.
+There are two ways to share the raw data associated with our study: the URL-based API call, and a spreadsheet of the downloaded information. Because the information on the PBDB updates over time, an API call made today might not yield an identical dataset. Earlier I hailed this as fantastic, which it is, but it is also limiting -- someone might not be able completely reproduce your analysis using this information because the data could be different. The API call is useful for improving and expanding on previous analyses, but by itself is not enough to reproduce your analysis. You also need to share the raw data download so that your complete analysis, including filtering and cleaning, is reproducible.
 
 You probably also want to save a local copy of your filtered and cleaned dataset so you don't have to re-run your cleaning scripts all the time. It also means you can separate your cleaning from the rest of your analysis. You'll end up with multiple R scripts and multiple datasets -- that's good. 
 

@@ -70,13 +70,13 @@ What happens when we draw another marble from the bag? We update the counts! How
 | [B B B B] | 4 | 0 | 0 x 4 = 0 |
 
 
-Logically, what we've just done can be expressed as
+Logically, what we've done can be expressed as
 
 <center>
   plausibility of [B W W W] after seeing [B W B] $\propto$ ways [B W W W] can produce [B W B] X prior plausibility of [B W W W].
 </center>
 
-But these are just counts and plausibilities; we want probabilities! First, to make explaining ourselves simpler, let's define $p$ as the proportion of blue marbles in the bag and $D_{new}$ as our data. We can now rewrite the previous statement as: 
+But these are counts and plausibilities; we want probabilities! First, to make explaining ourselves simpler, let's define $p$ as the proportion of blue marbles in the bag and $D_{new}$ as our data. We can now rewrite the previous statement as: 
 
 <center>
   plausibility of $p$ after $D_{new}$ $\propto$ ways $p$ can produce $D_{new}$ X prior plausibility of $p$.
@@ -128,7 +128,7 @@ To get the logic machinery working, we need to make some assumptions. These assu
 1. **Data story** 
     - Describe aspects of the underlying reality and the sampling process. 
     - Translate this description into a formal probability model.
-    - Acts as a framework for interpretation, but still just a story.
+    - Acts as a framework for interpretation, but still a story.
     - Helps with realizing additional questions that must be answered as hypotheses are frequently vague.
 2. **Updating**
     - Bayesian models begin with a set of plausibilities assigned to each possibility (*Prior*).
@@ -186,7 +186,7 @@ d %>%
 ```
 
 
-**Side note on sample size:** Bayesian estimates are valid and interpretable at any sample size. This fact is very much in contrast to the folk-wisdom around a minimum number of samples needed that you'll hear in non-Bayesian contexts. In non-Bayesian contests, statistical inference is justified by behaviour at large samples sizes, called asymptotic behaviour. The reason Bayesian estimates are always valid and interpretable comes down to the prior. If the prior is bad, the resulting posterior could be misleading. Regardless, all estimates in either context are based on assumptions -- the assumptions made during Bayesian analysis are just more obvious and capable of being directly interrogated.
+**Side note on sample size:** Bayesian estimates are valid and interpretable at any sample size. This fact is very much in contrast to the folk-wisdom around a minimum number of samples needed that you'll hear in non-Bayesian contexts. In non-Bayesian contests, statistical inference is by behaviour at large samples sizes, called asymptotic behaviour. The reason Bayesian estimates are always valid and interpretable comes down to the prior. If the prior is bad, the resulting posterior could be misleading. Regardless, all estimates in either context are based on assumptions -- the assumptions made during Bayesian analysis are more obvious and capable of being directly interrogated.
 
 
 ### Evaluate
@@ -195,7 +195,7 @@ Our model is learning from a "small world" of data. If there are important diffe
 
 Certainty is no guarantee that the model is good, either. As the amount of data increases, our model will become increasingly sure of the proportion of water. This sureness happens even if the model is seriously misleading because our estimates are conditional on our model. What is happening is that, given a specific model, we can be sure that plausible values are within a narrow range.
 
-It is important that you supervise and critique your model, and not just assume it worked or is correct because your code did not return an error. Anything that is not included in our model might not affect our inference directly, but might affect it indirectly because of that unmodeled dependence. For example, we currently are assuming that the order the data was collected in doesn't matter (*exchangeable*), but what if the order of the observations actually did matter? Check the model's inferences in light of aspects of the data that you know but the model doesn't know about. This part of data analysis is an inherently creative endeavor that is up to you (the analyst) and your scientific community. Robots can't do this step for you.
+It is important that you supervise and critique your model, and not assume it worked or is correct because your code did not return an error. Anything that is not included in our model might not affect our inference directly, but might affect it indirectly because of that unmodeled dependence. For example, we currently are assuming that the order the data was collected in doesn't matter (*exchangeable*), but what if the order of the observations actually did matter? Check the model's inferences in light of aspects of the data that you know but the model doesn't know about. This part of data analysis is an inherently creative endeavor that is up to you (the analyst) and your scientific community. Robots can't do this step for you.
 
 The goal when evaluating your model is not to test the truth of the model's assumptions. Our model's assumptions can never be exactly right as they are not the true data generating process. Failure to prove that our model false is a failure of our imagination, not a success of our model. Additionally, a model doesn't have to be true in order to produce precise and useful inference. Models are information processing machines, and there are parts of information that cannot be easily represented by framing our problem in terms of the truth of our assumptions.
 
@@ -328,7 +328,7 @@ tibble(p_grid = seq(from = 0, to = 1, length.out = 20), # define grid
 
 ### Markov chain Monte Carlo
 
-For many models, grid approximation or quadratic approximation just aren't good enough. Grid approximation takes too long as your model gets bigger. Quadratic approximation chokes on complex models. Instead, we end up having to use a technique like Markov chain Monte Carlo (MCMC).
+For many models, grid approximation or quadratic approximation aren't good enough. Grid approximation takes too long as your model gets bigger. Quadratic approximation chokes on complex models. Instead, we end up having to use a technique like Markov chain Monte Carlo (MCMC).
 
 Unlike grid approximation, where we computed the posterior distribution directly, MCMC techniques merely draw samples from the posterior. You end up with a collection of parameter values, where the frequencies of those values correspond to the posterior plausibilities.
 
@@ -476,12 +476,12 @@ globe_brms %>%
  
 Why are the PI and HPDI not equal?
 
-If the choice of interval makes a big difference in your summary, then you probably shouldn't be using intervals to summarize the posterior! The entire distribution of samples is our actual estimate, these summaries are just there to help digest this wealth of information. Do not only work with simplified versions of our posterior estimates!
+If the choice of interval makes a big difference in your summary, then you probably shouldn't be using intervals to summarize the posterior! The entire distribution of samples is our actual estimate, these summaries are there to help digest this wealth of information. Do not only work with simplified versions of our posterior estimates!
 
 
 ### Point estimates
 
-Sometimes we only want a single point from the distribution. Given an entire posterior distribution, what value should we report? Mechanically, this task is simple -- pick a summary (e.g. mean) and go. Conceptually, however, this task is actually quite complex. The Bayesian parameter estimate is the entire posterior distribution, and not just a single number. In most cases, it is unnecessary to choose a single point estimate. It is always better to report *more* than necessary about the posterior distribution than not enough.
+Sometimes we only want a single point from the distribution. Given an entire posterior distribution, what value should we report? Mechanically, this task is simple -- pick a summary (e.g. mean) and go. Conceptually, however, this task is actually quite complex. The Bayesian parameter estimate is the entire posterior distribution, and not a single number. In most cases, it is unnecessary to choose a single point estimate. It is always better to report *more* than necessary about the posterior distribution than not enough.
 
 The three most common point estimates are the mean, median, and mode -- you're probably already familiar with all three of them. A principled way of choosing among these three estimates is considering as products of different *loss functions*. Loss functions are an advanced topic we will not cover today but I encourage you to read up on; here's a good [blog entry by John Myles White](http://www.johnmyleswhite.com/notebook/2013/03/22/modes-medians-and-means-an-unifying-perspective/) on the subject.
 

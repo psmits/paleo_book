@@ -33,7 +33,7 @@ A lot of the material and advice for interpreting logistic regression coefficien
 
 ## Introduction
 
-Not all response variables we might be interested in are continuous variables between $-\infty$ and $\infty$. In some cases our variable of interest might be binary (0/1). For example, we might be interested in if a snail shell coils to the left or right, or if a species survives from one time to the next. The [globe tossing exercise from an earlier lesson](#globe-example) is an example of this type of data. But instead of just asking for the probability of an outcome, we'll now lean how to incorporate predictor variables into that type of model.
+Not all response variables we might be interested in are continuous variables between $-\infty$ and $\infty$. In some cases our variable of interest might be binary (0/1). For example, we might be interested in if a snail shell coils to the left or right, or if a species survives from one time to the next. The [globe tossing exercise from an earlier lesson](#globe-example) is an example of this type of data. But instead of asking for the probability of an outcome, we'll now lean how to incorporate predictor variables into that type of model.
 
 Logistic regression is the standard way to model a binary response variable. We will be modeling the response variable, $y$, as following a Bernoulli distribution. The Bernoulli distribution has a single parameter, $\theta$, which is the probability of a "positive" outcome i.e. a 1 and not a 0. The Bernoulli distribution is related to the Binomial distribution introduced with the [globe tossing exercise](#globe-example), but describes the probability of individual events as opposed to the probability of those "positive" events in aggregate. 
 
@@ -88,7 +88,7 @@ To get to that point, we will first explore the foram measurement data. Once we 
 
 The data we will be focusing on is from a paper by [Pearson and Ezard](https://bioone.org/journals/paleobiology/volume-40/issue-1/13004/Evolution-and-speciation-in-the-Eocene-planktonic-foraminifer-Turborotalia/10.1666/13004.full) that explored changes to morphology associated with speciation. In the original study, the morphological measures were analyzed as time series in an effort to characterize their evolution. For this lesson, we are instead tackling a much simpler question: do measures of foram size and shape predict if an individual is dextrally coiled or not? Are differently coiled forams simple mirror images or is there something more going on? 
 
-We're going to be ignoring the time structure of the data for now. We'll cover time series models in a later lesson. For now, we are just interested how size and shape measures predict coiling with the assumption that this relationship is constant over time. 
+We're going to be ignoring the time structure of the data for now. We'll cover time series models in a later lesson. For now, we are interested how size and shape measures predict coiling with the assumption that this relationship is constant over time. 
 
 Let's bring the data into the memory and start playing around with it. The Peason and Ezard paper describes a few derived measures, like compression ratio, that we can quickly recalculate.
 
@@ -203,7 +203,7 @@ $$
 Because the Bernoulli distribution only has a single parameter, we do not need to define a parameter for a scale term (e.g. standard deviation) like in a linear regression model.
 
 
-This is our first time exploring and writing out a logistic regression, so we should be careful to fully understand the implications of our priors. As discussed previously, the **prior predictive distribution** is just this -- the distribution of expected outcomes given just our prior information. 
+This is our first time exploring and writing out a logistic regression, so we should be careful to fully understand the implications of our priors. As discussed previously, the **prior predictive distribution** is this -- the distribution of expected outcomes given our prior information. 
 
 There are many ways we can go about simulating responses from the prior predictive distribution of our model. Two common ways are writing out an R function to simulate response data, and using the `brm()` function with the `sample_prior` argument given "only".
 
@@ -260,7 +260,7 @@ coil_prior_prob <- function(x) {
 
 ```
 
-Now that we have a function to simulate prior predictive draws from data, let's apply it to our foram data. This means yielding a prior design matrix from `foram_ready` with an intercept column and all. We can just stick that matrix right into our function and get a single simulate dataset from the prior predictive distribution. Let's look at the distribution of 0s and 1s from the empirical data and compare it to the distribution from four simulated data sets 
+Now that we have a function to simulate prior predictive draws from data, let's apply it to our foram data. This means yielding a prior design matrix from `foram_ready` with an intercept column and all. We can stick that matrix right into our function and get a single simulate dataset from the prior predictive distribution. Let's look at the distribution of 0s and 1s from the empirical data and compare it to the distribution from four simulated data sets 
 
 ```{r hand_sim}
 
@@ -505,9 +505,9 @@ ggplot(line_data) +
 
 Now that we've fit out model and taken a look at our parameter estimates, we should really investigate if our model is an adequate description of our data. How confident can we be in interpreting the results of our analysis?
 
-For our linear regression models, we could just compare properties like the density or median of the response to a distribution of those measures from our poseterior predictive distribution. With binary data it isn't that easy. Instead, we have to explore other ways of summarizing our model's adequacy.
+For our linear regression models, we could compare properties like the density or median of the response to a distribution of those measures from our poseterior predictive distribution. With binary data it isn't that easy. Instead, we have to explore other ways of summarizing our model's adequacy.
 
-A very simple measure of performance with binary data is to measure our model's **accuracy** -- does our model predict a 1 when our data is a 1? A 0 when the data is a 0? While other metrics exist (like [ROC/AUC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic), we're just going to cover accuracy in this lesson.
+A very simple measure of performance with binary data is to measure our model's **accuracy** -- does our model predict a 1 when our data is a 1? A 0 when the data is a 0? While other metrics exist (like [ROC/AUC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic), we're going to cover accuracy in this lesson.
 
 We can plot the (mis)matches like we did when we explored our prior predictive distribution and create a visual confusion matrix.
 
@@ -526,7 +526,7 @@ foram_ready %>%
 
 ```
 
-We can also just calculate accuracy as the percent of predictions that are correct for a single posterior predictive draw, repeat this 100s of times, and present a posterior distribution of accuracies.
+We can also calculate accuracy as the percent of predictions that are correct for a single posterior predictive draw, repeat this 100s of times, and present a posterior distribution of accuracies.
 
 ```{r side_model_accuracy}
 
