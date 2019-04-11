@@ -32,16 +32,13 @@ This lesson is a major conceptual leap forward in our studies. I highly recommen
 ## Introduction 
 
 
-When collecting or analyzing data, we frequently encounter groupings or nested structures underpinning that data. For example, we might have multiple measurements from the same individual or species, species co-occurrences across multiple temporal windows, 
+When collecting or analyzing data, we frequently encounter groupings or nested structures underpinning that data. For example, we might have multiple measurements from the same individual or species, species co-occurrences across multiple temporal windows or localities, or 
+
+In our previous lessons we've covered how to include [categorical predictors](#dummy) in our regression models as a way to encode some of this known structure in our data. By relying on dummy variables, however, we are forcing our model to consider the different states independently because their parameters are statistically independent even though we know of the logical relationship between them. The reality of this is that we are ignoring information that could be relevant to our understanding. But we want models that use all of this information, like that omnivory and herbivory are types of trophic levels and not completely independent. 
+
+We want inferences about one state to possibly inform inferences about another. This does not mean treating all states as identical. Instead we want to understand the distribution of states as well as those individual states. For example, this would mean the estimating the average and spread among the trophic levels as well as the individual values for each trophic level. Simultaneously inference means we can transfer information between states and improve our inferences.
 
 
-
-Grouped or nested data.
-
-
-
-
-In our previous lessons we've covered how to include [categorical predictors](#dummy) in our regression models. Dummy variables derived multistate categorical variables force our model to consider the different states independently -- the logically related parameters are statistically independent. But we want models that use all of the information given, like that certain states are all from that category. And that inferences about one state can inform inferences about another. This does not mean treating all states as identical. Instead we want to understand the average state and the population of states. Simultaneously inference means we can transfer information between states and improve our inferences.
 
 
 
