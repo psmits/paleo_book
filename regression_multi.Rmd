@@ -1,4 +1,4 @@
-# Multiple predictors in linear regression
+# Multiple predictors in linear regression {#reg-multi}
 
 ## Objectives
 
