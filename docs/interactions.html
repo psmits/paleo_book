@@ -25,14 +25,14 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-09">
+<meta name="date" content="2019-04-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="multiple-predictors-in-linear-regression.html">
+<link rel="prev" href="reg-multi.html">
 <link rel="next" href="logistic-regression.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -124,7 +124,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#globe-example"><i class="fa fa-check"></i><b>2.4</b> Building a model</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#a-data-story"><i class="fa fa-check"></i><b>2.4.1</b> A data story</a></li>
-<li class="chapter" data-level="2.4.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#bayesian-updating"><i class="fa fa-check"></i><b>2.4.2</b> Bayesian updating</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#bayes-updating-ex"><i class="fa fa-check"></i><b>2.4.2</b> Bayesian updating</a></li>
 <li class="chapter" data-level="2.4.3" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#evaluate"><i class="fa fa-check"></i><b>2.4.3</b> Evaluate</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#terms-and-theory"><i class="fa fa-check"></i><b>2.5</b> Terms and theory</a></li>
@@ -169,18 +169,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.5</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors in linear regression</a><ul>
-<li class="chapter" data-level="5.1" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
-<li class="chapter" data-level="5.2" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#reading-3"><i class="fa fa-check"></i><b>5.2</b> Reading</a></li>
-<li class="chapter" data-level="5.3" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#more-than-one-predictor"><i class="fa fa-check"></i><b>5.3</b> More than one predictor</a><ul>
-<li class="chapter" data-level="5.3.1" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#dummy"><i class="fa fa-check"></i><b>5.3.1</b> Categorical predictor</a></li>
+<li class="chapter" data-level="5" data-path="reg-multi.html"><a href="reg-multi.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors in linear regression</a><ul>
+<li class="chapter" data-level="5.1" data-path="reg-multi.html"><a href="reg-multi.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
+<li class="chapter" data-level="5.2" data-path="reg-multi.html"><a href="reg-multi.html#reading-3"><i class="fa fa-check"></i><b>5.2</b> Reading</a></li>
+<li class="chapter" data-level="5.3" data-path="reg-multi.html"><a href="reg-multi.html#more-than-one-predictor"><i class="fa fa-check"></i><b>5.3</b> More than one predictor</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="reg-multi.html"><a href="reg-multi.html#dummy"><i class="fa fa-check"></i><b>5.3.1</b> Categorical predictor</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#defining-our-model"><i class="fa fa-check"></i><b>5.4</b> Defining our model</a></li>
-<li class="chapter" data-level="5.5" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.5</b> Fitting model in <code>brms</code></a></li>
-<li class="chapter" data-level="5.6" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#aside-standardizing"><i class="fa fa-check"></i><b>5.6</b> Aside: Standardizing</a></li>
-<li class="chapter" data-level="5.7" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#multi-ppc"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
-<li class="chapter" data-level="5.8" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
-<li class="chapter" data-level="5.9" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="reg-multi.html"><a href="reg-multi.html#defining-our-model"><i class="fa fa-check"></i><b>5.4</b> Defining our model</a></li>
+<li class="chapter" data-level="5.5" data-path="reg-multi.html"><a href="reg-multi.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.5</b> Fitting model in <code>brms</code></a></li>
+<li class="chapter" data-level="5.6" data-path="reg-multi.html"><a href="reg-multi.html#aside-standardizing"><i class="fa fa-check"></i><b>5.6</b> Aside: Standardizing</a></li>
+<li class="chapter" data-level="5.7" data-path="reg-multi.html"><a href="reg-multi.html#multi-ppc"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
+<li class="chapter" data-level="5.8" data-path="reg-multi.html"><a href="reg-multi.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
+<li class="chapter" data-level="5.9" data-path="reg-multi.html"><a href="reg-multi.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>6</b> Interactions</a><ul>
 <li class="chapter" data-level="6.1" data-path="interactions.html"><a href="interactions.html#objectives-5"><i class="fa fa-check"></i><b>6.1</b> Objectives</a></li>
@@ -213,12 +213,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.1" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
 <li class="chapter" data-level="8.2" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#poisson-distribution"><i class="fa fa-check"></i><b>8.2</b> Poisson distribution</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="varying-intercepts.html"><a href="varying-intercepts.html"><i class="fa fa-check"></i><b>9</b> Varying-intercept(s)</a><ul>
-<li class="chapter" data-level="9.1" data-path="varying-intercepts.html"><a href="varying-intercepts.html#objectives-7"><i class="fa fa-check"></i><b>9.1</b> Objectives</a></li>
-<li class="chapter" data-level="9.2" data-path="varying-intercepts.html"><a href="varying-intercepts.html#reading-6"><i class="fa fa-check"></i><b>9.2</b> Reading</a></li>
+<li class="chapter" data-level="9" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html"><i class="fa fa-check"></i><b>9</b> Varying-intercept models</a><ul>
+<li class="chapter" data-level="9.1" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#objectives-7"><i class="fa fa-check"></i><b>9.1</b> Objectives</a></li>
+<li class="chapter" data-level="9.2" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#reading-6"><i class="fa fa-check"></i><b>9.2</b> Reading</a></li>
+<li class="chapter" data-level="9.3" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#introduction-3"><i class="fa fa-check"></i><b>9.3</b> Introduction</a></li>
+<li class="chapter" data-level="9.4" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#dummy-example"><i class="fa fa-check"></i><b>9.4</b> A basic model with categorical predictor</a></li>
+<li class="chapter" data-level="9.5" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#notation-for-multilevel-models"><i class="fa fa-check"></i><b>9.5</b> Notation for multilevel models</a></li>
+<li class="chapter" data-level="9.6" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#from-categorical-predictors-to-varying-intercept"><i class="fa fa-check"></i><b>9.6</b> From categorical predictors to varying-intercept</a></li>
+<li class="chapter" data-level="9.7" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#fitting-a-multilevel-model"><i class="fa fa-check"></i><b>9.7</b> Fitting a multilevel model</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="varying-slopes.html"><a href="varying-slopes.html"><i class="fa fa-check"></i><b>10</b> Varying slope(s)</a></li>
-<li class="chapter" data-level="11" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>11</b> Varying slopes and intercepts</a></li>
+<li class="chapter" data-level="10" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>10</b> Varying slopes and intercepts</a></li>
+<li class="chapter" data-level="11" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>11</b> Model Comparison</a><ul>
+<li class="chapter" data-level="11.1" data-path="model-comparison.html"><a href="model-comparison.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>11.1</b> Bias-Variance Trade-off</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="model-comparison.html"><a href="model-comparison.html#rmse"><i class="fa fa-check"></i><b>11.1.1</b> RMSE</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="model-comparison.html"><a href="model-comparison.html#regularization"><i class="fa fa-check"></i><b>11.2</b> Regularization</a></li>
+<li class="chapter" data-level="11.3" data-path="model-comparison.html"><a href="model-comparison.html#information-criteria-and-waic"><i class="fa fa-check"></i><b>11.3</b> Information Criteria and WAIC</a></li>
+<li class="chapter" data-level="11.4" data-path="model-comparison.html"><a href="model-comparison.html#looic"><i class="fa fa-check"></i><b>11.4</b> LOO(IC)</a></li>
+</ul></li>
 <li class="chapter" data-level="12" data-path="time-series.html"><a href="time-series.html"><i class="fa fa-check"></i><b>12</b> Time Series</a><ul>
 <li class="chapter" data-level="12.1" data-path="time-series.html"><a href="time-series.html#objectives-8"><i class="fa fa-check"></i><b>12.1</b> Objectives</a></li>
 </ul></li>
@@ -278,7 +290,7 @@ Proudly published with bookdown</a></li>
 </div>
 <div id="inter-initial" class="section level2">
 <h2><span class="header-section-number">6.4</span> Data and inital model</h2>
-<p>This lesson continues are use of the PanTHERIA dataset. We’ve already built a multiple/multivariable regression model of population density as predicted by average species body mass and trophic level. While the <a href="multiple-predictors-in-linear-regression.html#multi-ppc">model from our previous lesson was an improvement</a> over <a href="reg-continue.html#continue-ppc">simpler models using only body mass</a> as an individual predictor of population density, there was still room for improvement – especially when describing variation among omnivorous species. In this exercise we’re going to cover specify how a linear interaction between body size and trophic level affects (mean) population density.</p>
+<p>This lesson continues are use of the PanTHERIA dataset. We’ve already built a multiple/multivariable regression model of population density as predicted by average species body mass and trophic level. While the <a href="reg-multi.html#multi-ppc">model from our previous lesson was an improvement</a> over <a href="reg-continue.html#continue-ppc">simpler models using only body mass</a> as an individual predictor of population density, there was still room for improvement – especially when describing variation among omnivorous species. In this exercise we’re going to cover specify how a linear interaction between body size and trophic level affects (mean) population density.</p>
 <p>First, though, we need to import and clean up our data. We can also prepare our predictors by rescaling our continuous predictor body size and re-level trophic level at the same time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="kw">here</span>(<span class="st">&#39;data&#39;</span>, <span class="st">&#39;PanTHERIA_1-0_WR05_Aug2008.txt&#39;</span>), 
                       <span class="dt">na =</span> <span class="st">&#39;-999.00&#39;</span>) <span class="op">%&gt;%</span>
@@ -318,7 +330,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \sigma &amp;\sim \text{Cauchy}^{+}(0, 5) \\
 \end{align}
 \]</span></p>
-<p>And, of course, we can fit this model using <code>brm()</code> just like we did in the last lesson. This initial model will provide a useful comparison with the new model we will develop in this lesson.</p>
+<p>And, of course, we can fit this model using <code>brm()</code> like we did in the last lesson. This initial model will provide a useful comparison with the new model we will develop in this lesson.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
@@ -336,14 +348,14 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 </div>
 <div id="how-to-specify-an-interaction" class="section level2">
 <h2><span class="header-section-number">6.5</span> How to specify an interaction</h2>
-<p>Specifying an interaction term is extremely easy. Let’s explore this using a very basic model where the mean of <span class="math inline">\(y\)</span> is predicted by two variables, one continuous <span class="math inline">\(c\)</span> and one binary <span class="math inline">\(b\)</span>. We can just focus on the likelhood part of the model.</p>
+<p>Specifying an interaction term is extremely easy. Let’s explore this using a very basic model where the mean of <span class="math inline">\(y\)</span> is predicted by two variables, one continuous <span class="math inline">\(c\)</span> and one binary <span class="math inline">\(b\)</span>. We can focus on the likelhood part of the model.</p>
 <p><span class="math display">\[
 \begin{align}
 y &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \alpha + \beta_{c} c_{i} + \beta_{b} b_{i} 
 \end{align}
 \]</span></p>
-<p>In this case, we want to specify that the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> also depends on <span class="math inline">\(b\)</span>. The relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> is measured by the coefficient <span class="math inline">\(\beta_{c}\)</span>. Following the same strategy by which we replace parameters like <span class="math inline">\(\mu\)</span> with linear models, the most straightforward way to make <span class="math inline">\(\beta_{c}\)</span> depend on <span class="math inline">\(b\)</span> is to just define the coefficient <span class="math inline">\(\beta_{c}\)</span> as a linear model itself with <span class="math inline">\(b\)</span> as a predictor!</p>
+<p>In this case, we want to specify that the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> also depends on <span class="math inline">\(b\)</span>. The relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(c\)</span> is measured by the coefficient <span class="math inline">\(\beta_{c}\)</span>. Following the same strategy by which we replace parameters like <span class="math inline">\(\mu\)</span> with linear models, the most straightforward way to make <span class="math inline">\(\beta_{c}\)</span> depend on <span class="math inline">\(b\)</span> is to define the coefficient <span class="math inline">\(\beta_{c}\)</span> as a linear model itself with <span class="math inline">\(b\)</span> as a predictor!</p>
 <p><span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
@@ -365,7 +377,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 &amp;= \alpha + \beta_{c} c_{i} + (\beta_{b} + \beta_{cb} c_{i}) b_{i} \\
 \end{align}
 \]</span></p>
-<p>Not only are interactions symmetrical, we could just have easily defined <span class="math inline">\(\gamma\)</span> to be the slope of <span class="math inline">\(b\)</span> and a linear function of <span class="math inline">\(c\)</span>.</p>
+<p>Not only are interactions symmetrical, we could have defined <span class="math inline">\(\gamma\)</span> to be the slope of <span class="math inline">\(b\)</span> and a linear function of <span class="math inline">\(c\)</span>.</p>
 <p>One of the intermediate steps of this little algebra exercise is actually the standard way of expressing an interaction between predictors: <span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
@@ -377,13 +389,13 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 <li>it highlights the symmetry of the interaction,</li>
 <li>this is how interactions are expressed in R.</li>
 </ol>
-<p>This symmetry is important because if either <span class="math inline">\(c\)</span> or <span class="math inline">\(b\)</span> change, this will affect of the other on mean <span class="math inline">\(y\)</span> also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especially just from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.</p>
+<p>This symmetry is important because if either <span class="math inline">\(c\)</span> or <span class="math inline">\(b\)</span> change, this will affect of the other on mean <span class="math inline">\(y\)</span> also changes. In contrast to our previous linear models, we no longer can manipulate our predictors independently. This symmetry is the reason interaction effects can be difficult to interpret, especially from tables of parameter estimates. As we are going to do shortly, interpreting interactions almost always requires plotting out results.</p>
 </div>
 </div>
 <div id="fitting-a-model-with-an-interaction" class="section level2">
 <h2><span class="header-section-number">6.6</span> Fitting a model with an interaction</h2>
 <p>We’ve spent a lot of time describing an interaction effect and how we can increase the conditionality of our parameters, but we’ve yet to actually look at parameter estimates or discuss how to actually interpret interaction effects.</p>
-<p>Armed with what we’ve just covered, we can quickly update our <a href="#inter_initial">initial model</a> by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model’s intercept and the regression coefficients describing the difference in mean <span class="math inline">\(y\)</span> between the default state and that predictors state. We’ve releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.</p>
+<p>Armed with what we’ve covered, we can quickly update our <a href="#inter_initial">initial model</a> by adding in the linear interaction between body mass and trophic level. Remember, while trophic level begins as a multi-state factor, it is translated via dummy coding into multiple binary predictors with one of the states acting as the model’s intercept and the regression coefficients describing the difference in mean <span class="math inline">\(y\)</span> between the default state and that predictors state. We’ve releveled trophic level so that the default state is omnivory and there are two binary predictors: herbivory and carnivory.</p>
 <p><span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
@@ -403,7 +415,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 
 density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_stan <span class="op">*</span><span class="st"> </span>trophic_level</code></pre></div>
 <p>In R formula syntax <code>:</code> represents the interaction between the relevant terms. While <code>*</code> also indicates an interaction, it also indicates the individual effects of the relevant forms because mass_stan * trophic_level expands to mass_stan + trophic_level + mass_stan:trophic_level. <code>*</code> is the compact way of indicating an interaction term.</p>
-<p>Of course, you can also calculate the interaction between <code>mass_stan</code> and <code>trophic_level</code> by hand – it is just multiplication after all. The hurdle here is that you’ll have to first do the dummy coding for <code>trophic_level</code> and then calculate the interaction for <code>mass_stan</code> and <code>trophic_levelheribivore</code> and the interaction with <code>trophic_levelcanivore</code>. I’ll leave this activity for interested parties who want to explore than on their own.</p>
+<p>Of course, you can also calculate the interaction between <code>mass_stan</code> and <code>trophic_level</code> by hand – it is multiplication after all. The hurdle here is that you’ll have to first do the dummy coding for <code>trophic_level</code> and then calculate the interaction for <code>mass_stan</code> and <code>trophic_levelheribivore</code> and the interaction with <code>trophic_levelcanivore</code>. I’ll leave this activity for interested parties who want to explore than on their own.</p>
 <p>Now that we know how to specify an interaction using R formula syntax, we can implement and fit our model to the PanTHERIA dataset using <code>brm()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">2</span> &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
@@ -431,23 +443,23 @@ density_log <span class="op">~</span><span class="st"> </span><span class="dv">1
 ## 
 ## Population-Level Effects: 
 ##                                  Estimate Est.Error l-95% CI u-95% CI
-## Intercept                            3.20      0.11     2.99     3.40
-## mass_stan                           -4.73      0.22    -5.16    -4.31
-## trophic_levelherbivore               1.22      0.15     0.93     1.52
-## trophic_levelcarnivore              -1.38      0.20    -1.79    -0.98
-## mass_stan:trophic_levelherbivore    -0.15      0.30    -0.72     0.45
-## mass_stan:trophic_levelcarnivore    -1.17      0.40    -1.97    -0.41
+## Intercept                            3.20      0.11     3.00     3.40
+## mass_stan                           -4.74      0.22    -5.15    -4.33
+## trophic_levelherbivore               1.22      0.15     0.92     1.52
+## trophic_levelcarnivore              -1.38      0.21    -1.79    -0.96
+## mass_stan:trophic_levelherbivore    -0.14      0.30    -0.74     0.47
+## mass_stan:trophic_levelcarnivore    -1.16      0.40    -1.95    -0.36
 ##                                  Eff.Sample Rhat
-## Intercept                              2950 1.00
-## mass_stan                              2152 1.00
-## trophic_levelherbivore                 3944 1.00
-## trophic_levelcarnivore                 4006 1.00
-## mass_stan:trophic_levelherbivore       2620 1.00
-## mass_stan:trophic_levelcarnivore       3069 1.00
+## Intercept                              3700 1.00
+## mass_stan                              2433 1.00
+## trophic_levelherbivore                 4107 1.00
+## trophic_levelcarnivore                 4476 1.00
+## mass_stan:trophic_levelherbivore       2870 1.00
+## mass_stan:trophic_levelcarnivore       3461 1.00
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma     1.79      0.05     1.70     1.89       4821 1.00
+## sigma     1.79      0.05     1.70     1.89       4825 1.00
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -456,22 +468,22 @@ density_log <span class="op">~</span><span class="st"> </span><span class="dv">1
 <div id="interpreting-our-model" class="section level2">
 <h2><span class="header-section-number">6.7</span> Interpreting our model</h2>
 <p>But how do we interpret these parameters?</p>
-<p><strong>Statistical Rethinking</strong> outlines two reasons why just looking at a table of posterior estimates is a bad idea.</p>
+<p><strong>Statistical Rethinking</strong> outlines two reasons why looking at a table of posterior estimates is a bad idea.</p>
 <ol style="list-style-type: decimal">
 <li>Adding an interaction to a model changes the meaning of the parameters. The “main effect” coefficient of the predictor in an interaction model no longer means the same thing as the variable with the same name in a model without an interaction. Their posterior distributions are not directly comparable.</li>
 </ol>
-<p>Interactions are tricky because this extra conditioning means that our normal interpretation of regression coefficients (expected change in <span class="math inline">\(y\)</span> per unit change in that predictor, holding all others constant) is no longer valid. If we manipulate the value of one predictor in an interaction, multiple parameters are involved and not just that single coefficient.</p>
+<p>Interactions are tricky because this extra conditioning means that our normal interpretation of regression coefficients (expected change in <span class="math inline">\(y\)</span> per unit change in that predictor, holding all others constant) is no longer valid. If we manipulate the value of one predictor in an interaction, multiple parameters are involved and not that single coefficient.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>Tables make it difficult to incorporate uncertainty into our thinking – we see a series individual numbers instead of the entire spread of numbers. This difficulty is exacerbated by the covariance between parameters being absent from our summary table, and when the effect of one predictor depends on multiple (2+) other predictors.</li>
 </ol>
-<p>Interpreting model with an interaction requires that we add/multiple multiple parameters together. Each of those parameters have posterior distributions. We aren’t just adding mean estimates together, we’re combining multiple posterior distributions to yield our final posterior distribution of effects.</p>
+<p>Interpreting model with an interaction requires that we add/multiple multiple parameters together. Each of those parameters have posterior distributions. We aren’t adding mean estimates together, we’re combining multiple posterior distributions to yield our final posterior distribution of effects.</p>
 <p>Recall our demo model: <span class="math display">\[
 \begin{align}
 y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \mu_{i} &amp;= \alpha + \gamma_{c} c_{i} + \beta_{b} b_{i} \\
 \gamma_{i} &amp;= \beta_{c} + \beta_{cb} b_{i}. \\
 \end{align}
-\]</span> <span class="math inline">\(\gamma\)</span> depends on <span class="math inline">\(\beta_{c}\)</span> and <span class="math inline">\(\beta_{cb}\)</span>. Each of those parameters would have a posterior distribution. This means that <span class="math inline">\(\gamma\)</span> has a posterior distribution. When we just look at a table of parameter estimates, it is hard to readily incorporate all of our uncertainty into our interpretations.</p>
+\]</span> <span class="math inline">\(\gamma\)</span> depends on <span class="math inline">\(\beta_{c}\)</span> and <span class="math inline">\(\beta_{cb}\)</span>. Each of those parameters would have a posterior distribution. This means that <span class="math inline">\(\gamma\)</span> has a posterior distribution. When we look at a table of parameter estimates, it is hard to readily incorporate all of our uncertainty into our interpretations.</p>
 <p>The easiest way around these difficulties is to plot our results and spend time visualizing the effect of the interaction on our estimates of <span class="math inline">\(y\)</span>. We can visualize change across multiple parameters while also including all of our uncertainty around those estimates.</p>
 <p>So let’s do that. Let’s visualize how the effect of <code>mass_stan</code> varies by <code>trophic_level</code> (and vice-versa).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
@@ -488,12 +500,12 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 <span class="st">  </span><span class="ot">NULL</span></code></pre></div>
 <p><img src="paleo_book_files/figure-html/inter_vis-1.png" width="672" /></p>
 <p>The slope of <code>mass_stan</code> on <code>density_log</code> for omnivores is different from the slopes for the other trophic levels! The interaction between <code>mass_stan</code> and <code>trophic_levelomnivore</code> on <code>density_log</code> manifests as a more negative slope when compared to the other <code>trophic_level</code> states. This can also be phrased as that relationship has a greater slope magnitude (higher absolute value).</p>
-<p>Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we’ll notice that the posterior for <code>mass_stan:tophic_levelherbivore</code> is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between <code>mass_stan</code> and <code>trophic_levelomnivore</code>. The extent of this interaction is obvious from the plot we just made. Without making a plot visualizing our model’s results, we are able to go back and actually understand what the table of parameter estimates actually means.</p>
+<p>Also, the slopes for herbivores and carnivores are almost identical. If we look at the table of parameter estimates from our model we’ll notice that the posterior for <code>mass_stan:tophic_levelherbivore</code> is centered near 0. As we noted earlier, when an interaction effect is close to 0, the model simplifies to the non-interactive case. There is however, a non-zero interaction between <code>mass_stan</code> and <code>trophic_levelomnivore</code>. The extent of this interaction is obvious from the plot we made. Without making a plot visualizing our model’s results, we are able to go back and actually understand what the table of parameter estimates actually means.</p>
 </div>
 <div id="have-we-improved-on-our-previous-model" class="section level2">
 <h2><span class="header-section-number">6.8</span> Have we improved on our previous model?</h2>
 <p>Now that we’ve fit our model and taken a quick look, we really should evaluate how well our model represents our data. Additionally, we might be curious if our interaction model is a better model of our data than the model without an interaction effect, and if so by how much.</p>
-<p>We’ve already visualized our models predictions across the range of body sizes and trophic levels, so there is no need to plot that again. Let’s instead just use the posterior predictive checks we’ve <a href="multiple-predictors-in-linear-regression.html#multi-ppc">before</a>.</p>
+<p>We’ve already visualized our models predictions across the range of body sizes and trophic levels, so there is no need to plot that again. Let’s instead use the posterior predictive checks we’ve <a href="reg-multi.html#multi-ppc">before</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">2</span>,
                       <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
@@ -544,7 +556,7 @@ pantheria_summary_ppc <span class="op">%&gt;%</span>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="paleo_book_files/figure-html/inter_median_ppc-1.png" width="672" /></p>
 <p>Visual comparison of these posterior predictive check results to those from our earlier, non-interaction model indicates the possibility that our model is doing a better job at predicting population density values for omnivorous taxa than our previous model while maintaining the high quality of fit to the population densities of the herbivorous and carnivorous observations.</p>
-<p>Visual comparisons can be sometimes unsatisfying when we’re trying to understand how much of an improvement this model is over the previous one. In another lessons we will cover ways compare the relative quality of fit of different models. For now, we are just covering the “how-to” of developing, fitting, and understanding interaction models.</p>
+<p>Visual comparisons can be sometimes unsatisfying when we’re trying to understand how much of an improvement this model is over the previous one. In another lessons we will cover ways compare the relative quality of fit of different models. For now, we are covering the “how-to” of developing, fitting, and understanding interaction models.</p>
 </div>
 <div id="continuouscontinuous-interactions" class="section level2">
 <h2><span class="header-section-number">6.9</span> Continuous–Continuous interactions</h2>
@@ -561,7 +573,7 @@ pantheria_summary_ppc <span class="op">%&gt;%</span>
           </div>
         </div>
       </div>
-<a href="multiple-predictors-in-linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="reg-multi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="logistic-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

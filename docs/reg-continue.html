@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-09">
+<meta name="date" content="2019-04-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="reg-intro.html">
-<link rel="next" href="multiple-predictors-in-linear-regression.html">
+<link rel="next" href="reg-multi.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -124,7 +124,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#globe-example"><i class="fa fa-check"></i><b>2.4</b> Building a model</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#a-data-story"><i class="fa fa-check"></i><b>2.4.1</b> A data story</a></li>
-<li class="chapter" data-level="2.4.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#bayesian-updating"><i class="fa fa-check"></i><b>2.4.2</b> Bayesian updating</a></li>
+<li class="chapter" data-level="2.4.2" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#bayes-updating-ex"><i class="fa fa-check"></i><b>2.4.2</b> Bayesian updating</a></li>
 <li class="chapter" data-level="2.4.3" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#evaluate"><i class="fa fa-check"></i><b>2.4.3</b> Evaluate</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="introduction-to-bayesian-data-analysis.html"><a href="introduction-to-bayesian-data-analysis.html#terms-and-theory"><i class="fa fa-check"></i><b>2.5</b> Terms and theory</a></li>
@@ -169,18 +169,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="reg-continue.html"><a href="reg-continue.html#summary-3"><i class="fa fa-check"></i><b>4.5</b> Summary</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors in linear regression</a><ul>
-<li class="chapter" data-level="5.1" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
-<li class="chapter" data-level="5.2" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#reading-3"><i class="fa fa-check"></i><b>5.2</b> Reading</a></li>
-<li class="chapter" data-level="5.3" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#more-than-one-predictor"><i class="fa fa-check"></i><b>5.3</b> More than one predictor</a><ul>
-<li class="chapter" data-level="5.3.1" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#dummy"><i class="fa fa-check"></i><b>5.3.1</b> Categorical predictor</a></li>
+<li class="chapter" data-level="5" data-path="reg-multi.html"><a href="reg-multi.html"><i class="fa fa-check"></i><b>5</b> Multiple predictors in linear regression</a><ul>
+<li class="chapter" data-level="5.1" data-path="reg-multi.html"><a href="reg-multi.html#objectives-4"><i class="fa fa-check"></i><b>5.1</b> Objectives</a></li>
+<li class="chapter" data-level="5.2" data-path="reg-multi.html"><a href="reg-multi.html#reading-3"><i class="fa fa-check"></i><b>5.2</b> Reading</a></li>
+<li class="chapter" data-level="5.3" data-path="reg-multi.html"><a href="reg-multi.html#more-than-one-predictor"><i class="fa fa-check"></i><b>5.3</b> More than one predictor</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="reg-multi.html"><a href="reg-multi.html#dummy"><i class="fa fa-check"></i><b>5.3.1</b> Categorical predictor</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#defining-our-model"><i class="fa fa-check"></i><b>5.4</b> Defining our model</a></li>
-<li class="chapter" data-level="5.5" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.5</b> Fitting model in <code>brms</code></a></li>
-<li class="chapter" data-level="5.6" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#aside-standardizing"><i class="fa fa-check"></i><b>5.6</b> Aside: Standardizing</a></li>
-<li class="chapter" data-level="5.7" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#multi-ppc"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
-<li class="chapter" data-level="5.8" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
-<li class="chapter" data-level="5.9" data-path="multiple-predictors-in-linear-regression.html"><a href="multiple-predictors-in-linear-regression.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="reg-multi.html"><a href="reg-multi.html#defining-our-model"><i class="fa fa-check"></i><b>5.4</b> Defining our model</a></li>
+<li class="chapter" data-level="5.5" data-path="reg-multi.html"><a href="reg-multi.html#fitting-model-in-brms"><i class="fa fa-check"></i><b>5.5</b> Fitting model in <code>brms</code></a></li>
+<li class="chapter" data-level="5.6" data-path="reg-multi.html"><a href="reg-multi.html#aside-standardizing"><i class="fa fa-check"></i><b>5.6</b> Aside: Standardizing</a></li>
+<li class="chapter" data-level="5.7" data-path="reg-multi.html"><a href="reg-multi.html#multi-ppc"><i class="fa fa-check"></i><b>5.7</b> Checking model fit</a></li>
+<li class="chapter" data-level="5.8" data-path="reg-multi.html"><a href="reg-multi.html#matrix-notation"><i class="fa fa-check"></i><b>5.8</b> Aside: Matrix Notation</a></li>
+<li class="chapter" data-level="5.9" data-path="reg-multi.html"><a href="reg-multi.html#summary-4"><i class="fa fa-check"></i><b>5.9</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>6</b> Interactions</a><ul>
 <li class="chapter" data-level="6.1" data-path="interactions.html"><a href="interactions.html#objectives-5"><i class="fa fa-check"></i><b>6.1</b> Objectives</a></li>
@@ -213,12 +213,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.1" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#outline"><i class="fa fa-check"></i><b>8.1</b> Outline</a></li>
 <li class="chapter" data-level="8.2" data-path="poisson-regression-and-others-glms.html"><a href="poisson-regression-and-others-glms.html#poisson-distribution"><i class="fa fa-check"></i><b>8.2</b> Poisson distribution</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="varying-intercepts.html"><a href="varying-intercepts.html"><i class="fa fa-check"></i><b>9</b> Varying-intercept(s)</a><ul>
-<li class="chapter" data-level="9.1" data-path="varying-intercepts.html"><a href="varying-intercepts.html#objectives-7"><i class="fa fa-check"></i><b>9.1</b> Objectives</a></li>
-<li class="chapter" data-level="9.2" data-path="varying-intercepts.html"><a href="varying-intercepts.html#reading-6"><i class="fa fa-check"></i><b>9.2</b> Reading</a></li>
+<li class="chapter" data-level="9" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html"><i class="fa fa-check"></i><b>9</b> Varying-intercept models</a><ul>
+<li class="chapter" data-level="9.1" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#objectives-7"><i class="fa fa-check"></i><b>9.1</b> Objectives</a></li>
+<li class="chapter" data-level="9.2" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#reading-6"><i class="fa fa-check"></i><b>9.2</b> Reading</a></li>
+<li class="chapter" data-level="9.3" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#introduction-3"><i class="fa fa-check"></i><b>9.3</b> Introduction</a></li>
+<li class="chapter" data-level="9.4" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#dummy-example"><i class="fa fa-check"></i><b>9.4</b> A basic model with categorical predictor</a></li>
+<li class="chapter" data-level="9.5" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#notation-for-multilevel-models"><i class="fa fa-check"></i><b>9.5</b> Notation for multilevel models</a></li>
+<li class="chapter" data-level="9.6" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#from-categorical-predictors-to-varying-intercept"><i class="fa fa-check"></i><b>9.6</b> From categorical predictors to varying-intercept</a></li>
+<li class="chapter" data-level="9.7" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#fitting-a-multilevel-model"><i class="fa fa-check"></i><b>9.7</b> Fitting a multilevel model</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="varying-slopes.html"><a href="varying-slopes.html"><i class="fa fa-check"></i><b>10</b> Varying slope(s)</a></li>
-<li class="chapter" data-level="11" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>11</b> Varying slopes and intercepts</a></li>
+<li class="chapter" data-level="10" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>10</b> Varying slopes and intercepts</a></li>
+<li class="chapter" data-level="11" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>11</b> Model Comparison</a><ul>
+<li class="chapter" data-level="11.1" data-path="model-comparison.html"><a href="model-comparison.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>11.1</b> Bias-Variance Trade-off</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="model-comparison.html"><a href="model-comparison.html#rmse"><i class="fa fa-check"></i><b>11.1.1</b> RMSE</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="model-comparison.html"><a href="model-comparison.html#regularization"><i class="fa fa-check"></i><b>11.2</b> Regularization</a></li>
+<li class="chapter" data-level="11.3" data-path="model-comparison.html"><a href="model-comparison.html#information-criteria-and-waic"><i class="fa fa-check"></i><b>11.3</b> Information Criteria and WAIC</a></li>
+<li class="chapter" data-level="11.4" data-path="model-comparison.html"><a href="model-comparison.html#looic"><i class="fa fa-check"></i><b>11.4</b> LOO(IC)</a></li>
+</ul></li>
 <li class="chapter" data-level="12" data-path="time-series.html"><a href="time-series.html"><i class="fa fa-check"></i><b>12</b> Time Series</a><ul>
 <li class="chapter" data-level="12.1" data-path="time-series.html"><a href="time-series.html#objectives-8"><i class="fa fa-check"></i><b>12.1</b> Objectives</a></li>
 </ul></li>
@@ -339,7 +351,7 @@ y &amp;\sim \text{Normal}(\mu, \sigma) \\
 \end{align}
 \]</span></p>
 <p>Something is new here – what is this Cauchy<span class="math inline">\(^{+}\)</span> distribution? The Cauchy distribution is a thick-tailed probability distribution closely related to the Student’s <em>t</em> distribution. The Cauchy<span class="math inline">\(^{+}\)</span> distribution is the half-Cauchy distribution – this means it is only defined for all positive real values (including 0.) You can think of this distribution as a weakly regularizing prior for standard deviations – most of the mass is concentrated towards low values and 0, but the heavy tail means there is non-zero probably of large values for <span class="math inline">\(\sigma\)</span>. The half-Cauchy distribution has two parameters: location and scale. The location is the middle of the full distribution and the scale describes the “width” of the distribution. For the half-Cauchy distribution the location parameter is mostly a formality as it defines the “backstop” of the distribution – that it is defined for values of 0 or greater, with a default being 0.</p>
-<p>Here is a quick visualization of the Cauchy distribution’s behavior as you vary the scale parameter. The half-Cauchy is just this distribution reflected about the origin.</p>
+<p>Here is a quick visualization of the Cauchy distribution’s behavior as you vary the scale parameter. The half-Cauchy is this distribution reflected about the origin.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">-20</span>, <span class="dt">to =</span> <span class="dv">20</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scale_1 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">1</span>),
          <span class="dt">scale_5 =</span> <span class="kw">dcauchy</span>(x, <span class="dt">location =</span> <span class="dv">0</span>, <span class="dt">scale =</span> <span class="dv">5</span>),
@@ -433,7 +445,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 \end{align}
 \]</span></p>
 <p>Are the choice of priors reasonable? Take a closer look at the prior for <span class="math inline">\(\beta\)</span> – this is a <strong>weakly informative prior</strong>. I’m guessing that the slope is probably negative, but allow for the possibility of a 0 or positive slope – albeit less than that of a negative slope. Is this justified? Think of the physical definition of the variables – what would you guess the relationship between body size and population density to be?</p>
-<p>You might notice this model is functionally identical to the model from our previous lesson where we had only a single binary predictor. The difference is all on the data end, and not the model, as <span class="math inline">\(x\)</span> can take on any value and not just 0 and 1.</p>
+<p>You might notice this model is functionally identical to the model from our previous lesson where we had only a single binary predictor. The difference is all on the data end, and not the model, as <span class="math inline">\(x\)</span> can take on any value and not 0 and 1.</p>
 <p>How do we interpret all of these parameters? Our previous lesson gave us all the information we needed to describe each parameter, but I will reiterate them here because this is really important. If we don’t know what our parameters precisely mean, we cannot interpret them.</p>
 <ul>
 <li><span class="math inline">\(\mu\)</span> average value of <span class="math inline">\(y\)</span></li>
@@ -441,7 +453,7 @@ y_{i} &amp;\sim \text{Normal}(\mu_{i}, \sigma) \\
 <li><span class="math inline">\(\alpha\)</span> intercept, average value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> = 0</li>
 <li><span class="math inline">\(\beta\)</span> slope, expected change in <span class="math inline">\(y\)</span> per unit change in <span class="math inline">\(x\)</span></li>
 </ul>
-<p>Let’s implement this model in <code>brms</code>. Like before, we are going to ignore species that have missing data for either <code>density_log</code> or <code>mass_log</code> – <code>brms()</code> can do this for us automatically, but let’s do it by hand here again. So, our first set is filter down the <code>pantheria</code> tibble again and then fit our new model. We’ve already dropped all observations missing density values, so we just need to do the same for mass values. Conveniently, there is no harm in checking for missing <code>density_log</code> values again so that everything is clear.</p>
+<p>Let’s implement this model in <code>brms</code>. Like before, we are going to ignore species that have missing data for either <code>density_log</code> or <code>mass_log</code> – <code>brms()</code> can do this for us automatically, but let’s do it by hand here again. So, our first set is filter down the <code>pantheria</code> tibble again and then fit our new model. We’ve already dropped all observations missing density values, so we need to do the same for mass values. Conveniently, there is no harm in checking for missing <code>density_log</code> values again so that everything is clear.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span>
 <span class="st">  </span>pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log)
@@ -539,7 +551,7 @@ m_<span class="dv">2</span> &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>()</code></pre></div>
 <p><img src="paleo_book_files/figure-html/predictor_fitted-1.png" width="672" /></p>
-<p>The previous plot only covers our model’s estimates for <em>mean</em> population density but this is not all our model is telling us. As with our earlier posterior predictive comparisons from the intercept-only model, we can use the full posterior predictive distribution to compare our observed data to 100 datasets drawn from the posterior predictive distribution. Because the posterior predictive distribution also takes into account the estimated scale of our data (<span class="math inline">\(\sigma\)</span>) and thus estimates individual values of <span class="math inline">\(y\)</span> and not just the expected value of <span class="math inline">\(y\)</span>, these types of comparisons give us a fuller appreciation of how well our model is or is not representing out data.</p>
+<p>The previous plot only covers our model’s estimates for <em>mean</em> population density but this is not all our model is telling us. As with our earlier posterior predictive comparisons from the intercept-only model, we can use the full posterior predictive distribution to compare our observed data to 100 datasets drawn from the posterior predictive distribution. Because the posterior predictive distribution also takes into account the estimated scale of our data (<span class="math inline">\(\sigma\)</span>) and thus estimates individual values of <span class="math inline">\(y\)</span> and not the expected value of <span class="math inline">\(y\)</span>, these types of comparisons give us a fuller appreciation of how well our model is or is not representing out data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_log_center =</span> <span class="kw">seq_range</span>(mass_log_center, <span class="dt">n =</span> <span class="dv">1000</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> m_<span class="dv">3</span>,
@@ -666,7 +678,7 @@ pan_cut <span class="op">%&gt;%</span>
         </div>
       </div>
 <a href="reg-intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="multiple-predictors-in-linear-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="reg-multi.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

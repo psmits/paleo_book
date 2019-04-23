@@ -53,7 +53,7 @@ Multilevel regression should be the default approach to regression. In the vast 
 
 
 
-## A basic model with categorical predictor
+## A basic model with categorical predictor {#dummy-example}
 
 The basic form of a multilevel model is termed a "varying-intercept" model. This type of model is conceptually very similar to a model with a [multistate categorical predictor](#dummy), but instead of including $k - 1$ binary predcitors in our model, we are defining a model where each state has its own intercept, and those intercepts share a common prior distribution.
 
@@ -128,34 +128,94 @@ These conventions will get us through this lesson. As more complicated situation
 
 ## From categorical predictors to varying-intercept
 
-Now that we've established some ground rules, we can update our previous model with a multistate categorical predictor dummy coded to a varying-intercept model with that categorical predictor as the grouping factor. 
+Now that we've established some ground rules, we can update our [previous model](#dummy-example) with a multistate categorical predictor dummy coded to a varying-intercept model with that categorical predictor as the grouping factor. 
 
 $$
 \begin{align}
 y_{i} &= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 \alpha_{j} &\sim \text{Normal}(\mu_{\alpha}, \sigma_{\alpha}) \\
-\mu_{\alpha} &\sim \text{Normal}(0, 1) \\
-\sigma_{\alpha} &\sim \text{Cauchy}^{+}(5) \\
+\mu_{\alpha} &\sim \text{Normal}(0, 10) \\
 \sigma &\sim \text{Cauchy}^{+}(5) \\
+\sigma_{\alpha} &\sim \text{Normal}^{+}(1) \\
 \end{align}
 $$
 
-Let's parse out this model.
+Let's parse out this model. 
 
-$\alpha_{j[i]}$ is the intercept the group $j$ that species $i$ belongs to. The prior for $\alpha_{j}$ is a Normal distribution that has defined parameters instead of our normally chosen constants. These (hyper)parameters also have their own (hyper)priors.
+$\alpha_{j[i]}$ is the intercept the trophic level $j$ that species $i$ belongs to. The prior for $\alpha_{j}$ is a function of two parameters, $\mu_{\alpha}$ and $\sigma_{\alpha}$. 
+
+Instead of a single prior distribution for each $j$ of $\alpha_{j}$, we're using a distribution of distributions as a prior for all values of $j$. The parameters of the prior then have their own priors, defined as usual. 
+
+This is the "multi" part of multilevel modeling -- we've defined two levels of parameters, each of which is a simple model. We have the observation level (species), where species population densities are modeled as functions of their trophic levels. We also have a group level (trophic level) model, which describes the average population densities of the different trophic as a function of a mean of population density and its spread between the trophic levels. 
+
+When we fit this model to our data, we will simultaneously estimate both levels -- this means that we will learn about the individual trophic levels while we also learn about the population of trophic levels.
+
+
+Multilevel models breakdown the traditional differences between likelihood and prior. In this varying-intercepts model, can you isolate the likelihood? The prior? This flexibility and mutability in meaning and utility can be intimidating, especially if you're coming from a fairly traditional background where parts of your model live in distinct boxes. 
+
+Oh, and so you know, the parameters of the prior can be referred to as *hyperparameters*, so their priors can also be referred to as hyperpriors.
 
 
 
+## Fitting a multilevel model
 
-```{r multilevel_example}
-# do i use live data or do i do this by simulation?
+So let's fit two models -- the model with trophic level dummy coded, and the model with trophic level as a varying-intercept. We can then compare posterior parameter estimates to see if anything has changed. 
 
+```{r dummy_example, cache = TRUE, message = FALSE, results = 'hide'}
+
+dummy_fit <- 
+  pantheria %>%
+  brm(data = .,
+      family = gaussian(),
+      formula = bf(density_log ~ 1 + trophic_level),
+      prior = c(prior(normal(0, 10), class = Intercept),
+                prior(normal(0, 5), class = b),
+                prior(cauchy(0, 5), class = sigma)),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0)
 
 ```
 
 
+```{r multilevel_example}
+
+multilevel_fit <- 
+  pantheria %>%
+  brm(data = .,
+      family = gaussian(),
+      formula = bf(density_log ~ 1 + (1 | trophic_level)),
+      prior = c(prior(normal(0, 10), class = Intercept),
+                prior(cauchy(0, 5), class = sigma),
+                prior(normal(0, 1), class = sd, group = trophic_level)),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0)
+
+```
+
+With so few trophic levels, we have to use a more informative prior than previously. 
+
+A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is probably overkill to use a multilevel model instead of dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?
+
+When you have very few categories in your grouping factor, your results will be very sensitive to your choice of prior. Again, if you have 3 data points, it is going to be very hard to get precise estimates -- you're mostly going to get a result very similar to your prior. We can see this in one of [our first examples of Bayesian updating -- as more data is added, our estimates become more precise](#bayes-updating-ex).
+
+
+
+
+
+
+
 
 A parameter for each state as well as a mean and sd for the population. Every observation updates all of these parameters. If the population is highly variable, then the prior is flat and uninformative, which means that individual states have very little to do with each other. if the population contains little variation, then the prior is narrow and highly informative -- an observation about 1 state will have a big impact on the estimates of of another state.
+
+
+
+
 
 
 

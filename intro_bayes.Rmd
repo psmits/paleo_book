@@ -144,7 +144,7 @@ To get the logic machinery working, we need to make some assumptions. These assu
 How did the data come to be? A data story is a description of the aspects of the reality underlying our data, including the sampling process. This story should be sufficient to specifying an algorithm to simulate new data. Write out the data story for the globe tossing activity.
 
 
-### Bayesian updating
+### Bayesian updating {#bayes-updating-ex}
 
 A Bayesian model begins with one set of plausibilities assigned to each possible result: the prior plausibilities. These values are updated in light of data to produce our posterior plausibilities. This process is called *Bayesian updating*.
 

@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>8 Poisson regression and others GLMs | Analytical Paleobiology</title>
+  <title>11 Model Comparison | Analytical Paleobiology</title>
   <meta name="description" content="An informal course on analytical paleobiology">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="8 Poisson regression and others GLMs | Analytical Paleobiology" />
+  <meta property="og:title" content="11 Model Comparison | Analytical Paleobiology" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="psmits/paleo_book" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8 Poisson regression and others GLMs | Analytical Paleobiology" />
+  <meta name="twitter:title" content="11 Model Comparison | Analytical Paleobiology" />
   <meta name="twitter:site" content="@PeterDSmits" />
   <meta name="twitter:description" content="An informal course on analytical paleobiology" />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="logistic-regression.html">
-<link rel="next" href="varying-intercept-models.html">
+<link rel="prev" href="varying-slopes-and-intercepts.html">
+<link rel="next" href="time-series.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -255,31 +255,22 @@ Proudly published with bookdown</a></li>
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="poisson-regression-and-others-glms" class="section level1">
-<h1><span class="header-section-number">8</span> Poisson regression and others GLMs</h1>
-<div id="outline" class="section level2">
-<h2><span class="header-section-number">8.1</span> Outline</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
-
-<span class="kw">p_load</span>(tidyverse, here, janitor, purrr, viridis, brms, tidybayes, bayesplot)
-
-<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
+<div id="model-comparison" class="section level1">
+<h1><span class="header-section-number">11</span> Model Comparison</h1>
+<div id="bias-variance-trade-off" class="section level2">
+<h2><span class="header-section-number">11.1</span> Bias-Variance Trade-off</h2>
+<div id="rmse" class="section level3">
+<h3><span class="header-section-number">11.1.1</span> RMSE</h3>
 </div>
-<div id="poisson-distribution" class="section level2">
-<h2><span class="header-section-number">8.2</span> Poisson distribution</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#df &lt;- tibble(x = seq(from = 0, to = 20, by = 1)) %&gt;%</span>
-<span class="co">#  mutate(lambda_01 = dpois(x, lambda = 0.1))</span>
-<span class="co">#</span>
-<span class="co">#df %&gt;%</span>
-<span class="co">#  gather(key = &#39;key&#39;, value = &#39;value&#39;, -x) %&gt;% </span>
-<span class="co">#  separate(key, c(&#39;type&#39;, &#39;scale&#39;)) %&gt;%</span>
-<span class="co">#  mutate(scale = factor(scale, levels = sort(order(scale)))) %&gt;%</span>
-<span class="co">#  ggplot(aes(x = x, y = value, colour = scale)) +</span>
-<span class="co">#  geom_line(size = 2) +</span>
-<span class="co">#  scale_y_continuous(NULL, breaks = NULL) +</span>
-<span class="co">#  scale_colour_viridis(discrete = TRUE) +</span>
-<span class="co">#  labs(colour = &#39;Scale&#39;) +</span>
-<span class="co">#  NULL</span></code></pre></div>
+</div>
+<div id="regularization" class="section level2">
+<h2><span class="header-section-number">11.2</span> Regularization</h2>
+</div>
+<div id="information-criteria-and-waic" class="section level2">
+<h2><span class="header-section-number">11.3</span> Information Criteria and WAIC</h2>
+</div>
+<div id="looic" class="section level2">
+<h2><span class="header-section-number">11.4</span> LOO(IC)</h2>
 
 </div>
 </div>
@@ -288,8 +279,8 @@ Proudly published with bookdown</a></li>
           </div>
         </div>
       </div>
-<a href="logistic-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="varying-intercept-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="varying-slopes-and-intercepts.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="time-series.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
