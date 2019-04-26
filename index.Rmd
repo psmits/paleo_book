@@ -6,6 +6,8 @@ site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
+header-includes:
+  - \linespread{1.25}
 link-citations: yes
 github-repo: psmits/paleo_book
 twitter-handle: PeterDSmits

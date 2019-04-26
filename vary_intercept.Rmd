@@ -52,6 +52,8 @@ Each of the states are considered realizations from the same population. The pro
 Multilevel regression should be the default approach to regression. In the vast majority of cases, multilevel models are superior single-level models. Once you grasp the basics of the multilevel modeling strategy it becomes much easier to incorporate related tricks such as allowing for measurement error in the data and even modeling missing data! Defining, implementing, and understanding a multilevel model is in general more complicated than a single-level model. We have to define the distribution of our states -- something that sounds a lot harder than it is. Also, multilevel models are a lot harder to fit than most single-level models. This means more time tuning our MCMC algorithm, something we've so far been ableo to avoid. Finally, because multilevel models by their nature make statements at different "levels" of the data, they can be difficult for people to understanding. People rarely think about a population and the individual values within that population simultaneously.
 
 
+Also, to make sure we're all on the same page because the literature is full of alternative and conflicting language: multilevel = hierachical = mixed effects. Depending on the authors background or the structure of the data, there is a change they'll favor different language. Multilevel is probably the most generic term, and labeling your model as varying-intercepts and/or varying-slopes is certaintly clearer than mixed effects model. Check out [Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983) Chapter 11 for a longer discussion of the complications surrounding mixed effects model as a term.
+
 
 ## A basic model with categorical predictor {#dummy-example}
 
@@ -223,7 +225,6 @@ A parameter for each state as well as a mean and sd for the population. Every ob
 
 
 
-multilevel == hierachical == mixed effects
 
 
 shrinkage
@@ -238,70 +239,8 @@ pooling
 
 
 
-the first step of multilevel modeling is to set up a regression with varying coefficients; the second step is to set up a regression model for the coefficients themselves.
-
-
-
-
-
 
 ARM: with grouped data, a regression that includes indicators for groups is called a varying-intercept model because it can be interepreted as a model with a different intercept for each group.
-
-
-
-
-
-
-```{r panteria_data}
-
-pantheria <- read_tsv(here('data', 'PanTHERIA_1-0_WR05_Aug2008.txt'), 
-                      na = '-999.00') %>%
-  clean_names() %>% 
-  rename(order = msw05_order,
-         family = msw05_family,
-         genus = msw05_genus,
-         species = msw05_species,
-         binomial = msw05_binomial) %>%
-  mutate(mass_log = log(x5_1_adult_body_mass_g),
-         range_group_log = log(x22_1_home_range_km2),
-         range_indiv_log = log(x22_2_home_range_indiv_km2),
-         density_log = log(x21_1_population_density_n_km2),
-         activity_cycle = case_when(x1_1_activity_cycle == 1 ~ 'nocturnal',
-                                    x1_1_activity_cycle == 2 ~ 'mixed',
-                                    x1_1_activity_cycle == 3 ~ 'diurnal'),
-         trophic_level = case_when(x6_2_trophic_level == 1 ~ 'herbivore',
-                                   x6_2_trophic_level == 2 ~ 'omnivore',
-                                   x6_2_trophic_level == 3 ~ 'carnivore')) %>%
-  drop_na(density_log, mass_log, trophic_level, order, family, genus) %>%
-  mutate(mass_log_stan = (mass_log - mean(mass_log)) / (2 * sd(mass_log)),
-         trophic_level = fct_infreq(trophic_level))
-
-```
-
-
-```{r pantheria_family, cache = TRUE, message = FALSE, results = 'hide'}
-
-m_1 <- pantheria %>%
-  brm(data = .,
-      family = gaussian(),
-      formula = bf(density_log ~ 1 + mass_log_stan + trophic_level + (1 | order)),
-      prior = c(prior(normal(0, 10), class = 'Intercept'),
-                prior(normal(0, 5), class = 'b'),
-                prior(normal(-1, 5), class = 'b', coef = 'mass_log_stan'),
-                prior(cauchy(0, 5), class = 'sigma'),
-                prior(cauchy(0, 1), class = 'sd', group = 'order')),
-      iter = 2000,
-      warmup = 1000,
-      chains = 4,
-      cores = 4,
-      refresh = 0)
-
-```
-
-
-
-Repeated measurements
-
 
 
 

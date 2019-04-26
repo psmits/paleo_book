@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-04-23">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -296,6 +296,7 @@ Proudly published with bookdown</a></li>
 </ul>
 <p>Each of the states are considered realizations from the same population. The probability distribution for the population acts as the prior for each of the states. Except this prior isn’t exactly the same as we’re used to. Instead, this prior is actually learned from the data.</p>
 <p>Multilevel regression should be the default approach to regression. In the vast majority of cases, multilevel models are superior single-level models. Once you grasp the basics of the multilevel modeling strategy it becomes much easier to incorporate related tricks such as allowing for measurement error in the data and even modeling missing data! Defining, implementing, and understanding a multilevel model is in general more complicated than a single-level model. We have to define the distribution of our states – something that sounds a lot harder than it is. Also, multilevel models are a lot harder to fit than most single-level models. This means more time tuning our MCMC algorithm, something we’ve so far been ableo to avoid. Finally, because multilevel models by their nature make statements at different “levels” of the data, they can be difficult for people to understanding. People rarely think about a population and the individual values within that population simultaneously.</p>
+<p>Also, to make sure we’re all on the same page because the literature is full of alternative and conflicting language: multilevel = hierachical = mixed effects. Depending on the authors background or the structure of the data, there is a change they’ll favor different language. Multilevel is probably the most generic term, and labeling your model as varying-intercepts and/or varying-slopes is certaintly clearer than mixed effects model. Check out <a href="https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983">Gelman and Hill</a> Chapter 11 for a longer discussion of the complications surrounding mixed effects model as a term.</p>
 </div>
 <div id="dummy-example" class="section level2">
 <h2><span class="header-section-number">9.4</span> A basic model with categorical predictor</h2>
@@ -373,9 +374,9 @@ y_{i} &amp;= \text{Normal}(\alpha + \beta_{h} h_{i} + \beta_{c} c_{i}, \sigma) \
 \begin{align}
 y_{i} &amp;= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 \alpha_{j} &amp;\sim \text{Normal}(\mu_{\alpha}, \sigma_{\alpha}) \\
-\mu_{\alpha} &amp;\sim \text{Normal}(0, 1) \\
-\sigma_{\alpha} &amp;\sim \text{Cauchy}^{+}(5) \\
+\mu_{\alpha} &amp;\sim \text{Normal}(0, 10) \\
 \sigma &amp;\sim \text{Cauchy}^{+}(5) \\
+\sigma_{\alpha} &amp;\sim \text{Normal}^{+}(1) \\
 \end{align}
 \]</span></p>
 <p>Let’s parse out this model.</p>
@@ -383,16 +384,44 @@ y_{i} &amp;= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 <p>Instead of a single prior distribution for each <span class="math inline">\(j\)</span> of <span class="math inline">\(\alpha_{j}\)</span>, we’re using a distribution of distributions as a prior for all values of <span class="math inline">\(j\)</span>. The parameters of the prior then have their own priors, defined as usual.</p>
 <p>This is the “multi” part of multilevel modeling – we’ve defined two levels of parameters, each of which is a simple model. We have the observation level (species), where species population densities are modeled as functions of their trophic levels. We also have a group level (trophic level) model, which describes the average population densities of the different trophic as a function of a mean of population density and its spread between the trophic levels.</p>
 <p>When we fit this model to our data, we will simultaneously estimate both levels – this means that we will learn about the individual trophic levels while we also learn about the population of trophic levels.</p>
-<p>Multilevel models breakdown the traditional differences between likelihood and prior. In our simple model, can you isolate the likelihood? The prior? This flexibility and mutability in meaning and utility can be intimidating, especially if you’re coming from a fairly traditional background where parts of your model live in distinct boxes.</p>
+<p>Multilevel models breakdown the traditional differences between likelihood and prior. In this varying-intercepts model, can you isolate the likelihood? The prior? This flexibility and mutability in meaning and utility can be intimidating, especially if you’re coming from a fairly traditional background where parts of your model live in distinct boxes.</p>
 <p>Oh, and so you know, the parameters of the prior can be referred to as <em>hyperparameters</em>, so their priors can also be referred to as hyperpriors.</p>
 </div>
 <div id="fitting-a-multilevel-model" class="section level2">
 <h2><span class="header-section-number">9.7</span> Fitting a multilevel model</h2>
-<p>So let’s fit two models – the model with trophic level dummy coded, and the model with trophic level as a varying-intercept. We can then compare posterior parameter estimates to see if anything’s changed.</p>
-<p>A parameter for each state as well as a mean and sd for the population. Every observation updates all of these parameters. If the population is highly variable, then the prior is flat and uninformative, which means that individual states have very little to do with each other. if the population contains little variation, then the prior is narrow and highly informative – an observation about 1 state will have a big impact on the estimates of of another state.</p>
-<p>A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is probably overkill to use a multilevel model instead of just dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?</p>
+<p>So let’s fit two models – the model with trophic level dummy coded, and the model with trophic level as a varying-intercept. We can then compare posterior parameter estimates to see if anything has changed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dummy_fit &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>trophic_level),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">multilevel_fit &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>trophic_level)),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">class =</span> sd, <span class="dt">group =</span> trophic_level)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
+<pre><code>## Compiling the C++ model</code></pre>
+<pre><code>## Start sampling</code></pre>
+<p>With so few trophic levels, we have to use a more informative prior than previously.</p>
+<p>A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is probably overkill to use a multilevel model instead of dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?</p>
 <p>When you have very few categories in your grouping factor, your results will be very sensitive to your choice of prior. Again, if you have 3 data points, it is going to be very hard to get precise estimates – you’re mostly going to get a result very similar to your prior. We can see this in one of <a href="introduction-to-bayesian-data-analysis.html#bayes-updating-ex">our first examples of Bayesian updating – as more data is added, our estimates become more precise</a>.</p>
-<p>multilevel == hierachical == mixed effects</p>
+<p>A parameter for each state as well as a mean and sd for the population. Every observation updates all of these parameters. If the population is highly variable, then the prior is flat and uninformative, which means that individual states have very little to do with each other. if the population contains little variation, then the prior is narrow and highly informative – an observation about 1 state will have a big impact on the estimates of of another state.</p>
 <p>shrinkage</p>
 <p>pooling</p>
 <ul>
@@ -400,55 +429,7 @@ y_{i} &amp;= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 <li>none</li>
 <li>partial</li>
 </ul>
-<p>the first step of multilevel modeling is to set up a regression with varying coefficients; the second step is to set up a regression model for the coefficients themselves.</p>
 <p>ARM: with grouped data, a regression that includes indicators for groups is called a varying-intercept model because it can be interepreted as a model with a different intercept for each group.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="kw">here</span>(<span class="st">&#39;data&#39;</span>, <span class="st">&#39;PanTHERIA_1-0_WR05_Aug2008.txt&#39;</span>), 
-                      <span class="dt">na =</span> <span class="st">&#39;-999.00&#39;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">order =</span> msw05_order,
-         <span class="dt">family =</span> msw05_family,
-         <span class="dt">genus =</span> msw05_genus,
-         <span class="dt">species =</span> msw05_species,
-         <span class="dt">binomial =</span> msw05_binomial) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log =</span> <span class="kw">log</span>(x5_<span class="dv">1</span>_adult_body_mass_g),
-         <span class="dt">range_group_log =</span> <span class="kw">log</span>(x22_<span class="dv">1</span>_home_range_km2),
-         <span class="dt">range_indiv_log =</span> <span class="kw">log</span>(x22_<span class="dv">2</span>_home_range_indiv_km2),
-         <span class="dt">density_log =</span> <span class="kw">log</span>(x21_<span class="dv">1</span>_population_density_n_km2),
-         <span class="dt">activity_cycle =</span> <span class="kw">case_when</span>(x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;nocturnal&#39;</span>,
-                                    x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &#39;mixed&#39;</span>,
-                                    x1_<span class="dv">1</span>_activity_cycle <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> &#39;diurnal&#39;</span>),
-         <span class="dt">trophic_level =</span> <span class="kw">case_when</span>(x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> &#39;herbivore&#39;</span>,
-                                   x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">~</span><span class="st"> &#39;omnivore&#39;</span>,
-                                   x6_<span class="dv">2</span>_trophic_level <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">~</span><span class="st"> &#39;carnivore&#39;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">drop_na</span>(density_log, mass_log, trophic_level, order, family, genus) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mass_log_stan =</span> (mass_log <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(mass_log)) <span class="op">/</span><span class="st"> </span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(mass_log)),
-         <span class="dt">trophic_level =</span> <span class="kw">fct_infreq</span>(trophic_level))</code></pre></div>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_double(),
-##   MSW05_Order = col_character(),
-##   MSW05_Family = col_character(),
-##   MSW05_Genus = col_character(),
-##   MSW05_Species = col_character(),
-##   MSW05_Binomial = col_character(),
-##   References = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_<span class="dv">1</span> &lt;-<span class="st"> </span>pantheria <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
-      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
-      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_log_stan <span class="op">+</span><span class="st"> </span>trophic_level <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>order)),
-      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> <span class="st">&#39;Intercept&#39;</span>),
-                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> <span class="st">&#39;b&#39;</span>),
-                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">5</span>), <span class="dt">class =</span> <span class="st">&#39;b&#39;</span>, <span class="dt">coef =</span> <span class="st">&#39;mass_log_stan&#39;</span>),
-                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> <span class="st">&#39;sigma&#39;</span>),
-                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">class =</span> <span class="st">&#39;sd&#39;</span>, <span class="dt">group =</span> <span class="st">&#39;order&#39;</span>)),
-      <span class="dt">iter =</span> <span class="dv">2000</span>,
-      <span class="dt">warmup =</span> <span class="dv">1000</span>,
-      <span class="dt">chains =</span> <span class="dv">4</span>,
-      <span class="dt">cores =</span> <span class="dv">4</span>,
-      <span class="dt">refresh =</span> <span class="dv">0</span>)</code></pre></div>
-<p>Repeated measurements</p>
 
 </div>
 </div>
