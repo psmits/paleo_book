@@ -179,6 +179,7 @@ dummy_fit <-
       cores = 4,
       refresh = 0)
 
+print(dummy_fit)
 ```
 
 
@@ -196,8 +197,10 @@ multilevel_fit <-
       warmup = 1000,
       chains = 4,
       cores = 4,
-      refresh = 0)
+      refresh = 0,
+      control = list(adapt_delta = 0.9))
 
+print(multilevel_fit)
 ```
 
 With so few trophic levels, we have to use a more informative prior than previously. 
@@ -208,40 +211,59 @@ When you have very few categories in your grouping factor, your results will be 
 
 
 
+In our dummy model our intercept term is the average population density of omnivorous mammals, while the herbivore and carnivore terms describe the *difference* between the omnivore mean and the herbivore (or carnivore) mean. This parameteriation also does not explicitly define the difference between herbivore and carnivore average population density -- that has to be calculated by hand. Make sure you can identify how all the parameters in this summary map back to our written model.
 
+In contrast, for our multilevel model we have a single intercept term under "population-level effects" -- this is $\mu_{\alpha}$. There is also a new subsection titled "group-level effects" which has a single parameter `sd(Intercept)`. This standard deviation parameter is $\sigma_{alpha}$ from our model definition. What's missing from this summary are the estimates for the different trophic levels. In our model definition these are the individual values of $\alpha_{j}$, which describe that trophic level's difference from the grand mean $\mu_{\alpha}$. 
 
+Let's get the posterior distributions for those differences and then calculate the estimated average population density for each trophic level.
 
+```{r}
 
+multilevel_fit %>%
+  get_variables()
 
-A parameter for each state as well as a mean and sd for the population. Every observation updates all of these parameters. If the population is highly variable, then the prior is flat and uninformative, which means that individual states have very little to do with each other. if the population contains little variation, then the prior is narrow and highly informative -- an observation about 1 state will have a big impact on the estimates of of another state.
+```
 
+Here `b_Intercept` is the global mean while `r_trophic_level[]` variables are the offsets from that mean for each of the trophic level states. 
 
+`tidybayes` has convenience features to simultaneously extract all of the different forms `r_trophic_level[]` appears as. Instead of writing out 
 
+`r_trophic_level[herbivore,Intercept]`
 
+for each of the specific columns, we can more succinctly write out
 
+`r_trophic_level[state,term]`.
 
+This syntax will return our posterior draws with `state` and `term` as columns of the relevant information (trophic level and Intercept, respectively).
 
+```{r}
 
+multilevel_fit %>%
+  spread_draws(r_trophic_level[state, term])
 
+```
 
+You can even ommit the second term.
 
+```{r}
 
+multilevel_fit %>%
+  spread_draws(r_trophic_level[state,])
 
-shrinkage
+```
 
+We can plot the distribution of posterior estimates for each trophic level's difference from the grand mean. Remember, the estimated average population density for each trophic level are these values *plus* the esimtates for the intercept term. 
 
-pooling
+```{r}
 
-- complete
-- none
-- partial
+multilevel_fit %>%
+  spread_draws(r_trophic_level[state, ]) %>%
+  ggplot(aes(x = r_trophic_level,
+             y = state)) +
+  geom_halfeyeh(.width = c(0.5, 0.8))
 
+```
 
-
-
-
-ARM: with grouped data, a regression that includes indicators for groups is called a varying-intercept model because it can be interepreted as a model with a different intercept for each group.
-
-
+We can also make a similar plot, but this time compare the posterior estimates of average population density by trophic group. This will be essentially the previous plot but with the intercept added to the trophic level differences.
 
 
