@@ -179,11 +179,13 @@ dummy_fit <-
       cores = 4,
       refresh = 0)
 
+```
+```{r dummy_print}
 print(dummy_fit)
 ```
 
 
-```{r multilevel_example}
+```{r multilevel_example, cache = TRUE, message = FALSE, results = 'hide'}
 
 multilevel_fit <- 
   pantheria %>%
@@ -200,6 +202,8 @@ multilevel_fit <-
       refresh = 0,
       control = list(adapt_delta = 0.9))
 
+```
+```{r multilevel_print}
 print(multilevel_fit)
 ```
 
@@ -210,6 +214,7 @@ A lot of ink has been spilled about how many categories are necessary for multil
 When you have very few categories in your grouping factor, your results will be very sensitive to your choice of prior. Again, if you have 3 data points, it is going to be very hard to get precise estimates -- you're mostly going to get a result very similar to your prior. We can see this in one of [our first examples of Bayesian updating -- as more data is added, our estimates become more precise](#bayes-updating-ex).
 
 
+## Understanding our multilevel model
 
 In our dummy model our intercept term is the average population density of omnivorous mammals, while the herbivore and carnivore terms describe the *difference* between the omnivore mean and the herbivore (or carnivore) mean. This parameteriation also does not explicitly define the difference between herbivore and carnivore average population density -- that has to be calculated by hand. Make sure you can identify how all the parameters in this summary map back to our written model.
 
@@ -217,7 +222,7 @@ In contrast, for our multilevel model we have a single intercept term under "pop
 
 Let's get the posterior distributions for those differences and then calculate the estimated average population density for each trophic level.
 
-```{r}
+```{r multi_variables}
 
 multilevel_fit %>%
   get_variables()
@@ -236,7 +241,7 @@ for each of the specific columns, we can more succinctly write out
 
 This syntax will return our posterior draws with `state` and `term` as columns of the relevant information (trophic level and Intercept, respectively).
 
-```{r}
+```{r mult_spread_1}
 
 multilevel_fit %>%
   spread_draws(r_trophic_level[state, term])
@@ -245,7 +250,7 @@ multilevel_fit %>%
 
 You can even ommit the second term.
 
-```{r}
+```{r mult_spread_2}
 
 multilevel_fit %>%
   spread_draws(r_trophic_level[state,])
@@ -254,7 +259,7 @@ multilevel_fit %>%
 
 We can plot the distribution of posterior estimates for each trophic level's difference from the grand mean. Remember, the estimated average population density for each trophic level are these values *plus* the esimtates for the intercept term. 
 
-```{r}
+```{r multi_est}
 
 multilevel_fit %>%
   spread_draws(r_trophic_level[state, ]) %>%
@@ -265,5 +270,58 @@ multilevel_fit %>%
 ```
 
 We can also make a similar plot, but this time compare the posterior estimates of average population density by trophic group. This will be essentially the previous plot but with the intercept added to the trophic level differences.
+
+```{r multi_w_intercept}
+
+multilevel_fit %>%
+  spread_draws(b_Intercept, r_trophic_level[state, ]) %>%
+  mutate(mean_dens = b_Intercept + r_trophic_level) %>%
+  ggplot(aes(x = mean_dens,
+             y = state)) +
+  geom_halfeyeh(.width = c(0.5, 0.8))
+
+```
+
+You'll notice the last two plots are almost identical except the first was centered about 0 and the second is (approximately) centered around 3.15.
+
+
+
+
+## Shrinkage
+
+But how different are our estimates for mean population density by trophic level when estimated using a single-level regression versus a multilevel regression?
+
+```{r compare_ests}
+
+single_level <- 
+  dummy_fit %>%
+  spread_draws(b_Intercept, 
+               b_trophic_levelherbivore,
+               b_trophic_levelcarnivore) %>%
+  transmute(omnivore = b_Intercept,
+            herbivore = b_Intercept + b_trophic_levelherbivore,
+            carnivore = b_Intercept + b_trophic_levelcarnivore) %>%
+  gather(key = key, value = value) 
+
+multi_level <- 
+  multilevel_fit %>%
+  spread_draws(b_Intercept, r_trophic_level[state, ]) %>%
+  ungroup() %>%
+  mutate(key = state,
+         value = b_Intercept + r_trophic_level) %>%
+  select(key, value)
+
+bind_rows(single_level, multi_level, .id = 'model') %>%
+  mutate(model = case_when(model == 1 ~ 'single',
+                           model == 2 ~ 'multi')) %>%
+  ggplot(aes(x = value, colour = model, fill = model)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ key)
+
+```
+
+The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has *shrunk* slightly towards mean. Interestingly, our estimate of mean omnivore population density is our least precise (highest variance).
+
+
 
 
