@@ -5,6 +5,7 @@
 
 - Introduce multilevel structures
 - Introduce varying intercept models
+- Demonstrate how to fit a varying-intercept model.
 
 
 ```{r load_packages_vary_intercept, message = F, results = 'hide'}
@@ -209,9 +210,11 @@ print(multilevel_fit)
 
 With so few trophic levels, we have to use a more informative prior than previously. 
 
-A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is probably overkill to use a multilevel model instead of dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?
+A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is totally overkill to use a multilevel model instead of dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?
 
 When you have very few categories in your grouping factor, your results will be very sensitive to your choice of prior. Again, if you have 3 data points, it is going to be very hard to get precise estimates -- you're mostly going to get a result very similar to your prior. We can see this in one of [our first examples of Bayesian updating -- as more data is added, our estimates become more precise](#bayes-updating-ex).
+
+Multilevel modeling is overkill for this simple example. This chapter is mostly a "how-to", but being comfortable with this type of model is important for understanding more complex models we will deal with over the next few sections.
 
 
 ## Understanding our multilevel model
@@ -285,10 +288,6 @@ multilevel_fit %>%
 You'll notice the last two plots are almost identical except the first was centered about 0 and the second is (approximately) centered around 3.15.
 
 
-
-
-## Shrinkage
-
 But how different are our estimates for mean population density by trophic level when estimated using a single-level regression versus a multilevel regression?
 
 ```{r compare_ests}
@@ -301,7 +300,7 @@ single_level <-
   transmute(omnivore = b_Intercept,
             herbivore = b_Intercept + b_trophic_levelherbivore,
             carnivore = b_Intercept + b_trophic_levelcarnivore) %>%
-  gather(key = key, value = value) 
+ gather(key = key, value = value) 
 
 multi_level <- 
   multilevel_fit %>%
@@ -309,7 +308,7 @@ multi_level <-
   ungroup() %>%
   mutate(key = state,
          value = b_Intercept + r_trophic_level) %>%
-  select(key, value)
+  dplyr::select(key, value)
 
 bind_rows(single_level, multi_level, .id = 'model') %>%
   mutate(model = case_when(model == 1 ~ 'single',
@@ -320,7 +319,44 @@ bind_rows(single_level, multi_level, .id = 'model') %>%
 
 ```
 
-The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has *shrunk* slightly towards mean. Interestingly, our estimate of mean omnivore population density is our least precise (highest variance).
+The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has *shrunk* slightly towards mean. Interestingly, that estimate our least precise (highest variance).
+
+What we have gained by using a multilevel model is a direct estimate of the variance between trophic levels, $\sigma_{\alpha}$. 
+
+The distribution $\text{Normal}(\mu_{\alpha}, \sigma_{\alpha})$ defines the distribution of average population density for all trophic levels -- including those which aren't measured. Assuming tha tother trophic levels behave like the three we've observed, we can generate an average population density for that theoretical trophic level. 
+
+Now, this concept is probably nonsense when discussing trophic levels, but makes perfect sense in many other contexts. For example, if we were looking at population density at different sites we might want to estimate the population density at some unobserved site.
+
+
+
+## A more complex varying-intercept model
+
+We can improve on this simple varying-intercept model by including other predictors of species population density. In this example, we will include species average body size as a predictor. This excercise is a reimplementation of [a previous model of ours](#reg-multi) but using the varying-intercepts we've just introduced.
+
+
+
+
+```{r big_example, cache = TRUE, message = FALSE, results = 'hide'}
+bigger_fit <- 
+  pantheria %>%
+  brm(data = .,
+      family = gaussian(),
+      formula = bf(density_log ~ 1 + mass_stan + (1 | trophic_level)),
+      prior = c(prior(normal(0, 10), class = Intercept),
+                prior(cauchy(0, 5), class = sigma),
+                prior(normal(0, 1), class = sd, group = trophic_level)),
+      iter = 2000,
+      warmup = 1000,
+      chains = 4,
+      cores = 4,
+      refresh = 0,
+      control = list(adapt_delta = 0.9))
+```
+```{r dummy_print}
+print(bigger_fit)
+```
+
+
 
 
 
