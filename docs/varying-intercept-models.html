@@ -25,7 +25,7 @@
 <meta name="author" content="Peter D Smits">
 
 
-<meta name="date" content="2019-05-06">
+<meta name="date" content="2019-05-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="poisson-regression-and-others-glms.html">
-<link rel="next" href="varying-slopes-and-intercepts.html">
+<link rel="next" href="vary-all.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -219,12 +219,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.3" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#introduction-3"><i class="fa fa-check"></i><b>9.3</b> Introduction</a></li>
 <li class="chapter" data-level="9.4" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#dummy-example"><i class="fa fa-check"></i><b>9.4</b> A basic model with categorical predictor</a></li>
 <li class="chapter" data-level="9.5" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#notation-for-multilevel-models"><i class="fa fa-check"></i><b>9.5</b> Notation for multilevel models</a></li>
-<li class="chapter" data-level="9.6" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#from-categorical-predictors-to-varying-intercept"><i class="fa fa-check"></i><b>9.6</b> From categorical predictors to varying-intercept</a></li>
+<li class="chapter" data-level="9.6" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#multilevel-example"><i class="fa fa-check"></i><b>9.6</b> From categorical predictors to varying-intercept</a></li>
 <li class="chapter" data-level="9.7" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#fitting-a-multilevel-model"><i class="fa fa-check"></i><b>9.7</b> Fitting a multilevel model</a></li>
 <li class="chapter" data-level="9.8" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#understanding-our-multilevel-model"><i class="fa fa-check"></i><b>9.8</b> Understanding our multilevel model</a></li>
-<li class="chapter" data-level="9.9" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#shrinkage"><i class="fa fa-check"></i><b>9.9</b> Shrinkage</a></li>
+<li class="chapter" data-level="9.9" data-path="varying-intercept-models.html"><a href="varying-intercept-models.html#a-more-complex-varying-intercept-model"><i class="fa fa-check"></i><b>9.9</b> A more complex varying-intercept model</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="varying-slopes-and-intercepts.html"><a href="varying-slopes-and-intercepts.html"><i class="fa fa-check"></i><b>10</b> Varying slopes and intercepts</a></li>
+<li class="chapter" data-level="10" data-path="vary-all.html"><a href="vary-all.html"><i class="fa fa-check"></i><b>10</b> Varying slopes and intercepts</a></li>
 <li class="chapter" data-level="11" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>11</b> Model Comparison</a><ul>
 <li class="chapter" data-level="11.1" data-path="model-comparison.html"><a href="model-comparison.html#bias-variance-trade-off"><i class="fa fa-check"></i><b>11.1</b> Bias-Variance Trade-off</a><ul>
 <li class="chapter" data-level="11.1.1" data-path="model-comparison.html"><a href="model-comparison.html#rmse"><i class="fa fa-check"></i><b>11.1.1</b> RMSE</a></li>
@@ -264,6 +264,7 @@ Proudly published with bookdown</a></li>
 <ul>
 <li>Introduce multilevel structures</li>
 <li>Introduce varying intercept models</li>
+<li>Demonstrate how to fit a varying-intercept model.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
 
@@ -369,7 +370,7 @@ y_{i} &amp;= \text{Normal}(\alpha + \beta_{h} h_{i} + \beta_{c} c_{i}, \sigma) \
 </ul>
 <p>These conventions will get us through this lesson. As more complicated situations arise, we’ll introduce additional notational conventions.</p>
 </div>
-<div id="from-categorical-predictors-to-varying-intercept" class="section level2">
+<div id="multilevel-example" class="section level2">
 <h2><span class="header-section-number">9.6</span> From categorical predictors to varying-intercept</h2>
 <p>Now that we’ve established some ground rules, we can update our <a href="varying-intercept-models.html#dummy-example">previous model</a> with a multistate categorical predictor dummy coded to a varying-intercept model with that categorical predictor as the grouping factor.</p>
 <p><span class="math display">\[
@@ -469,8 +470,9 @@ y_{i} &amp;= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 ## is a crude measure of effective sample size, and Rhat is the potential 
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>With so few trophic levels, we have to use a more informative prior than previously.</p>
-<p>A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is probably overkill to use a multilevel model instead of dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?</p>
+<p>A lot of ink has been spilled about how many categories are necessary for multilevel modeling to be effective, and a lot of people caution against using groupings with few categories. For example, our trophic level variable only has 3 groupings and it is totally overkill to use a multilevel model instead of dummy coding the variable. With only 3 categories, it is extremely hard to get a high precision estimate of the variance between the groups, so why even estimate it?</p>
 <p>When you have very few categories in your grouping factor, your results will be very sensitive to your choice of prior. Again, if you have 3 data points, it is going to be very hard to get precise estimates – you’re mostly going to get a result very similar to your prior. We can see this in one of <a href="introduction-to-bayesian-data-analysis.html#bayes-updating-ex">our first examples of Bayesian updating – as more data is added, our estimates become more precise</a>.</p>
+<p>Multilevel modeling is overkill for this simple example. This section has mostly been a “how-to” because being comfortable with this type of model is important for understanding more complex models we will deal with over the next few sections.</p>
 </div>
 <div id="understanding-our-multilevel-model" class="section level2">
 <h2><span class="header-section-number">9.8</span> Understanding our multilevel model</h2>
@@ -515,7 +517,7 @@ y_{i} &amp;= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 ##  9      1          3     3 omnivore  Intercept          0.987 
 ## 10      1          4     4 carnivore Intercept         -1.15  
 ## # … with 11,990 more rows</code></pre>
-<p>You can even ommit the second term.</p>
+<p>You can even omit the second term.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">multilevel_fit <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">spread_draws</span>(r_trophic_level[state,])</code></pre></div>
 <pre><code>## # A tibble: 12,000 x 5
@@ -549,9 +551,6 @@ y_{i} &amp;= \text{Normal}(\alpha_{j[i]}, \sigma) \\
 <span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>))</code></pre></div>
 <p><img src="paleo_book_files/figure-html/multi_w_intercept-1.png" width="672" /></p>
 <p>You’ll notice the last two plots are almost identical except the first was centered about 0 and the second is (approximately) centered around 3.15.</p>
-</div>
-<div id="shrinkage" class="section level2">
-<h2><span class="header-section-number">9.9</span> Shrinkage</h2>
 <p>But how different are our estimates for mean population density by trophic level when estimated using a single-level regression versus a multilevel regression?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">single_level &lt;-<span class="st"> </span>
 <span class="st">  </span>dummy_fit <span class="op">%&gt;%</span>
@@ -578,7 +577,109 @@ multi_level &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>key)</code></pre></div>
 <p><img src="paleo_book_files/figure-html/compare_ests-1.png" width="672" /></p>
-<p>The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has <em>shrunk</em> slightly towards mean. Interestingly, our estimate of mean omnivore population density is our least precise (highest variance).</p>
+<p>The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has <em>shrunk</em> slightly towards mean. Interestingly, that estimate our least precise (highest variance).</p>
+<p>What we have gained by using a multilevel model is a direct estimate of the variance between trophic levels, <span class="math inline">\(\sigma_{\alpha}\)</span>.</p>
+<p>The distribution <span class="math inline">\(\text{Normal}(\mu_{\alpha}, \sigma_{\alpha})\)</span> defines the distribution of average population density for all trophic levels – including those which aren’t measured. Assuming tha tother trophic levels behave like the three we’ve observed, we can generate an average population density for that theoretical trophic level.</p>
+<p>Now, this concept is probably nonsense when discussing trophic levels, but makes perfect sense in many other contexts. For example, if we were looking at population density at different sites we might want to estimate the population density at some unobserved site.</p>
+</div>
+<div id="a-more-complex-varying-intercept-model" class="section level2">
+<h2><span class="header-section-number">9.9</span> A more complex varying-intercept model</h2>
+<p>We can improve on this simple varying-intercept model by including other predictors of species population density. In this example, we will include species average body size as a predictor. This exercise is a reimplementation of <a href="reg-multi.html#reg-multi">a previous model of ours</a> but using the varying-intercepts we’ve just introduced.</p>
+<p>First, let’s define this model, building on <a href="varying-intercept-models.html#multilevel-example">our earlier model of population density with just a varying intercept</a>. We have to define two terms. Let’s have <span class="math inline">\(x_{i}\)</span> signify the average body mass of species <span class="math inline">\(i\)</span>, which has been log transformed and rescaled. The parameter <span class="math inline">\(\beta\)</span> is the regression coefficient for this predictor.</p>
+<p>Everything else is as before.</p>
+<p><span class="math display">\[
+\begin{align}
+y_{i} &amp;= \text{Normal}(\alpha_{j[i]} + \beta x_{i}, \sigma) \\
+\beta &amp;= \text{Normal}(0, 5) \\
+\alpha_{j} &amp;\sim \text{Normal}(\mu_{\alpha}, \sigma_{\alpha}) \\
+\mu_{\alpha} &amp;\sim \text{Normal}(0, 10) \\
+\sigma &amp;\sim \text{Cauchy}^{+}(5) \\
+\sigma_{\alpha} &amp;\sim \text{Normal}^{+}(1) \\
+\end{align}
+\]</span></p>
+<p>As we’ve always done, we’ve added this predictor to the linear model describing the mean of <span class="math inline">\(y_{i}\)</span>. The regression coefficient has the same interpretation as usual: it describes the expected change in mean <span class="math inline">\(y\)</span> for unit change in <span class="math inline">\(x\)</span>.</p>
+<p>Now that we’ve written out the model, we can fit it using <code>brm()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bigger_fit &lt;-<span class="st"> </span>
+<span class="st">  </span>pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> .,
+      <span class="dt">family =</span> <span class="kw">gaussian</span>(),
+      <span class="dt">formula =</span> <span class="kw">bf</span>(density_log <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>mass_stan <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>trophic_level)),
+      <span class="dt">prior =</span> <span class="kw">c</span>(<span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="dt">class =</span> Intercept),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> b),
+                <span class="kw">prior</span>(<span class="kw">cauchy</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dt">class =</span> sigma),
+                <span class="kw">prior</span>(<span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">class =</span> sd, <span class="dt">group =</span> trophic_level)),
+      <span class="dt">iter =</span> <span class="dv">2000</span>,
+      <span class="dt">warmup =</span> <span class="dv">1000</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>,
+      <span class="dt">cores =</span> <span class="dv">4</span>,
+      <span class="dt">refresh =</span> <span class="dv">0</span>,
+      <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">adapt_delta =</span> <span class="fl">0.9</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(bigger_fit)</code></pre></div>
+<pre><code>##  Family: gaussian 
+##   Links: mu = identity; sigma = identity 
+## Formula: density_log ~ 1 + mass_stan + (1 | trophic_level) 
+##    Data: . (Number of observations: 746) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Group-Level Effects: 
+## ~trophic_level (Number of levels: 3) 
+##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sd(Intercept)     1.26      0.44     0.62     2.29       1964 1.00
+## 
+## Population-Level Effects: 
+##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## Intercept     3.16      0.76     1.58     4.72       1218 1.00
+## mass_stan    -4.99      0.14    -5.26    -4.71       3250 1.00
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
+## sigma     1.80      0.05     1.71     1.89       3251 1.00
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>There are a few things we can do with this fitted model: explore our parameter estimates, and check model adequacy. Because we skipped checking model adequacy with our just varying intercept model, let’s start with that.</p>
+<p>The most basic check is plotting out data and comparing with the posterior predictions from our model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">data_grid</span>(<span class="dt">mass_stan =</span> <span class="kw">seq_range</span>(mass_stan, <span class="dt">n =</span> <span class="dv">1000</span>),
+            trophic_level) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> bigger_fit,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> mass_stan, <span class="dt">y =</span> .prediction)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_lineribbon</span>(<span class="kw">aes</span>(<span class="dt">group =</span> trophic_level), <span class="dt">.width =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.9</span>), <span class="dt">size =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> pantheria,
+             <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> density_log), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&#39;Body mass (sd units)&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Population density&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_brewer</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/big_vis-1.png" width="672" /></p>
+<p>This graph should look familiar – it is almost identical to <a href="reg-multi.html#multi-ppc">one of our previous model checks</a> for our model with dummy coded <code>trophic_level</code>. This makes sense because our model here is just a translation of that model into varying intercept form. This deja vu is going to be a recurring theme for the next few graphs.</p>
+<p>Similarly, we can also look at how well our model reproduces the distribution of population density by trophic level.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pantheria <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predicted_draws</span>(<span class="dt">model =</span> bigger_fit,
+                      <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> .prediction, <span class="dt">group =</span> .draw)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">alpha =</span> <span class="fl">0.1</span>,
+            <span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">stat =</span> <span class="st">&#39;density&#39;</span>,
+            <span class="dt">data =</span> pantheria,
+            <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> density_log,
+                          <span class="dt">group =</span> <span class="ot">NULL</span>),
+            <span class="dt">colour =</span> <span class="st">&#39;black&#39;</span>,
+            <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&#39;Population density &#39;</span>, <span class="kw">log</span>(n <span class="op">/</span><span class="st"> </span>km<span class="op">^</span><span class="dv">2</span>))),
+       <span class="dt">title =</span> <span class="st">&#39;Population density, actual versus predicted&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>trophic_level) <span class="op">+</span>
+<span class="st">  </span><span class="ot">NULL</span></code></pre></div>
+<p><img src="paleo_book_files/figure-html/big_dens-1.png" width="672" /></p>
+<p>This plot demonstrates our model’s difficulty in fully reproducing the distribution of population densities of carnivores. This misfit suggests that carnivores have a slightly different pattern of population densities than the other two trophic levels – something we’ve noticed since our first <a href="reg-multi.html#reg-multi">multipredictor model</a>.</p>
+<p>We were able to improve this specific aspect of our model in our tutorial on <a href="interactions.html#interactions">interactions</a> by including an interaction term between trophic level and body size in our linear predictor. But how can we do that with a varying intercept term? There isn’t a covariate to define an interaction with, so what can we do? This issue is the motivation behind our next lesson on <a href="vary-all.html#vary-all">varying-slope and combined varying-intercept, varying-slope models</a>.</p>
 
 </div>
 </div>
@@ -588,7 +689,7 @@ multi_level &lt;-<span class="st"> </span>
         </div>
       </div>
 <a href="poisson-regression-and-others-glms.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="varying-slopes-and-intercepts.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="vary-all.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

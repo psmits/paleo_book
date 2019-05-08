@@ -1,1 +1,1 @@
-# Varying slopes and intercepts
+# Varying slopes and intercepts {#vary-all}

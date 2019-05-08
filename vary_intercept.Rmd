@@ -129,7 +129,7 @@ As we introduce multilevel models, we also need to introduce some new notational
 These conventions will get us through this lesson. As more complicated situations arise, we'll introduce additional notational conventions.
 
 
-## From categorical predictors to varying-intercept
+## From categorical predictors to varying-intercept {#multilevel-example}
 
 Now that we've established some ground rules, we can update our [previous model](#dummy-example) with a multistate categorical predictor dummy coded to a varying-intercept model with that categorical predictor as the grouping factor. 
 
@@ -182,7 +182,9 @@ dummy_fit <-
 
 ```
 ```{r dummy_print}
+
 print(dummy_fit)
+
 ```
 
 
@@ -205,7 +207,9 @@ multilevel_fit <-
 
 ```
 ```{r multilevel_print}
+
 print(multilevel_fit)
+
 ```
 
 With so few trophic levels, we have to use a more informative prior than previously. 
@@ -214,7 +218,6 @@ A lot of ink has been spilled about how many categories are necessary for multil
 
 When you have very few categories in your grouping factor, your results will be very sensitive to your choice of prior. Again, if you have 3 data points, it is going to be very hard to get precise estimates -- you're mostly going to get a result very similar to your prior. We can see this in one of [our first examples of Bayesian updating -- as more data is added, our estimates become more precise](#bayes-updating-ex).
 
-Multilevel modeling is overkill for this simple example. This chapter is mostly a "how-to", but being comfortable with this type of model is important for understanding more complex models we will deal with over the next few sections.
 
 
 ## Understanding our multilevel model
@@ -251,7 +254,7 @@ multilevel_fit %>%
 
 ```
 
-You can even ommit the second term.
+You can even omit the second term.
 
 ```{r mult_spread_2}
 
@@ -328,21 +331,39 @@ The distribution $\text{Normal}(\mu_{\alpha}, \sigma_{\alpha})$ defines the dist
 Now, this concept is probably nonsense when discussing trophic levels, but makes perfect sense in many other contexts. For example, if we were looking at population density at different sites we might want to estimate the population density at some unobserved site.
 
 
-
 ## A more complex varying-intercept model
 
-We can improve on this simple varying-intercept model by including other predictors of species population density. In this example, we will include species average body size as a predictor. This excercise is a reimplementation of [a previous model of ours](#reg-multi) but using the varying-intercepts we've just introduced.
+We can improve on this simple varying-intercept model by including other predictors of species population density. In this example, we will include species average body size as a predictor. This exercise is a reimplementation of [a previous model of ours](#reg-multi) but using the varying-intercepts we've just introduced.
 
+First, let's define this model, building on [our earlier model of population density with just a varying intercept](#multilevel-example). We have to define two terms. Let's have $x_{i}$ signify the average body mass of species $i$, which has been log transformed and rescaled. The parameter $\beta$ is the regression coefficient for this predictor.
 
+Everything else is as before.
+
+$$
+\begin{align}
+y_{i} &= \text{Normal}(\alpha_{j[i]} + \beta x_{i}, \sigma) \\
+\beta &= \text{Normal}(0, 5) \\
+\alpha_{j} &\sim \text{Normal}(\mu_{\alpha}, \sigma_{\alpha}) \\
+\mu_{\alpha} &\sim \text{Normal}(0, 10) \\
+\sigma &\sim \text{Cauchy}^{+}(5) \\
+\sigma_{\alpha} &\sim \text{Normal}^{+}(1) \\
+\end{align}
+$$
+
+As we've always done, we've added this predictor to the linear model describing the mean of $y_{i}$. The regression coefficient has the same interpretation as usual: it describes the expected change in mean $y$ for unit change in $x$.
+
+Now that we've written out the model, we can fit it using `brm()`.
 
 
 ```{r big_example, cache = TRUE, message = FALSE, results = 'hide'}
+
 bigger_fit <- 
   pantheria %>%
   brm(data = .,
       family = gaussian(),
       formula = bf(density_log ~ 1 + mass_stan + (1 | trophic_level)),
       prior = c(prior(normal(0, 10), class = Intercept),
+                prior(normal(0, 5), class = b),
                 prior(cauchy(0, 5), class = sigma),
                 prior(normal(0, 1), class = sd, group = trophic_level)),
       iter = 2000,
@@ -351,10 +372,83 @@ bigger_fit <-
       cores = 4,
       refresh = 0,
       control = list(adapt_delta = 0.9))
+
 ```
-```{r dummy_print}
+```{r bigger_print}
+
 print(bigger_fit)
+
 ```
+
+There are a few things we can do with this fitted model: explore our parameter estimates, and check model adequacy. Because we skipped checking model adequacy with our just varying intercept model, let's start with that.
+
+The most basic check is plotting out data and comparing with the posterior predictions from our model.
+
+```{r big_vis}
+
+pantheria %>%
+  data_grid(mass_stan = seq_range(mass_stan, n = 1000),
+            trophic_level) %>%
+  add_predicted_draws(model = bigger_fit,
+                      n = 100) %>%
+  ungroup() %>%
+  ggplot(aes(x = mass_stan, y = .prediction)) +
+  stat_lineribbon(aes(group = trophic_level), .width = c(0.5, 0.9), size = 0) +
+  geom_point(data = pantheria,
+             mapping = aes(y = density_log), size = 2) +
+  labs(x = 'Body mass (sd units)', y = 'Population density') +
+  scale_fill_brewer() +
+  facet_wrap(~ trophic_level) +
+  NULL
+
+```
+
+This graph should look familiar -- it is almost identical to [one of our previous model checks](#multi-ppc) for our model with dummy coded `trophic_level`. This makes sense because our model here is just a translation of that model into varying intercept form. This deja vu is going to be a recurring theme for the next few graphs. 
+
+Similarly, we can also look at how well our model reproduces the distribution of population density by trophic level.
+
+
+```{r big_dens}
+
+pantheria %>%
+  add_predicted_draws(model = bigger_fit,
+                      n = 100) %>%
+  ungroup() %>%
+  ggplot(aes(x = .prediction, group = .draw)) +
+  geom_line(stat = 'density',
+            alpha = 0.1,
+            colour = 'blue') +
+  geom_line(stat = 'density',
+            data = pantheria,
+            mapping = aes(x = density_log,
+                          group = NULL),
+            colour = 'black',
+            size = 1.5) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(x = expression(paste('Population density ', log(n / km^2))),
+       title = 'Population density, actual versus predicted') +
+  facet_wrap(~ trophic_level) +
+  NULL
+
+```
+
+This plot demonstrates our model's difficulty in fully reproducing the distribution of population densities of carnivores. This misfit suggests that carnivores have a slightly different pattern of population densities than the other two trophic levels -- something we've noticed since our first [multipredictor model](#reg-multi). 
+
+We were able to improve upon this specific modeling failure in our tutorial on [interactions](#interactions) by including an interaction term between trophic level and body size in our linear predictor. But how can we do that with a varying intercept term? There isn't a covariate to define an interaction with, so what can we do? This issue is the motivation behind our next lesson on [varying-slope and combined varying-intercept, varying-slope models](#vary-all).
+
+
+
+
+
+## Summary
+
+This lesson was a brief introduction to multilevel models and a fast "how-to" on varying-intercept models. We covered the meaning of multilevel model and various data configurations where multilievel modeling might be appropriate. Varying-intercept models were introduced as an alternative to dummy coding of multistate categorical predictors. We covered a lot additional of notation for writing out multilevel models. After introducing all of this material, we covered fitting and extracting model estimates from our multilevel model fit using `brms`.
+
+
+Multilevel modeling is overkill for the example from this lesson. Because of this, this section has mostly been a "how-to" because being comfortable with this type of model is important for understanding more complex models we will deal with over the next few sections.
+
+
+
 
 
 
