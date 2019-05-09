@@ -37,30 +37,30 @@ When collecting or analyzing data, it is not uncommon to identify groupings or n
 
 In our previous lessons we've covered how to include [categorical predictors](#dummy) in our regression models as a way to encode some of this known structure in our data. By relying on dummy variables, however, we are forcing our model to consider the different states independently because their parameters are statistically independent even though we know of the logical relationship between them. The reality of this is that we are ignoring information that could be relevant to our understanding. But we want models that use all of this information, like that omnivory and herbivory are types of trophic levels and not completely independent. 
 
-We want inferences about one state to possibly inform inferences about another. Importantly, this does not mean treating all states as identical. Instead we want to understand the distribution of states within a group as well as the individual states themselves. For example, this would mean the estimating the average and spread among the trophic levels as well as the individual values for each trophic level. Simultaneously inference means we can transfer information between states and improve our inferences.
+We want inferences about one state to possibly inform inferences about another. Importantly, this does not mean treating all states as identical. Instead, we want to understand the distribution of states within a group as well as the individual states themselves. For example, this would mean the estimating the average and spread among the trophic levels as well as the individual values for each trophic level. Simultaneously inference means we can transfer information between states and improve our inferences.
 
-Multilevel models are models that remember features of each (identified) group in the data as they learn about all of the states. The amount of variation among the clusters determines how much the model pools information across clusters and improving our overall estimates. 
+Multilevel models are models that remember features of each (identified) group in the data as they learn about all the states. The amount of variation among the clusters determines how much the model pools information across clusters and improving our overall estimates. 
 
-Pragmatic benefits of multilevel modeling
+Pragmatic benefits of multilevel modeling:
 
 - **Improved estimates for repeat sampling.** When more than one observation arises from the same individual, location, or time, then traditional single-level models either maximally underfit or overfit the data.  By identifying and modeling that repeated sampling, we can improve our estimates of the variable being measured and propagate our uncertainty about that parameter. 
-- **Improved estimates for imbalance in sampling.** When some individuals, locations, or times are sampled more than others, multilevel models automatically cope with differeing uncertainty across these clusters. This prevents over-sampled clusters from unfairly dominating inference.
-- **Estimates of variation.** If our research questions include variation among individuals or other groups within the data, then multilevel models are a big help because they model variation explicits. Dummy coding does not include the variation between the states, which is potentially very useful information. 
+- **Improved estimates for imbalance in sampling.** When some individuals, locations, or times are sampled more than others, multilevel models automatically cope with differing uncertainty across these clusters. This prevents over-sampled clusters from unfairly dominating inference.
+- **Estimates of variation.** If our research questions include variation among individuals or other groups within the data, then multilevel models are a big help because they model variation explicitly. Dummy coding does not include the variation between the states, which is potentially very useful information. 
 - **Avoid averaging, retaining variation.** Too often people summarize repeated sampling by pre-averaging some data to construct their variables. This can be dangerous because averaging removes variation. Also, there are lots of ways to average data. Averaging manufactures false confidence and introduces an arbitrary data transform. Multilevel models allow us to preserve our uncertainty and avoid unnecessary and unprincipled data transforms.
 
-Each of the states are considered realizations from the same population. The probability distribution for the population acts as the prior for each of the states. Except this prior isn't exactly the same as we're used to. Instead, this prior is actually learned from the data.
+Each of the states is considered a realization from the same population. The probability distribution for the population acts as the prior for each of the states. Except this prior isn't exactly the same as we're used to. Instead, this prior is actually learned from the data.
 
-Multilevel regression should be the default approach to regression. In the vast majority of cases, multilevel models are superior single-level models. Once you grasp the basics of the multilevel modeling strategy it becomes much easier to incorporate related tricks such as allowing for measurement error in the data and even modeling missing data! Defining, implementing, and understanding a multilevel model is in general more complicated than a single-level model. We have to define the distribution of our states -- something that sounds a lot harder than it is. Also, multilevel models are a lot harder to fit than most single-level models. This means more time tuning our MCMC algorithm, something we've so far been ableo to avoid. Finally, because multilevel models by their nature make statements at different "levels" of the data, they can be difficult for people to understanding. People rarely think about a population and the individual values within that population simultaneously.
+Multilevel regression should be the default approach to regression. In the vast majority of cases, multilevel models are superior single-level models. Once you grasp the basics of the multilevel modeling strategy it becomes much easier to incorporate related tricks such as allowing for measurement error in the data and even modeling missing data! Defining, implementing, and understanding a multilevel model is in general more complicated than a single-level model. We have to define the distribution of our states -- something that sounds a lot harder than it is. Also, multilevel models are a lot harder to fit than most single-level models. This means more time tuning our MCMC algorithm, something we've so far been able to avoid. Finally, because multilevel models by their nature make statements at different "levels" of the data, they can be difficult for people to understanding. People rarely think about a population and the individual values within that population simultaneously.
 
 
-Also, to make sure we're all on the same page because the literature is full of alternative and conflicting language: multilevel = hierachical = mixed effects. Depending on the authors background or the structure of the data, there is a change they'll favor different language. Multilevel is probably the most generic term, and labeling your model as varying-intercepts and/or varying-slopes is certaintly clearer than mixed effects model. Check out [Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983) Chapter 11 for a longer discussion of the complications surrounding mixed effects model as a term.
+Also, to make sure we're all on the same page because the literature is full of alternative and conflicting language: multilevel = hierarchical = mixed effects. Depending on the authors background or the structure of the data, there is a change they'll favor different language. Multilevel is probably the most generic term, and labeling your model as varying-intercepts and/or varying-slopes is certainly clearer than mixed effects model. Check out [Gelman and Hill](https://www.cambridge.org/core/books/data-analysis-using-regression-and-multilevelhierarchical-models/32A29531C7FD730C3A68951A17C9D983) Chapter 11 for a longer discussion of the complications surrounding mixed effects model as a term.
 
 
 ## A basic model with categorical predictor {#dummy-example}
 
-The basic form of a multilevel model is termed a "varying-intercept" model. This type of model is conceptually very similar to a model with a [multistate categorical predictor](#dummy), but instead of including $k - 1$ binary predcitors in our model, we are defining a model where each state has its own intercept, and those intercepts share a common prior distribution.
+The basic form of a multilevel model is termed a "varying-intercept" model. This type of model is conceptually very similar to a model with a [multistate categorical predictor](#dummy), but instead of including $k - 1$ binary predictors in our model, we are defining a model where each state has its own intercept, and those intercepts share a common prior distribution.
 
-For this example we're going to explore how mammal species population denisty varies as a function of species trophic level. All this data is from the [PanTHERIA dataset](http://www.esapubs.org/archive/ecol/E090/184/default.htm) database, a large collection of trait data for extant mammals. If you need a refresher on the definitions of the variables within this dataset, you can review the [data dictionary](http://esapubs.org/archive/ecol/E090/184/metadata.htm). 
+For this example we're going to explore how mammal species population density varies as a function of species trophic level. All this data is from the [PanTHERIA dataset](http://www.esapubs.org/archive/ecol/E090/184/default.htm) database, a large collection of trait data for extant mammals. If you need a refresher on the definitions of the variables within this dataset, you can review the [data dictionary](http://esapubs.org/archive/ecol/E090/184/metadata.htm). 
 
 As per usual, let's import the PanTHERIA dataset, clean it up a bit, and prepare it for further exploration and analysis. Importantly, I'm recoding `trophic_level` so that "omnivore" is the default state.
 
@@ -99,7 +99,7 @@ $$
 
 My guess is that this should look familiar. This is the way we've been writing out regression models with a multistate categorical predictor so far. 
 
-$\beta_{h}$ and $\beta_{c}$ are modeled independently, which means that any information we learn about one will have no effect on our learning for the other. We know that the different trophic levels are part of the same category and are certaintly not logically independent. Additionally, because of dummy coding, $\beta_{h}$ and $\beta_{c}$ are defined by their difference from $\alpha$ (the population density of omnivores). 
+$\beta_{h}$ and $\beta_{c}$ are modeled independently, which means that any information we learn about one will have no effect on our learning for the other. We know that the different trophic levels are part of the same category and are certainly not logically independent. Additionally, because of dummy coding, $\beta_{h}$ and $\beta_{c}$ are defined by their difference from $\alpha$ (the population density of omnivores). 
 
 
 
@@ -111,20 +111,20 @@ Here's a summary the notation we've been using so far for our regression models.
 
 - Observations $i = 1, \ldots, n$ where an observation is the smallest unit of measurement (e.g. species in the PanTHERIA dataset).
 - Outcome measurement $y = (y_{1}, \ldots, y_{n})$. These are the values being modeled (e.g. species population density).
-- Regression predictors are either vectors $x$ or $n \times k$ matrix $X$. Unless the intercept is written out explicitly, the [first column of $X$ is all 1's]($matrix-notation).
-- For each obsevation $i$, its row-vector of predictors is $X_{i}$.
-- For each predictor $k$, the $(k + 1)^{st}$ column of $X$ as $X_{(k)}$ (assuming that the first column of $X$ is a columns of 1's). 
+- Regression predictors are either vectors $x$ or $n \times k$ matrix $X$. Unless the intercept is written out explicitly, the [first column of $X$ is all 1-s]($matrix-notation).
+- For each observation $i$, its row-vector of predictors is $X_{i}$.
+- For each predictor $k$, the $(k + 1)^{st}$ column of $X$ as $X_{(k)}$ (assuming that the first column of $X$ is a column of 1-s). 
 - Coefficients are sometimes written as a vector $\beta$ and sometimes individually as $\alpha$ and one or more $\beta$-s. 
 - Any information about the unit labels $i$ should be coded in the regression inputs. For example, if $i = 1, \ldots, n$ are in temporal order, we should create a time variable $t_{i}$ and possibly include it in $X$.
 
 As we introduce multilevel models, we also need to introduce some new notational conventions.
 
-- Observations belong to a group $j = 1, \ldots, J$. This is for single level groupings (e.g. specimens of a speices).
-- For a second grouping you can use $g = 1, \ldots, G$ to indicate those memberships. You can substitute other letters if you prefer, but try to avoid overloading you letters (e.g. if $k$ is the number of predictors, don't use $k$ as a grouping). 
+- Observations belong to a group $j = 1, \ldots, J$. This is for single level groupings (e.g. specimens of a species).
+- For a second grouping you can use $g = 1, \ldots, G$ to indicate those memberships. You can substitute other letters if you prefer, but be careful to not overload you letters (e.g. if $k$ is the number of predictors, don't use $k$ as a grouping). 
 - Indices $j[i]$ represent group membership ("$i$ belongs to group $j$").
 - Group-level predictors are represented by $u$ if there is only one and by a matrix $U$ with $J$ rows if there are multiple. 
-- Group-level regression coeffcients are typically labeled $\gamma$.
-- $\sigma_{y}$ is the data-level standard devaition and $\sigma_{\alpha}$, $\sigma_{\beta}$, and so on, are for group-level standard deviations.
+- Group-level regression coefficients are typically labeled $\gamma$.
+- $\sigma_{y}$ is the data-level standard deviation and $\sigma_{\alpha}$, $\sigma_{\beta}$, and so on, are for group-level standard deviations.
 
 These conventions will get us through this lesson. As more complicated situations arise, we'll introduce additional notational conventions.
 
@@ -235,19 +235,13 @@ multilevel_fit %>%
 
 ```
 
-Here `b_Intercept` is the global mean while `r_trophic_level[]` variables are the offsets from that mean for each of the trophic level states. 
+Here `b_Intercept` is the global meanwhile `r_trophic_level[]` variables are the offsets from that mean for each of the trophic level states. 
 
-`tidybayes` has convenience features to simultaneously extract all of the different forms `r_trophic_level[]` appears as. Instead of writing out 
-
-`r_trophic_level[herbivore,Intercept]`
-
-for each of the specific columns, we can more succinctly write out
-
-`r_trophic_level[state,term]`.
+`tidybayes` has convenience features to simultaneously extract all the different forms `r_trophic_level[]` appears as. Instead of writing out `r_trophic_level[herbivore,Intercept]` for each of the specific columns, we can more succinctly write out `r_trophic_level[state,term]`.
 
 This syntax will return our posterior draws with `state` and `term` as columns of the relevant information (trophic level and Intercept, respectively).
 
-```{r mult_spread_1}
+```{r multi_spread_1}
 
 multilevel_fit %>%
   spread_draws(r_trophic_level[state, term])
@@ -256,14 +250,14 @@ multilevel_fit %>%
 
 You can even omit the second term.
 
-```{r mult_spread_2}
+```{r multi_spread_2}
 
 multilevel_fit %>%
   spread_draws(r_trophic_level[state,])
 
 ```
 
-We can plot the distribution of posterior estimates for each trophic level's difference from the grand mean. Remember, the estimated average population density for each trophic level are these values *plus* the esimtates for the intercept term. 
+We can plot the distribution of posterior estimates for each trophic level's difference from the grand mean. Remember, the estimated average population density for each trophic level are these values *plus* the estimates for the intercept term. 
 
 ```{r multi_est}
 
@@ -322,11 +316,11 @@ bind_rows(single_level, multi_level, .id = 'model') %>%
 
 ```
 
-The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has *shrunk* slightly towards mean. Interestingly, that estimate our least precise (highest variance).
+The estimates from both models are almost identical. The only visible difference is that the estimates for mean omnivore population density, which has *shrunk* slightly towards mean. Interestingly, that estimate is our least precise one (highest variance).
 
 What we have gained by using a multilevel model is a direct estimate of the variance between trophic levels, $\sigma_{\alpha}$. 
 
-The distribution $\text{Normal}(\mu_{\alpha}, \sigma_{\alpha})$ defines the distribution of average population density for all trophic levels -- including those which aren't measured. Assuming tha tother trophic levels behave like the three we've observed, we can generate an average population density for that theoretical trophic level. 
+The distribution $\text{Normal}(\mu_{\alpha}, \sigma_{\alpha})$ defines the distribution of average population density for all trophic levels -- including those which aren't measured. Assuming that other trophic levels behave like the three we've observed, we can generate an average population density for that theoretical trophic level. 
 
 Now, this concept is probably nonsense when discussing trophic levels, but makes perfect sense in many other contexts. For example, if we were looking at population density at different sites we might want to estimate the population density at some unobserved site.
 
@@ -403,7 +397,7 @@ pantheria %>%
 
 ```
 
-This graph should look familiar -- it is almost identical to [one of our previous model checks](#multi-ppc) for our model with dummy coded `trophic_level`. This makes sense because our model here is just a translation of that model into varying intercept form. This deja vu is going to be a recurring theme for the next few graphs. 
+The above graph should look familiar -- it is almost identical to [one of our previous model checks](#multi-ppc) for our model with dummy coded `trophic_level`. This similarity makes sense because our model here is just a translation of that model into varying intercept form. Deja vu is going to be a recurring theme for the next few graphs. 
 
 Similarly, we can also look at how well our model reproduces the distribution of population density by trophic level.
 
@@ -444,14 +438,6 @@ We were able to improve upon this specific modeling failure in our tutorial on [
 
 This lesson was a brief introduction to multilevel models and a fast "how-to" on varying-intercept models. We covered the meaning of multilevel model and various data configurations where multilievel modeling might be appropriate. Varying-intercept models were introduced as an alternative to dummy coding of multistate categorical predictors. We covered a lot additional of notation for writing out multilevel models. After introducing all of this material, we covered fitting and extracting model estimates from our multilevel model fit using `brms`.
 
-
-Multilevel modeling is overkill for the example from this lesson. Because of this, this section has mostly been a "how-to" because being comfortable with this type of model is important for understanding more complex models we will deal with over the next few sections.
-
-
-
-
-
-
-
+Multilevel modeling is overkill for the example from this lesson. Because of this, this section has mostly been a "how-to" because being comfortable with this type of model is important for understanding more complex models we will delve deeper into multilevel models and different types of structured data.
 
 
