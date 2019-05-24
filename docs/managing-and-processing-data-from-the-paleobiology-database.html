@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>1 Managing and Processing Data From the Paleobiology Database | Analytical Paleobiology</title>
-  <meta name="description" content="An informal course on analytical paleobiology">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="An informal course on analytical paleobiology" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="1 Managing and Processing Data From the Paleobiology Database | Analytical Paleobiology" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="An informal course on analytical paleobiology" />
   
 
-<meta name="author" content="Peter D Smits">
+<meta name="author" content="Peter D Smits" />
 
 
-<meta name="date" content="2019-05-09">
+<meta name="date" content="2019-05-23" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="index.html">
@@ -270,9 +269,13 @@ Proudly published with bookdown</a></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
 
-<span class="kw">p_load</span>(tidyverse, janitor, knitr, kableExtra)
-
-<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
+<span class="kw">p_load</span>(tidyverse, janitor, knitr, kableExtra)</code></pre></div>
+<pre><code>## Installing package into &#39;/home/peter/R/x86_64-pc-linux-gnu-library/3.6&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## also installing the dependency &#39;webshot&#39;</code></pre>
+<pre><code>## 
+## kableExtra installed</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
 <div id="project-reading" class="section level2">
 <h2><span class="header-section-number">1.2</span> Reading</h2>
@@ -950,7 +953,7 @@ carnivora &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span c
 ##   # ... with 25 more columns
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Warning: 1056 parsing failures.
+<pre><code>## Warning: 1061 parsing failures.
 ##  row             col           expected actual                                                                                          file
 ## 1071 regionalsection 1/0/T/F/TRUE/FALSE  ValAH &#39;https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&amp;interval=Miocene&amp;show=full&#39;
 ## 1071 regionalbed     1/0/T/F/TRUE/FALSE  3     &#39;https://paleobiodb.org/data1.2/occs/list.txt?base_name=Carnivora&amp;interval=Miocene&amp;show=full&#39;

@@ -448,6 +448,8 @@ where $\mu$ is a vector of means, \beta is a vector of regression coefficients, 
 A design matrix has as many rows as the data, and as many columns as there are predictors plot one. This additional column is filled with 1s. These 1s are multiplied by the intercept and so return the unmodified intercept. Here is a quick visual on vector-matrix multiplication to help refresh your memory on how this all works to fit the vector $\mu$:
 ![https://commons.wikimedia.org/wiki/File:Matrix_multiplication_row_column_correspondance.svg](figures/wiki_matrix_multi.png)
 
+(image from [wikimedia](https://commons.wikimedia.org/wiki/File:Matrix_multiplication_row_column_correspondance.svg)
+
 You might have realized that we've actually interacted with design matrices before when we were exploring how [dummy coding is handled](#dummy) -- the column of all 1s called `Intercept` is exactly what I've described here. For example, we can peak at the design matrix from the regression model we developed in this lesson.
 
 ```{r design_matrix}

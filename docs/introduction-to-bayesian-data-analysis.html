@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Introduction to Bayesian data analysis | Analytical Paleobiology</title>
-  <meta name="description" content="An informal course on analytical paleobiology">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="An informal course on analytical paleobiology" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Introduction to Bayesian data analysis | Analytical Paleobiology" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="An informal course on analytical paleobiology" />
   
 
-<meta name="author" content="Peter D Smits">
+<meta name="author" content="Peter D Smits" />
 
 
-<meta name="date" content="2019-05-09">
+<meta name="date" content="2019-05-23" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="managing-and-processing-data-from-the-paleobiology-database.html">
@@ -286,9 +285,13 @@ Proudly published with bookdown</a></li>
 <p>Most of this section is based on material presented in <strong>Statistical Rethinking</strong> and code material from <a href="https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/">Solomon Kurz’s rewrite of <strong>Statistical Rethinking</strong></a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(pacman)
 
-<span class="kw">p_load</span>(tidyverse, brms, tidybayes)
-
-<span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
+<span class="kw">p_load</span>(tidyverse, brms, tidybayes)</code></pre></div>
+<pre><code>## Installing package into &#39;/home/peter/R/x86_64-pc-linux-gnu-library/3.6&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## also installing the dependencies &#39;svUnit&#39;, &#39;LaplacesDemon&#39;, &#39;ggstance&#39;, &#39;HDInterval&#39;, &#39;arrayhelpers&#39;</code></pre>
+<pre><code>## 
+## tidybayes installed</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())</code></pre></div>
 </div>
 <div id="learning-from-data" class="section level2">
 <h2><span class="header-section-number">2.3</span> Learning from data</h2>
